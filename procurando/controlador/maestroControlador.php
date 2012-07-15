@@ -4,6 +4,72 @@
     require_once '../comunes/php/utilidades.php';
 
     verificarSession();
+    
+    function selectAllMaestroPadresLike($input, $campo= 'id_maestro', $id_sistemas=0){
+        $respuesta= new xajaxResponse();
+        $maestro= new clMaestroModelo();
+        $data= "";
+        $html= ""; 
+        if($input!='')
+            $data= $maestro->selectAllMaestroPadresLike($input,$campo,$id_sistemas);
+        if($data){
+            $html= "<div style='border:solid 1px #CCCCCC;background:#f8f8f8'>
+                        <table border='0' class='tablaTitulo' width='100%'>
+                            <tr>
+                                <th width='5%'>
+                                    <a href='#' onclick=\"xajax_orden('id_maestro')\">Id</a>
+                                </th>
+                                <th width='10%'>
+                                    <a href='#' onclick=\"xajax_orden('id_origen')\">Padre</a>
+                                </th>
+                                <th width='25%'>
+                                    <a href='#' onclick=\"xajax_orden('stritema')\">Nombre</a>
+                                </th>
+                                <th width='20%'>
+                                    <a href='#' onclick=\"xajax_orden('stritemb')\">Descripci&oacute;n A</a>
+                                </th>
+                                <th width='10%'>
+                                    <a href='#' onclick=\"xajax_orden('lngnumero')\">Sistema</a>
+                                </th>                                
+                                <th width='10%'>
+                                    <a href='#' onclick=\"xajax_orden('lngnumero')\">N&uacute;mero</a>
+                                </th>
+                                <th width='10%'>
+                                    <a href='#' onclick=\"xajax_orden('sngcant')\">Monto/Cant</a>
+                                </th>
+                                <th width='10%'>Acci&oacute;n</th>
+                            </tr>";
+            for ($i= 0; $i < count($data); $i++){
+                $html.= "<tr bgcolor='#f8f8f8'onmouseover=\"this.style.background='#f0f0f0';this.style.color='blue'\" onmouseout=\"this.style.background='#f8f8f8';this.style.color='black'\" >
+                            <td align='center'>".$data[$i]['id_maestro']."</td>
+                            <td align='center' >".$data[$i]['id_origen']."</td>
+                            <td>".$data[$i]['stritema']."</td>
+                            <td>".$data[$i]['stritemb']."</td>                                  
+                            <td>".$data[$i][sistema]."</td>
+                            <td align='right'>".$data[$i]['lngnumero']."</td>
+                            <td align='right'>".$data[$i]['sngcant']."</td>
+                            <td align='center'>";
+                            if ($data[$i][hijo]>0)
+                            $html.="<a>
+                                    <img src='../comunes/images/ver.gif' onmouseover=\"Tip('Ver Hijos')\" onmouseout='UnTip()' onclick=\"xajax_selectAllMaestroHijos('".$data[$i]['id_maestro']."', '".$data[$i]['stritema']."')\">
+                                </a>";
+                            $html.="<a>
+                                    <img src='../comunes/images/table_edit.png' onmouseover='Tip(\"Editar\")' onmouseout='UnTip()' onclick=\"xajax_formMaestro('UPD','".$data[$i]['id_maestro']."-".$data[$i]['stritema']."-".$data[$i]['stritemb']."-".$data[$i]['stritemc']."-".$data[$i]['lngnumero']."-".$data[$i]['sngcant']."')\">
+                                </a>
+                                <a>
+                                    <img src='../comunes/images/table_delete.png' onmouseover='Tip(\"Eliminar\")' onmouseout='UnTip()' onclick=\"eliminarMaestro('".$data[$i]['id_maestro']."')\">
+                                </a>
+                            </td>
+                        </tr>";
+            }
+            $html.= "</table></div>";
+        }else{
+            $html="<div class='celda_etiqueta'>No Hay Maestros Registrados</div>";
+        }
+        $respuesta->assign("contenedor","innerHTML",$html);
+        return $respuesta;
+    }
+    
 
     function insertMaestroCombos($request) {
         $respuesta= new xajaxResponse();
@@ -189,10 +255,12 @@
                                 <th width='25%'>
                                     <a href='#' onclick=\"xajax_orden('stritema')\">Nombre</a>
                                 </th>
-                                <th width='30%'>
+                                <th width='20%'>
                                     <a href='#' onclick=\"xajax_orden('stritemb')\">Descripci&oacute;n A</a>
                                 </th>
-                                
+                                <th width='10%'>
+                                    <a href='#' onclick=\"xajax_orden('lngnumero')\">Sistema</a>
+                                </th>                                  
                                 <th width='10%'>
                                     <a href='#' onclick=\"xajax_orden('lngnumero')\">N&uacute;mero</a>
                                 </th>
@@ -207,13 +275,15 @@
                             <td align='center' >".$data[$i]['id_origen']."</td>
                             <td>".$data[$i]['stritema']."</td>
                             <td>".$data[$i]['stritemb']."</td>
+                            <td>".$data[$i][sistema]."</td>                                
                             <td align='right'>".$data[$i]['lngnumero']."</td>
                             <td align='right'>".$data[$i]['sngcant']."</td>
-                            <td align='center'>
-                                <a>
+                            <td align='center'>";
+                            if ($data[$i][hijo]>0)
+                            $html.="<a>
                                     <img src='../comunes/images/ver.gif' onmouseover=\"Tip('Ver Hijos')\" onmouseout='UnTip()' onclick=\"xajax_selectAllMaestroHijos('".$data[$i]['id_maestro']."', '".$data[$i]['stritema']."')\">
-                                </a>
-                                <a>
+                                </a>";
+                            $html.="<a>
                                     <img src='../comunes/images/table_edit.png' onmouseover='Tip(\"Editar\")' onmouseout='UnTip()' onclick=\"xajax_formMaestro('UPD','".$data[$i]['id_maestro']."-".$data[$i]['stritema']."-".$data[$i]['stritemb']."-".$data[$i]['stritemc']."-".$data[$i]['lngnumero']."-".$data[$i]['sngcant']."')\">
                                 </a>
                                 <a>
@@ -253,9 +323,12 @@
                                 <th width='25%'>
                                     <a href='#' onclick=\"xajax_orden('stritema', ".$padre.", '".$nombrePadre."')\">Nombre</a>
                                 </th>
-                                <th width='30%'>
+                                <th width='20%'>
                                     <a href='#' onclick=\"xajax_orden('stritemb', ".$padre.", '".$nombrePadre."')\">Descripci&oacute;n A</a>
                                 </th>
+                                <th width='10%'>
+                                    <a href='#' onclick=\"xajax_orden('lngnumero')\">Sistema</a>
+                                </th>                                  
 
                                 <th width='10%'>
                                     <a href='#' onclick=\"xajax_orden('lngnumero', ".$padre.", '".$nombrePadre."')\">N&uacute;mero</a>
@@ -271,14 +344,16 @@
                             <td align='center' >".$data[$i]['id_origen']."</td>
                             <td>".$data[$i]['stritema']."</td>
                             <td>".$data[$i]['stritemb']."</td>
+                            <td>".$data[$i][sistema]."</td>                                
                             <td align='right'>".$data[$i]['lngnumero']."</td>
                             <td align='right'>".$data[$i]['sngcant']."</td>
-                            <td align='center'>
-                                <a>
+                            <td align='center'>";
+                            if ($data[$i][hijo]>0)
+                            $html.="<a>
                                     <img src='../comunes/images/ver.gif' onmouseover=\"Tip('Ver Hijos')\" onmouseout='UnTip()' onclick=\"xajax_selectAllMaestroHijos('".$data[$i]['id_maestro']."', '".$data[$i]['stritema']."')\">
-                                </a>
-                                <a>
-                                    <img src='../comunes/images/table_edit.png' onmouseover='Tip(\"Editar\")' onmouseout='UnTip()' onclick=\"xajax_formMaestro('UPD', '".$data[$i]['id_maestro']."-".$data[$i]['stritema']."-".$data[$i]['stritemb']."-".$data[$i]['stritemc']."-".$data[$i]['lngnumero']."-".$data[$i]['sngcant']."')\">
+                                </a>";
+                            $html.="<a>
+                                    <img src='../comunes/images/table_edit.png' onmouseover='Tip(\"Editar\")' onmouseout='UnTip()' onclick=\"xajax_formMaestro('UPD','".$data[$i]['id_maestro']."-".$data[$i]['stritema']."-".$data[$i]['stritemb']."-".$data[$i]['stritemc']."-".$data[$i]['lngnumero']."-".$data[$i]['sngcant']."')\">
                                 </a>
                                 <a>
                                     <img src='../comunes/images/table_delete.png' onmouseover='Tip(\"Eliminar\")' onmouseout='UnTip()' onclick=\"eliminarMaestro('".$data[$i]['id_maestro']."')\">
@@ -301,21 +376,21 @@
                     <input type='hidden' name='capa' id='capa' value='div_".$numero."'>
                     <table class='tablaTitulo' bgcolor='#f8f8f8' width='100%'>
                         <tr>
-                            <th width='23%'><label id='lnombre'>Nombre</label></th>
-                            <th width='23%'><label id='ldescA'>Descripci&oacute;n A</label></th>
-                            <th width='23%'><label id='ldescB'>Descripci&oacute;n B</label></th>
+                            <th width='20%'><label id='lnombre'>Nombre</label></th>
+                            <th width='20%'><label id='ldescA'>Descripci&oacute;n A</label></th>
+                            <th width='20%'><label id='ldescB'>Descripci&oacute;n B</label></th>
                             <th width='12%'><label id='lnumero'>Numero</label></th>
                             <th width='12%'><label id='lmonto'>Monto/Cant</label></th>
                             <th width='7%'></th>
                         </tr>
                         <tr>
-                            <td width='23%' align='center'>
+                            <td width='20%' align='center'>
                                 <input type='text' value='' name='stritema' id='stritema' size='19' class='inputbox82' maxlength='100' style='width:100%'>
                             </td>
-                            <td width='23%' align='center'>
+                            <td width='20%' align='center'>
                                 <input type='text' value='' name='stritemb' id='stritemb' class='inputbox82' maxlength='100' style='width:100%'>
                             </td>
-                            <td width='23%' align='center'>
+                            <td width='20%' align='center'>
                                 <input type='text' value='' name='stritemc' id='stritemc' class='inputbox82' maxlength='50' style='width:100%'>
                             </td>
                             <td width='12%' align='center'>
