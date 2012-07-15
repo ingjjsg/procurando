@@ -3,7 +3,7 @@
 
     class Conexion{
        public $conex;
-       private $host= "127.0.0.1"; //ambiente de desarrollo
+       private $host= "localhost"; //ambiente de desarrollo
        private $port= "5432";
        private $dbname= "procurando";
        private $user= "postgres";
