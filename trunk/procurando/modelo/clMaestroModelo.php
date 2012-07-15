@@ -15,6 +15,7 @@ class clMaestroModelo {
     private $lngnumero;
     private $sngcant;
     private $bolborrado;
+    private $id_origen_nuevo;
 
     public function __construct() {
 
@@ -27,6 +28,9 @@ class clMaestroModelo {
         if($request['id_origen'] != ""){
             $this->id_origen= $request['id_origen'];
         }
+        if($request['id_origen_nuevo'] != ""){
+            $this->id_origen_nuevo= $request['id_origen_nuevo'];
+        }        
         if($request['stritema'] != ""){
             $this->stritema= $request['stritema'];
         }
@@ -55,6 +59,12 @@ class clMaestroModelo {
     }
     public function setId_maestro($id_maestro){
         $this->id_maestro= $id_maestro;
+    }    
+    public function getId_origen_nuevo(){
+        return $this->id_origen_nuevo;
+    }   
+    public function setId_origen_nuevo($id_origen_nuevo){
+        $this->id_origen_nuevo= $id_origen_nuevo;
     }
     public function getId_origen(){
         return $this->id_origen;
@@ -98,6 +108,21 @@ class clMaestroModelo {
     public function setBolborrado($bolborrado){
         $this->bolborrado= $bolborrado;
     }
+
+    
+    public static function getTieneHijos($id){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $origen='';
+        $data='';
+        $sql="SELECT id_origen FROM ".clConstantesModelo::correspondencia_table."tblmaestros_vista WHERE id_origen=".$id." limit 1";        
+//        exit($sql);
+        $conn->sql= $sql;
+        $data= $conn->ejecutarSentencia(2);
+        if (is_array($data)) $origen=$data[0][id_origen];
+        $conn->cerrarConexion();
+        return $origen;
+    }          
     
     
     public function insertMaestroCombos($stritema,$id_origen,$id_sistema){
@@ -136,9 +161,11 @@ class clMaestroModelo {
     public function insertMaestro(){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $conn->sql= "INSERT INTO ".clConstantesModelo::correspondencia_table."tblmaestros (id_origen, stritema, stritemb, stritemc, lngnumero, sngcant) VALUES ";
-        $conn->sql.= "(".$this->getId_origen().", '".$this->getStritema()."', '".$this->getStritemb()."', '".$this->getStritemc()."', ".$this->getLngnumero().", ";
-        $conn->sql.= $this->getSngcant().")";
+        $sql= "INSERT INTO ".clConstantesModelo::correspondencia_table."tblmaestros (id_origen, stritema, stritemb, stritemc, lngnumero, sngcant) VALUES ";
+        $sql.= "(".$this->getId_origen().", '".$this->getStritema()."', '".$this->getStritemb()."', '".$this->getStritemc()."', ".$this->getLngnumero().", ";
+        $sql.= $this->getSngcant().")";
+        exit($sql);        
+        $conn->sql=$sql;
         $retorno= $conn->ejecutarSentencia();
         $conn->cerrarConexion();
         return $retorno;
@@ -167,8 +194,9 @@ class clMaestroModelo {
         $conn->abrirConexion();
         $conn->sql= "";
 //        exit($campo);
-        if ($id_sistemas!='') $sql_insert="AND id_sistema= ".$id_sistemas;
-        $sql="SELECT * FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE bolborrado= 0 ".$sql_insert." ORDER BY ".$campo." ".$_SESSION["AD"];
+        if ($id_sistemas!='') $sql_insert="AND a.id_sistema= ".$id_sistemas;
+        $sql="SELECT a.*, b.stritema as sistema FROM ".clConstantesModelo::correspondencia_table."tblmaestros_vista a, ".clConstantesModelo::correspondencia_table."tblmaestros_sistemas b WHERE a.id_sistema=b.id_sistema and a.bolborrado= 0 ".$sql_insert." ORDER BY a.".$campo." ".$_SESSION["AD"];
+//        exit($sql);
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
         $conn->cerrarConexion();
@@ -178,8 +206,8 @@ class clMaestroModelo {
         $conn= new Conexion();
         $conn->abrirConexion();
         $conn->sql= "";
-        if ($id_sistemas!='') $sql_insert="AND id_sistema= ".$id_sistemas;
-        $sql="SELECT * FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_origen= ".$padre." ".$sql_insert." AND bolborrado= 0 ORDER BY ".$campo." ".$_SESSION["AD"];
+        if ($id_sistemas!='') $sql_insert="AND a.id_sistema= ".$id_sistemas;
+        $sql="SELECT a.*, b.stritema as sistema FROM ".clConstantesModelo::correspondencia_table."tblmaestros_vista a, ".clConstantesModelo::correspondencia_table."tblmaestros_sistemas b WHERE a.id_sistema=b.id_sistema and a.id_origen= ".$padre." ".$sql_insert." AND a.bolborrado= 0 ORDER BY a.".$campo." ".$_SESSION["AD"];
 //        exit($sql);        
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
@@ -189,7 +217,7 @@ class clMaestroModelo {
     public function selectMaestroPadreById($id_maestro){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $sql= "SELECT * FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= ".$id_maestro." AND bolborrado= 0";
+        $sql= "SELECT * FROM ".clConstantesModelo::correspondencia_table."tblmaestros_vista WHERE id_maestro= ".$id_maestro." AND bolborrado= 0";
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
         $conn->cerrarConexion();
@@ -199,7 +227,7 @@ class clMaestroModelo {
         $conn= new Conexion();
         $conn->abrirConexion();
         $conn->sql= "";
-        $conn->sql= "SELECT * FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_origen= ".$id_origen." AND lngnumero= ".$lngnumero." AND bolborrado= 0 ORDER BY stritema";
+        $conn->sql= "SELECT * FROM ".clConstantesModelo::correspondencia_table."tblmaestros_vista WHERE id_origen= ".$id_origen." AND lngnumero= ".$lngnumero." AND bolborrado= 0 ORDER BY stritema";
         $data= $conn->ejecutarSentencia(2);
         $conn->cerrarConexion();
         return $data;
@@ -208,7 +236,7 @@ class clMaestroModelo {
     public function selectMaestroPadreByIdProcurandoLike($id_maestro,$id_sistema){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $sql= "SELECT * FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE stritema like '%Combo%' and  id_sistema=".$id_sistema." and id_origen= ".$id_maestro." AND bolborrado= 0";
+        $sql= "SELECT * FROM ".clConstantesModelo::correspondencia_table."tblmaestros_vista WHERE stritema like '%Combo%' and  id_sistema=".$id_sistema." and id_origen= ".$id_maestro." AND bolborrado= 0";
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
         $conn->cerrarConexion();
@@ -218,7 +246,21 @@ class clMaestroModelo {
     public function selectMaestroOrigenByIdProcurando($id_maestro,$id_sistema){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $sql= "SELECT * FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_sistema=".$id_sistema." and id_origen= ".$id_maestro." AND bolborrado= 0";
+        $sql= "SELECT * FROM ".clConstantesModelo::correspondencia_table."tblmaestros_vista WHERE id_sistema=".$id_sistema." and id_origen= ".$id_maestro." AND bolborrado= 0";
+        $conn->sql= $sql;
+        $data= $conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();
+        return $data;
+    }    
+    
+    public function selectAllMaestroPadresLike($input, $campo, $id_sistemas=0){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $conn->sql= "";
+//        exit($campo);
+        if ($id_sistemas!=0) $sql_insert="AND a.id_sistema= ".$id_sistemas;
+        $sql="SELECT a.*, b.stritema as sistema FROM ".clConstantesModelo::correspondencia_table."tblmaestros_vista a,  ".clConstantesModelo::correspondencia_table."tblmaestros_sistemas b WHERE a.id_sistema=b.id_sistema and a.bolborrado= 0 and upper(a.stritema) like '%".strtoupper($input)."%' ".$sql_insert." ORDER BY a.".$campo." ".$_SESSION["AD"];
+//        exit($sql);
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
         $conn->cerrarConexion();

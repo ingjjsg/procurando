@@ -4,7 +4,8 @@
     require_once "../controlador/maestroControlador.php";
     require_once ('../comunes/xajax/xajax_core/xajax.inc.php');
     $xajax= new xajax();
-    $xajax->registerFunction('selectAllMaestroPadres');
+    $xajax->registerFunction('selectAllMaestroPadresLike');
+    $xajax->registerFunction('selectAllMaestroPadres');    
     $xajax->registerFunction('selectAllMaestroHijos');
     $xajax->registerFunction('formMaestro');
     $xajax->registerFunction('insertMaestro');
@@ -29,7 +30,7 @@
         <script src="../comunes/js/funciones.js" type="text/javascript"></script>
         <script src="../comunes/js/prototype.js" type="text/javascript"></script>
         <script type="text/javascript" src="../comunes/js/effects.js"></script>
-        <script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>
+<!--        <script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>-->
         <style>
             body {padding:0px;margin:0px;text-align:left;font:11px verdana, arial, helvetica, serif; background-color:#FFFFFF;}
         </style>
@@ -58,7 +59,8 @@
                     e.style.borderColor= 'Red';
                     e.focus();
                     return false;
-                }else{
+                }
+                else{
                     if(acc == 'INS'){
                         xajax_insertMaestro(xajax.getFormValues('frmcontacto'));
                     }else if(acc == 'UPD'){
@@ -97,9 +99,19 @@
                             </select>
                         </div>
                     </td>
-                </tr>                
-                
-
+                </tr>       
+<!--                <tr>
+                    <td width="15%" class="menu_izq_titulo">Origen</td>
+                    <td width="85%" align="left" class="menu_izq_titulo">
+                        <input type="text" class='inputbox82' id="id_origen" name="id_origen" size="30" />
+                    </td>
+                </tr>      -->
+                <tr>
+                    <td width="15%" class="menu_izq_titulo">Descripción</td>
+                    <td width="85%" align="left" class="menu_izq_titulo">
+                        <input type="text" class='inputbox82' id="stritema_busqueda" name="stritema_busqueda" size="30" onKeyDown="xajax_selectAllMaestroPadresLike(document.frmcontacto.stritema_busqueda.value,'id_maestro',document.frmcontacto.id_sistemas.value);" onKeyUp="xajax_selectAllMaestroPadresLike(document.frmcontacto.stritema_busqueda.value,'id_maestro',document.frmcontacto.id_sistemas.value);"/>
+                    </td>
+                </tr>                      
             </table>
             <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding-top:10px; padding-bottom:0px;">
                 <tr>
