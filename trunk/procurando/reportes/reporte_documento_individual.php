@@ -34,6 +34,14 @@ $html='
         .prioridad {
             width:70px;
         }
+        
+        tr#espacio{
+            height:100px;
+        }
+        .align{
+             text-align:justify;
+             text-indent: 10px;
+        }
     </style>
 
     ';
@@ -54,12 +62,18 @@ $html='
             $html.='<th >Titulo</th>';
             $html.='<td >'.functions::decrypt($data['0']['strtitulo']).'</td>';
         $html.='</tr>';
+        $html.='</table>';
+        
+        $html.='<br>';
+        
+        $html.='<table id="tabla-2">';
+                
         $html.='<tr>';
-            $html.='<th colspan="4">Descripcion</th>';
+            $html.='<th colspan="4">Descripción</th>';
         $html.='</tr>';
         
         $html.='<tr>';
-            $html.='<td colspan="4">'.functions::decrypt($data['0']['strtitulo']).'</td>';
+            $html.='<td colspan="4"><p class="align">'.functions::decrypt($data['0']['strdescripcion']).'</p></td>';
         $html.='</tr>';
         
           /*  $html.='<th>Evento</th>';
