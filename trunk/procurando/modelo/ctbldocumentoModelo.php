@@ -907,6 +907,26 @@ public function llenar($request)
         $data= $conn->ejecutarSentencia(2);
         $conn->cerrarConexion();        
         return $data;
+    }
+    
+    public function selectDocumentoIndividualReporte($id_documento){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $sql.= "SELECT id_documento, id_usuario, id_tipo, id_evento, id_prioridad, id_estado, id_recordatorio, id_unidad, fecdocumento, strdescripcion, strtitulo, id_expediente, bolborrado, strpersona, id_refiere, visto, id_seguimiento, origen  ";
+        $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_tipo) AS id_tipo_documento ";
+        $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_evento) AS id_evento_documento ";
+        $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_prioridad) AS id_prioridad_documento ";
+        $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_estado) AS id_estado_documento ";
+        $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_recordatorio) AS id_recordatorio_documento ";
+        $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_unidad) AS id_unidad_documento ";        
+        $sql.=" from ".clConstantesModelo::correspondencia_table."tbldocumento  Where id_documento=".$id_documento."  and bolborrado=0  and id_usuario=".$_SESSION['id_contacto'];
+
+//        exit($sql);      
+        $sql.=" order by id_documento desc";
+        $conn->sql= $sql;
+        $data= $conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();        
+        return $data;
     }      
         
     
