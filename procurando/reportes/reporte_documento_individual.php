@@ -35,9 +35,6 @@ $html='
             width:70px;
         }
         
-        tr#espacio{
-            height:100px;
-        }
         .align{
              text-align:justify;
              text-indent: 10px;
