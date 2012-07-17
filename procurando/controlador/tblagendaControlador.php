@@ -143,7 +143,10 @@
                 }                            
                 $html.="        <a>
                                     <img src='../comunes/images/page_edit.png' onmouseover='Tip(\"Editar Item Agenda ".$data[$i]['id_agenda']."\")' onmouseout='UnTip()' onclick=\"javascript:location.href='vista_insertTblAgenda.php?id=".$data[$i]['id_agenda']."'\";\">
-                                </a>";   
+                                </a>";
+                $html.="<a>
+                                    <img src='../comunes/images/ver.gif' onmouseover=\"Tip('Detalle de la Agenda')\" onmouseout='UnTip()' onclick=\"location.href='../reportes/reporte_agenda_individual.php?id=".$data[$i]['id_agenda']."'\">
+                                </a>";
                 if ($data[$i][visto]!=1)
                  $html.="       <a>
                                     <img src='../comunes/images/Undo.png' onmouseover='Tip(\"Marcar como no Leido Item Agenda ".$data[$i]['id_agenda']."\")' onmouseout='UnTip()' onclick=\"xajax_ActualizarItemAgenda('".$data[$i]['id_agenda']."','1','visto');\">
@@ -296,7 +299,10 @@
                 }                            
                 $html.="        <a>
                                     <img src='../comunes/images/page_edit.png' onmouseover='Tip(\"Editar Item Agenda ".$data[$i]['id_agenda']."\")' onmouseout='UnTip()' onclick=\"javascript:location.href='vista_insertTblAgenda.php?id=".$data[$i]['id_agenda']."'\";\">
-                                </a>";   
+                                </a>"; 
+                $html.="<a>
+                                    <img src='../comunes/images/ver.gif' onmouseover=\"Tip('Detalle de la Agenda')\" onmouseout='UnTip()' onclick=\"location.href='../reportes/reporte_agenda_individual.php?id=".$data[$i]['id_agenda']."'\">
+                                </a>";
                 if ($data[$i][visto]!=1)
                  $html.="       <a>
                                     <img src='../comunes/images/Undo.png' onmouseover='Tip(\"Marcar como no Leido Item Agenda ".$data[$i]['id_agenda']."\")' onmouseout='UnTip()' onclick=\"xajax_ActualizarItemAgendaBorrados('".$data[$i]['id_agenda']."','1','visto');xajax_ActualizarItemAgendaBorrados('".$data[$i]['id_agenda']."','0','bolborrado');\">
@@ -994,7 +1000,10 @@
                 }                            
                 $html.="        <a>
                                     <img src='../comunes/images/page_edit.png' onmouseover='Tip(\"Editar Item Agenda ".$data[$i]['id_agenda']."\")' onmouseout='UnTip()' onclick=\"javascript:location.href='vista_insertTblAgenda.php?id=".$data[$i]['id_agenda']."'\";\">
-                                </a>";   
+                                </a>";  
+                $html.="<a>
+                                    <img src='../comunes/images/ver.gif' onmouseover=\"Tip('Detalle de la Agenda')\" onmouseout='UnTip()' onclick=\"location.href='../reportes/reporte_agenda_individual.php?id=".$data[$i]['id_agenda']."'\">
+                                </a>";
                 if ($data[$i][visto]!=1)
                  $html.="       <a>
                                     <img src='../comunes/images/Undo.png' onmouseover='Tip(\"Marcar como no Leido Item Agenda ".$data[$i]['id_agenda']."\")' onmouseout='UnTip()' onclick=\"xajax_ActualizarItemAgenda('".$data[$i]['id_agenda']."','1','visto');\">
@@ -1004,7 +1013,9 @@
                                 </a>
                                 <a>
                                     <img src='../comunes/images/vcard_delete.png' onmouseover='Tip(\"Eliminar Item Agenda ".$data[$i]['id_agenda']."\")' onmouseout='UnTip()' onclick=\"if(confirm('¿Desea Eliminar el Item de Agenda?')){xajax_ActualizarItemAgenda('".$data[$i]['id_agenda']."','1','bolborrado')};\">
-                                </a>";                                 
+                                </a>";
+                
+                
                  $html.="</td></tr></table>";
             }
             $html.= "</div>";
@@ -1134,7 +1145,10 @@
                 }                            
                 $html.="        <a>
                                     <img src='../comunes/images/page_edit.png' onmouseover='Tip(\"Editar Item Agenda ".$data[$i]['id_agenda']."\")' onmouseout='UnTip()' onclick=\"javascript:location.href='vista_insertTblAgenda.php?id=".$data[$i]['id_agenda']."'\";\">
-                                </a>";   
+                                </a>";
+                $html.="<a>
+                                    <img src='../comunes/images/ver.gif' onmouseover=\"Tip('Detalle de la Agenda')\" onmouseout='UnTip()' onclick=\"location.href='../reportes/reporte_agenda_individual.php?id=".$data[$i]['id_agenda']."'\">
+                                </a>";
                 if ($data[$i][visto]!=1)
                  $html.="       <a>
                                     <img src='../comunes/images/Undo.png' onmouseover='Tip(\"Marcar como no Leido Item Agenda ".$data[$i]['id_agenda']."\")' onmouseout='UnTip()' onclick=\"xajax_ActualizarItemAgenda('".$data[$i]['id_agenda']."','1','visto');\">
