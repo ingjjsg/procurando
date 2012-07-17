@@ -72,23 +72,7 @@ $html='
         $html.='<tr>';
             $html.='<td colspan="4"><p class="align">'.functions::decrypt($data['0']['strdescripcion']).'</p></td>';
         $html.='</tr>';
-        
-          /*  $html.='<th>Evento</th>';
-            $html.='<th>Titulo</th>';
-            $html.='<th class="prioridad">Prioridad</th>';
-            $html.='<th>Estado</th>';
-            $html.='<th>Días</th>';*/
-       /*  $html.='</tr>';
-                $html.='<tr>';
-                    $html.='<td class="nro">'.++$count.'</td>';
-                    $html.='<td>'.$data[$key]['id_tipo_documento'].'</td>';
-                    $html.='<td class="departamento">'.$data[$key]['id_unidad_documento'].'</td>';
-                    $html.='<td>'.$data[$key]['id_evento_documento'].'</td>';
-                    $html.='<td>'.functions::decrypt($data[$key]['strtitulo']).'</td>';
-                    $html.='<td class="prioridad centrado">'.$data[$key]['id_prioridad_documento'].'</td>';
-                    $html.='<td>'.$data[$key]['id_estado_documento'].'</td>';
-                    $html.='<td>0</td>';
-                $html.="</tr>";*/
+
 
         
         $html.='</table>';
