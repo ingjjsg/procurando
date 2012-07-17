@@ -204,7 +204,7 @@
                                     <img src='../comunes/images/vcard_delete.png' onmouseover='Tip(\"Eliminar Item Documento ".$data[$i]['id_documento']."\")' onmouseout='UnTip()' onclick=\"if(confirm('¿Desea Eliminar el Item de Documento?')){xajax_ActualizarItemDocumentoRecibidos('".$data[$i]['id_documento']."','1','bolborrado')};\">
                                 </a>"; 
                $html.="<a>
-                                    <img src='../comunes/images/ver.gif' onmouseover=\"Tip('Detalles Clientes')\" onmouseout='UnTip()' onclick=\"location.href='reporte_abogados.php?id=".$data[$i]['id_abogado']."'\">
+                                    <img src='../comunes/images/ver.gif' onmouseover=\"Tip('Detalle del Documento')\" onmouseout='UnTip()' onclick=\"location.href='../reportes/reporte_documento_individual.php?id=".$data[$i]['id_documento']."'\">
                                 </a>";
                  $html.="</td></tr></table>";
             }
@@ -360,7 +360,10 @@
                                 </a>
                                 <a>
                                     <img src='../comunes/images/vcard_add.png' onmouseover='Tip(\"Colocar como no Borrado el Item de Documento ".$data[$i]['id_documento']."\")' onmouseout='UnTip()' onclick=\"if(confirm('¿Desea Colocar como no Borrado el Item de Documento?')){xajax_ActualizarItemDocumentoBorrados('".$data[$i]['id_documento']."','0','bolborrado')};\">
-                                </a>";                                 
+                                </a>";
+                $html.="<a>
+                                    <img src='../comunes/images/ver.gif' onmouseover=\"Tip('Detalle del Documento')\" onmouseout='UnTip()' onclick=\"location.href='../reportes/reporte_documento_individual.php?id=".$data[$i]['id_documento']."'\">
+                                </a>";
                  $html.="</td></tr></table>";
             }
             $html.= "</div>";
@@ -1204,7 +1207,10 @@
                                 </a>
                                 <a>
                                     <img src='../comunes/images/vcard_delete.png' onmouseover='Tip(\"Eliminar Item Documento ".$data[$i]['id_documento']."\")' onmouseout='UnTip()' onclick=\"if(confirm('¿Desea Eliminar el Item de Documento?')){xajax_ActualizarItemDocumentoEnviados('".$data[$i]['id_documento']."','1','bolborrado')};\">
-                                </a>";                                 
+                                </a>";
+                $html.="<a>
+                                    <img src='../comunes/images/ver.gif' onmouseover=\"Tip('Detalle del Documento')\" onmouseout='UnTip()' onclick=\"location.href='../reportes/reporte_documento_individual.php?id=".$data[$i]['id_documento']."'\">
+                                </a>";
                  $html.="</td></tr></table>";
             }
             $html.= "</div>";
