@@ -17,6 +17,7 @@ class Plantilla extends TCPDF{
     
     public function __construct($orientacion) {
         parent::__construct($orientacion, 'mm', 'letter', true, 'UTF-8', false);
+        $this->SetTopMargin(40);
     }
     public function  Header() {
         $image_file = '../comunes/images/img2.gif';
