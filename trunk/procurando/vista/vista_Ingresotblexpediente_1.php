@@ -1,7 +1,7 @@
 <?php
     session_start();
     include("../comunes/fckeditor/fckeditor.php") ;    
-    require_once "../controlador/tblproexpedienteControlador.php";
+    require_once "../controlador/tblactuacionesControlador.php";
     require_once ('../comunes/xajax/xajax_core/xajax.inc.php');
     
     if(isset($_GET['id'])){

@@ -1,6 +1,6 @@
 <?php
     session_start();
-    require_once "../controlador/tblproexpedienteControlador.php";
+    require_once "../controlador/tblactuacionesControlador.php";
     require_once ('../comunes/xajax/xajax_core/xajax.inc.php');
     require_once '../modelo/clPermisoModelo.php';
     require_once '../modelo/clConstantesModelo.php';
