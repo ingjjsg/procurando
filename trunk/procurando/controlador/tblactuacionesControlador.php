@@ -3,9 +3,9 @@
     require_once '../modelo/clProActuaciones.php';
     require_once '../modelo/clProAsociaciones.php';    
     require_once '../modelo/clMaestroModelo.php';
-    require_once '../modelo/clProExpediente_Fases.php';    
-    require_once '../modelo/ctblproexpedienteModelo.php';
-    require_once '../modelo/ctblproexpedienteSituacionesModelo.php';
+    require_once '../modelo/clActuacionFases.php';    
+    require_once '../modelo/clActuacionesModelo.php';
+    require_once '../modelo/clActuacionSituaciones.php';
     require_once '../modelo/ctblprohonorariosModelo.php';
     require_once '../modelo/clProClientes.php';
     require_once '../modelo/clProContrarios.php';    
