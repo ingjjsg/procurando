@@ -6,14 +6,15 @@
  * Description of clTblproexpediente
  * @author jmendoza
  */
- class clProExpediente {
+ class clActuaciones {
 
 //=========================== VAR ===================
 
 
 
-
-  private   $id_proexpediente;
+  const TABLA='tblactuaciones';
+  
+  private   $id_proactuacion;
 
   private   $id_proclientecasos;
 
@@ -130,7 +131,7 @@ public function llenar($request)
 {
      $functions= new functions();   
      if($request['id_proexpediente'] != ""){
-        $this->set_id_proexpediente($request['id_proexpediente']);
+        $this->set_id_proactuacion($request['id_proexpediente']);
      }
 
 
@@ -404,8 +405,8 @@ public function llenar($request)
 
 
 
-    public function get_id_proexpediente(){
-        return $this->id_proexpediente;
+    public function get_id_proactuacion(){
+        return $this->id_proactuacion;
     }
 
 
@@ -711,8 +712,8 @@ public function llenar($request)
 
 
 
-    public function set_id_proexpediente($id_proexpediente){
-        return $this->id_proexpediente=$id_proexpediente;
+    public function set_id_proactuacion($id_proexpediente){
+        return $this->id_proactuacion=$id_proexpediente;
     }
 
 
@@ -1002,7 +1003,7 @@ public function llenar($request)
     public static function getExpedienteClienteAgenda($id_cliente){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $sql="SELECT id_proexpediente,strnroexpediente,strdescripcion FROM ".clConstantesModelo::correspondencia_table."tblproexpediente WHERE id_proexpediente=".$id_cliente;        
+        $sql="SELECT id_proactuacion,strnroexpediente,strdescripcion FROM ".clConstantesModelo::correspondencia_table." ".self::TABLA." WHERE id_proexpediente=".$id_cliente;        
 //        exit($sql);
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
@@ -1016,7 +1017,7 @@ public function llenar($request)
      public function SelectExpedienteAgendaLike($str_expediente){
          $conn= new Conexion();
          $conn->abrirConexion();
-         $sql="SELECT id_proexpediente,
+         $sql="SELECT id_proactuacion,
          id_proclientecasos,
          id_proabogadoscasos,
          id_documentoscasos,
@@ -1068,7 +1069,7 @@ public function llenar($request)
          id_abogado_ejecutor, 
          id_solicitante, 
          id_contrarios
-         FROM public.tblproexpediente WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
+         FROM public.".self::TABLA." WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
          
          if($str_expediente !=""){
              $sql .=" AND upper(strnroexpediente) like '%".strtoupper($str_expediente)."%'";
@@ -1087,7 +1088,7 @@ public function llenar($request)
      public function SelectExpediente($id_expediente){
          $conn= new Conexion();
          $conn->abrirConexion();
-         $sql="SELECT id_proexpediente,
+         $sql="SELECT id_proactuacion,
          id_proclientecasos,
          id_proabogadoscasos,
          id_documentoscasos,
@@ -1139,7 +1140,7 @@ public function llenar($request)
          id_abogado_ejecutor, 
          id_solicitante, 
          id_contrarios
-         FROM public.tblproexpediente WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
+         FROM public.".self::TABLA." WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
          
          if($id_expediente !=""){
              $sql .=" AND id_proexpediente=".$id_expediente;
