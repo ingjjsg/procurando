@@ -5,14 +5,17 @@ session_start();
  * Description of clTblproexpediente_fases
  * @author jsuarez
  */
- class clTblproexpediente_fases {
+ class clProActuacionFases {
 
 //=========================== VAR ===================
 
 
 
+  const TABLA='tblactuacion_fases';
 
-  private   $id_proexpediente_fase;
+  const TABLA_ACTUACIONES='tblactuaciones';
+  
+  private   $id_proactuacion_fase;
 
   private   $id_tipo_fase;
 
@@ -20,7 +23,7 @@ session_start();
 
   private   $strobservacionfase;
 
-  private   $id_proexpediente;
+  private   $id_proactuacion;
 
   private   $fecfase;
 
@@ -34,7 +37,7 @@ session_start();
 public function llenar($request)
 {
      if($request['id_proexpediente_fase'] != ""){
-        $this->id_proexpediente_fase= $request['id_proexpediente_fase'];
+        $this->id_proactuacion_fase= $request['id_proexpediente_fase'];
      }
 
 
@@ -54,7 +57,8 @@ public function llenar($request)
 
 
      if($request['id_proexpediente'] != ""){
-        $this->id_proexpediente= $request['id_proexpediente'];
+        $this->id_proactuacion= $request['id_proexpediente'];
+        
      }
 
 
@@ -73,8 +77,8 @@ public function llenar($request)
 
 
 
-    public function getId_proexpediente_fase(){
-        return $this->id_proexpediente_fase;
+    public function getId_proactuacion_fase(){
+        return $this->id_proactuacion_fase;
     }
 
 
@@ -97,8 +101,8 @@ public function llenar($request)
 
 
 
-    public function getId_proexpediente(){
-        return $this->id_proexpediente;
+    public function getId_proactuacion(){
+        return $this->id_proactuacion;
     }
 
 
@@ -120,8 +124,8 @@ public function llenar($request)
 
 
 
-    public function setId_proexpediente_fase($id_proexpediente_fase){
-        return $this->id_proexpediente_fase=$id_proexpediente_fase;
+    public function setId_proactuacion_fase($id_proexpediente_fase){
+        return $this->id_proactuacion_fase=$id_proexpediente_fase;
     }
 
 
@@ -144,8 +148,8 @@ public function llenar($request)
 
 
 
-    public function setId_proexpediente($id_proexpediente){
-        return $this->id_proexpediente=$id_proexpediente;
+    public function setId_proactuacion($id_proexpediente){
+        return $this->id_proactuacion=$id_proexpediente;
     }
 
 
@@ -169,14 +173,14 @@ public function llenar($request)
      public function insertar(){
          $conn= new Conexion();
          $conn->abrirConexion();
-         $sql="Insert into ".clConstantesModelo::correspondencia_table."tblproexpediente_fases (
+         $sql="Insert into ".clConstantesModelo::correspondencia_table.self::TABLA." (
          id_tipo_fase, id_fase, strobservacion, 
-            id_proexpediente, fecfase) VALUES ("
+            id_proactuacion, fecfase) VALUES ("
          .$this->getId_tipo_fase().","
          .$this->getId_fase().",'"
          .$this->getStrobservacionfase()."',"
-         .$this->getId_proexpediente().",TO_DATE('"
-         .$this->getFecfase()."', 'DD/MM/YYYY'))";     
+         .$this->getId_proactuacion().",TO_DATE('"
+         .$this->getFecfase()."', 'DD/MM/YYYY'))";
          $conn->sql=$sql;
          if($conn->ejecutarSentencia()){
              $retorno=true;
@@ -196,12 +200,12 @@ public function llenar($request)
          $conn= new Conexion();
          $conn->abrirConexion();
       
-         $sql="UPDATE ".clConstantesModelo::correspondencia_table."tblproexpediente_fases SET
+         $sql="UPDATE ".clConstantesModelo::correspondencia_table.self::TABLA." SET
          id_tipo_fase=".$this->getId_tipo_fase().",
          id_fase=".$this->getId_fase().",
          strobservacion='".$this->getStrobservacionfase()."',
          fecfase=TO_DATE('".$this->getFecfase()."', 'DD/MM/YYYY')                   
-         WHERE id_proexpediente_fase=".$id_expediente_fase;
+         WHERE id_proactuacion_fase=".$id_expediente_fase;
          $conn->sql=$sql;
          $data = $conn->ejecutarSentencia();
          return $data;
@@ -210,9 +214,9 @@ public function llenar($request)
     function Delete($id_proexpediente){
         $conn= new Conexion();
          $conn->abrirConexion();
-         $sql="UPDATE ".clConstantesModelo::correspondencia_table."tblproexpediente_fases SET
+         $sql="UPDATE ".clConstantesModelo::correspondencia_table.self::TABLA." SET
          bolborrado=1
-         WHERE id_proexpediente_fase=".$id_proexpediente;
+         WHERE id_proactuacion_fase=".$id_proexpediente;
          $conn->sql=$sql;
          $data = $conn->ejecutarSentencia();
          return $data;
@@ -222,12 +226,12 @@ public function llenar($request)
          $conn= new Conexion();
          $conn->abrirConexion();
          $sql="SELECT 
-         id_proexpediente_fase, id_tipo_fase, id_fase, strobservacion, 
-         id_proexpediente,
+         id_proactuacion_fase, id_tipo_fase, id_fase, strobservacion,
+         id_proactuacion,
          to_char(fecfase,'DD/MM/YYYY') as fecfase
-         FROM ".clConstantesModelo::correspondencia_table."tblproexpediente_fases WHERE id_proexpediente=".$id_expediente ." AND bolborrado=0";
+         FROM ".clConstantesModelo::correspondencia_table.self::TABLA." WHERE id_proactuacion=".$id_expediente ." AND bolborrado=0";
          if($id_expediente_fase !=""){
-             $sql .=" AND id_proexpediente_fase=".$id_expediente_fase;
+             $sql .=" AND id_proactuacion_fase=".$id_expediente_fase;
          }
 //        exit($sql);
          $conn->sql=$sql;
