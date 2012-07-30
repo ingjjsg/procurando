@@ -90,7 +90,7 @@
             <form name="frmexpedientes" id="frmexpedientes" method="post">
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
-                    <td width="65%" class="menu_izq_titulo">Expedientes</td>
+                    <td width="65%" class="menu_izq_titulo">Actuaciones</td>
                     <td width="10%" align="center" class="menu_izq_titulo">
                         <?php 
                         if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario('expedientes'),'nuevo', clConstantesModelo::acciones_expedientes())) {?>
