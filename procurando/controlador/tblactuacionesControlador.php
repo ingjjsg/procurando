@@ -133,24 +133,24 @@
                 if ($color=='R')
                 {
                     $html.="<a>
-                                    <img src='../comunes/images/rojo.gif' height='17px' onmouseover=\"Tip('Agenda Pendiente Vencidas')\" onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblexpediente.php?id=".$data[$i]['id_proexpediente']."'\">
+                                    <img src='../comunes/images/rojo.gif' height='17px' onmouseover=\"Tip('Agenda Pendiente Vencidas')\" onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblactuaciones.php?id=".$data[$i]['id_proexpediente']."'\">
                                 </a>";
                 }
                 elseif ($color=='A')
                 {        
                     $html.="<a>
-                                    <img src='../comunes/images/amarillo.gif' height='17px'  onmouseover=\"Tip('Agenda Pendiente por Vencer')\" onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblexpediente.php?id=".$data[$i]['id_proexpediente']."'\">
+                                    <img src='../comunes/images/amarillo.gif' height='17px'  onmouseover=\"Tip('Agenda Pendiente por Vencer')\" onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblactuaciones.php?id=".$data[$i]['id_proexpediente']."'\">
                                 </a>";                
                 }
                 elseif ($color=='V')
                 {
                     $html.="<a>
-                                    <img src='../comunes/images/verde.gif' height='17px'  onmouseover=\"Tip('Agenda Pendiente')\" onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblexpediente.php?id=".$data[$i]['id_proexpediente']."'\">
+                                    <img src='../comunes/images/verde.gif' height='17px'  onmouseover=\"Tip('Agenda Pendiente')\" onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblactuaciones.php?id=".$data[$i]['id_proexpediente']."'\">
                                 </a>";                   
                 }
                 
                 $html.="        <a>
-                                    <img src='../comunes/images/Open.png' onmouseover='Tip(\"Editar\")' onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblexpediente.php?id=".$data[$i]['id_proexpediente']."'\">
+                                    <img src='../comunes/images/Open.png' onmouseover='Tip(\"Editar\")' onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblactuaciones.php?id=".$data[$i]['id_proexpediente']."'\">
                                 </a>";
                                 if ($data[$i][feccierre]!='')
                                    $html.= "
@@ -238,12 +238,12 @@
                                 if ($data[$i][id_estado_minuta]>0)
                                 {
                                     if ($color=='R')
-                                        $html.="<a><img src='../comunes/images/rojo.gif' height='17px' onmouseover=\"Tip('Agenda Pendiente Vencidas')\" onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblexpediente.php?id=".$data[$i]['id_proexpediente']."'\"></a>";
+                                        $html.="<a><img src='../comunes/images/rojo.gif' height='17px' onmouseover=\"Tip('Agenda Pendiente Vencidas')\" onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblactuaciones.php?id=".$data[$i]['id_proexpediente']."'\"></a>";
                                     elseif ($color=='A')
 
-                                        $html.="<a><img src='../comunes/images/amarillo.gif' height='17px'  onmouseover=\"Tip('Agenda Pendiente por Vencer')\" onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblexpediente.php?id=".$data[$i]['id_proexpediente']."'\"></a>";                
+                                        $html.="<a><img src='../comunes/images/amarillo.gif' height='17px'  onmouseover=\"Tip('Agenda Pendiente por Vencer')\" onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblactuaciones.php?id=".$data[$i]['id_proexpediente']."'\"></a>";                
                                     elseif ($color=='V')
-                                        $html.="<a><img src='../comunes/images/verde.gif' height='17px'  onmouseover=\"Tip('Agenda Pendiente')\" onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblexpediente.php?id=".$data[$i]['id_proexpediente']."'\"></a>";                   
+                                        $html.="<a><img src='../comunes/images/verde.gif' height='17px'  onmouseover=\"Tip('Agenda Pendiente')\" onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblactuaciones.php?id=".$data[$i]['id_proexpediente']."'\"></a>";                   
                                 }
                                 $html.="
                                 </td>
@@ -1302,7 +1302,7 @@ function selectAllActuaciones($id_expediente){
                                 </a>";
                                 if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario('expedientes'),'editar', clConstantesModelo::acciones_expedientes())){
                                 $html.="<a>
-                                    <img src='../comunes/images/Open.png' onmouseover='Tip(\"Editar\")' onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblexpediente_1.php?id=".$data[$i]['id_proactuacion']."'\">
+                                    <img src='../comunes/images/Open.png' onmouseover='Tip(\"Editar\")' onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblactuaciones.php?id=".$data[$i]['id_proactuacion']."'\">
                                 </a>";
                                 }
                                 if ($data[$i][feccierre]!='')
@@ -1397,7 +1397,7 @@ function selectAllActuaciones($id_expediente){
                                 </a>";
                                 if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario('expedientes'),'editar', clConstantesModelo::acciones_expedientes())){
                                 $html.="<a>
-                                    <img src='../comunes/images/Open.png' onmouseover='Tip(\"Editar\")' onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblexpediente.php?id=".$data[$i]['id_proexpediente']."'\">
+                                    <img src='../comunes/images/Open.png' onmouseover='Tip(\"Editar\")' onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblactuaciones.php?id=".$data[$i]['id_proexpediente']."'\">
                                 </a>";
                                 }
                                 if ($data[$i][feccierre]!='')
@@ -1985,12 +1985,12 @@ function editar_expediente($request){
                                 if ($data[$i][id_estado_minuta]>0)
                                 {
                                     if ($color=='R')
-                                        $html.="<a><img src='../comunes/images/rojo.gif' height='17px' onmouseover=\"Tip('Agenda Pendiente Vencidas')\" onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblexpediente.php?id=".$data[$i]['id_proactuacion']."'\"></a>";
+                                        $html.="<a><img src='../comunes/images/rojo.gif' height='17px' onmouseover=\"Tip('Agenda Pendiente Vencidas')\" onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblactuaciones.php?id=".$data[$i]['id_proactuacion']."'\"></a>";
                                     elseif ($color=='A')
 
-                                        $html.="<a><img src='../comunes/images/amarillo.gif' height='17px'  onmouseover=\"Tip('Agenda Pendiente por Vencer')\" onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblexpediente.php?id=".$data[$i]['id_proactuacion']."'\"></a>";
+                                        $html.="<a><img src='../comunes/images/amarillo.gif' height='17px'  onmouseover=\"Tip('Agenda Pendiente por Vencer')\" onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblactuaciones.php?id=".$data[$i]['id_proactuacion']."'\"></a>";
                                     elseif ($color=='V')
-                                        $html.="<a><img src='../comunes/images/verde.gif' height='17px'  onmouseover=\"Tip('Agenda Pendiente')\" onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblexpediente.php?id=".$data[$i]['id_proactuacion']."'\"></a>";
+                                        $html.="<a><img src='../comunes/images/verde.gif' height='17px'  onmouseover=\"Tip('Agenda Pendiente')\" onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblactuaciones.php?id=".$data[$i]['id_proactuacion']."'\"></a>";
                                     if ($fecie=='')
                                         $html.="
                                         <a><img src='../comunes/images/table_edit.png' onmouseover='Tip(\"Editar\")' onmouseout='UnTip()' onclick=\"xajax_selectSituacion('".$data[$i]['id_proactuacion']."','".$data[$i]['id_proactuacion_situacion']."')\"></a>
