@@ -1003,7 +1003,7 @@ public function llenar($request)
     public static function getExpedienteClienteAgenda($id_cliente){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $sql="SELECT id_proactuacion,strnroexpediente,strdescripcion FROM ".clConstantesModelo::correspondencia_table." ".self::TABLA." WHERE id_proexpediente=".$id_cliente;        
+        $sql="SELECT id_proactuacion,strnroexpediente,strdescripcion FROM ".clConstantesModelo::correspondencia_table.self::TABLA." WHERE id_proexpediente=".$id_cliente;        
 //        exit($sql);
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
@@ -1069,7 +1069,7 @@ public function llenar($request)
          id_abogado_ejecutor, 
          id_solicitante, 
          id_contrarios
-         FROM public.".self::TABLA." WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
+         FROM ".clConstantesModelo::correspondencia_table.self::TABLA." WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
          
          if($str_expediente !=""){
              $sql .=" AND upper(strnroexpediente) like '%".strtoupper($str_expediente)."%'";
@@ -1140,12 +1140,12 @@ public function llenar($request)
          id_abogado_ejecutor, 
          id_solicitante, 
          id_contrarios
-         FROM public.".self::TABLA." WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
+         FROM ".clConstantesModelo::correspondencia_table.self::TABLA." WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
          
          if($id_expediente !=""){
-             $sql .=" AND id_proexpediente=".$id_expediente;
+             $sql .=" AND id_proactuacion=".$id_expediente;
          }
-         $sql.=" order by id_proexpediente asc";
+         $sql.=" order by id_proactuacion asc";
          $conn->sql=$sql;
          $data = $conn->ejecutarSentencia(2);
          return $data;
@@ -1156,11 +1156,12 @@ public function llenar($request)
          $expediente='OAS-' . date('dmY') . '-'.$nexval;
          $conn= new Conexion();
          $conn->abrirConexion();
-         $sql="Insert into public.tblproexpediente (
+         $sql="Insert into ".clConstantesModelo::correspondencia_table.self::TABLA."(
          strnroexpediente,
          strtitulo,
-         strdescripcion,
-         id_refer,
+         strdescripcion,";/*
+         id_refer,*/
+         $sql.="
          fecapertura,
          cedula_abogado_responsable,
          cedula_abogado_ejecutor,
@@ -1179,12 +1180,12 @@ public function llenar($request)
          strdireccion_asistido,
          strobservacion_cerrar,
          strdireccion_conyugue,
-         strdireccion_ultimo_domicilio,
-         fecseparacion,
-         intmonto_manutencion,
-         id_regimen,
-         id_citacion,
-         strdias,
+         strdireccion_ultimo_domicilio,";
+         /*fecseparacion,*/
+         $sql.="intmonto_manutencion,";
+         /*id_regimen,
+         id_citacion,*/
+         $sql.="strdias,
          strhoras,
          intcuotames1,
          intcuotames2,
@@ -1194,15 +1195,16 @@ public function llenar($request)
          cedula_conyugue,
          id_abogado_resp, 
          id_abogado_ejecutor, 
-         id_solicitante, 
-         id_contrarios         
+         id_solicitante";/*,
+         id_contrarios*/
+         $sql.="
          ) VALUES (
          '";
 //         exit($sql);
          $sql.=$expediente."','"
          .$this->get_strtitulo()."','"
          .$this->get_strdescripcion()."',"
-         .$this->get_id_refer().",TO_DATE('"
+         ./*$this->get_id_refer().",*/"TO_DATE('"
          .$this->get_fecapertura()."', 'DD/MM/YYYY'),"
          .$this->get_cedula_abogado_responsable().","
          .$this->get_cedula_abogado_ejecutor().","
@@ -1221,11 +1223,11 @@ public function llenar($request)
          .$this->get_strdireccion_asistido()."','"
          .$this->get_strobservacion_cerrar()."','"                 
          .$this->get_strdireccion_conyugue()."','"
-         .$this->get_strdireccion_ultimo_domicilio()."',TO_DATE('"
-         .$this->get_fecseparacion()."', 'DD/MM/YYYY'),"
-         .$this->get_intmonto_manutencion().","
-         .$this->get_id_regimen().","
-         .$this->get_id_citacion().",'"                 
+         .$this->get_strdireccion_ultimo_domicilio()."',"/*TO_DATE('"
+         .$this->get_fecseparacion()."', 'DD/MM/YYYY'),"*/
+         .$this->get_intmonto_manutencion().",'"
+         /*.$this->get_id_regimen().","
+         .$this->get_id_citacion().",'"*/
          .$this->get_strdias()."','"                 
          .$this->get_strhoras()."',"             
          .$this->get_intcuotames1().","                 
@@ -1236,9 +1238,9 @@ public function llenar($request)
          .$this->get_cedula_conyugue()."',"
          .$this->getId_abogado_resp().","
          .$this->getId_abogado_ejecutor().","  
-         .$this->getId_solicitante().","
-         .$this->getId_contrarios ().")";    
-//        exit($sql);         
+         .$this->getId_solicitante()/*","
+         .$this->getId_contrarios ()*/.")";
+        //exit($sql);
          $conn->sql=$sql;
 
         if($conn->ejecutarSentencia()){
@@ -1256,7 +1258,7 @@ public function llenar($request)
      public function SelectAll($pagina){
          $conn= new Conexion();
          $conn->abrirConexion();
-         $sql="SELECT id_proexpediente,
+         $sql="SELECT id_proactuacion,
          id_proclientecasos,
          id_proabogadoscasos,
          id_documentoscasos,
@@ -1308,13 +1310,13 @@ public function llenar($request)
          id_abogado_ejecutor, 
          id_solicitante, 
          id_contrarios
-         FROM public.tblproexpediente WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
+         FROM ".clConstantesModelo::correspondencia_table.self::TABLA." WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
          
 //         if($id_expediente !=""){
 //             $sql .=" AND id_proexpediente=".$id_expediente;
 //         }
-//         exit($sql);
-         $sql.=" order by id_proexpediente asc";
+        //exit($sql);
+         $sql.=" order by id_proactuacion asc";
          $conn->sql=$sql;
          $_pagi_sql= $conn->sql;
          $_pagi_cuantos = 10;
@@ -1338,12 +1340,12 @@ public function llenar($request)
          
          $conn= new Conexion();
          $conn->abrirConexion();
-         $sql="UPDATE public.tblproexpediente SET
+         $sql="UPDATE ".clConstantesModelo::correspondencia_table.self::TABLA." SET
          strnroexpediente='".$this->get_strnroexpediente()."',
          strtitulo='".$this->get_strtitulo()."',
-         strdescripcion='".$this->get_strdescripcion()."',
-         id_refer=".$this->get_id_refer().",
-         cedula_abogado_responsable='".$this->get_cedula_abogado_responsable()."',
+         strdescripcion='".$this->get_strdescripcion()."',";
+        /* id_refer=".$this->get_id_refer().",*/
+         $sql.="cedula_abogado_responsable='".$this->get_cedula_abogado_responsable()."',
          cedula_abogado_ejecutor='".$this->get_cedula_abogado_ejecutor()."',
          cedula_cliente='".$this->get_cedula_cliente()."',
          id_actuacion=".$this->get_id_actuacion_persona().",
@@ -1357,14 +1359,14 @@ public function llenar($request)
          fecexpediente=TO_DATE('".$this->get_fecexpediente()."','DD/MM/YYYY'),
          strdireccion_asistido='".$this->get_strdireccion_asistido()."',
          strdireccion_conyugue='".$this->get_strdireccion_conyugue()."',
-         strdireccion_ultimo_domicilio='".$this->get_strdireccion_ultimo_domicilio()."',
-         fecseparacion=TO_DATE('".$this->get_fecseparacion()."','DD/MM/YYYY'),";
+         strdireccion_ultimo_domicilio='".$this->get_strdireccion_ultimo_domicilio()."',";
+         /*fecseparacion=TO_DATE('".$this->get_fecseparacion()."','DD/MM/YYYY'),";*/
          if ($this->get_feccierre()!='')
             $sql.="feccierre=TO_DATE('".$this->get_feccierre()."','DD/MM/YYYY'),";             
-         $sql.="intmonto_manutencion=".$this->get_intmonto_manutencion().",
-         id_regimen=".$this->get_id_regimen().",
-         id_citacion=".$this->get_id_citacion().",             
-         strdias='".$this->get_strdias()."',";       
+         $sql.="intmonto_manutencion=".$this->get_intmonto_manutencion().",";
+         /*id_regimen=".$this->get_id_regimen().",
+         id_citacion=".$this->get_id_citacion().",             */
+         $sql.="strdias='".$this->get_strdias()."',";
          if ($this->get_strobservacion_cerrar()!='')             
             $sql.="strobservacion_cerrar='".$this->get_strobservacion_cerrar()."',";                    
          $sql.="strhoras='".$this->get_strhoras()."',      
@@ -1372,18 +1374,18 @@ public function llenar($request)
          intcuotames2=".$this->get_intcuotames2().",    
          cedula_conyugue='".$this->get_cedula_conyugue()."',    
          strnroexpedienteauxiliar='".$this->get_strnroexpedienteauxiliar()."',
-         strrepresentante='".$this->get_strrepresentante()."', 
-         id_estado_fisico_expediente=".$this->getId_estado_fisico_expediente().",         
+         strrepresentante='".$this->get_strrepresentante()."',";
+         /*id_estado_fisico_expediente=".$this->getId_estado_fisico_expediente().",
          id_tipo_espacio=".$this->getId_tipo_espacio().",    
          id_tipo_archivador=".$this->getId_tipo_archivador().",    
          id_tipo_piso_archivador=".$this->getId_tipo_piso_archivador().",
-         id_tipo_archivador_gaveta=".$this->getId_tipo_archivador_gaveta().",  
-         id_abogado_resp=".$this->getId_abogado_resp().",    
+         id_tipo_archivador_gaveta=".$this->getId_tipo_archivador_gaveta().",  */
+         $sql.="id_abogado_resp=".$this->getId_abogado_resp().",
          id_abogado_ejecutor=".$this->getId_abogado_ejecutor().",    
-         id_solicitante=".$this->getId_solicitante().",
-         id_contrarios=".$this->getId_contrarios().",  
-         strdocumentos='".$this->get_strdocumentos()."' WHERE id_proexpediente=".$this->get_id_proexpediente();
-//         exit($sql);
+         id_solicitante=".$this->getId_solicitante().",";
+         /*id_contrarios=".$this->getId_contrarios().",  */
+         $sql.="strdocumentos='".$this->get_strdocumentos()."' WHERE id_proactuacion=".$this->get_id_proactuacion();
+       // exit($sql);
          $conn->sql=$sql;
          $data = $conn->ejecutarSentencia();
          return $data;
@@ -1392,9 +1394,9 @@ public function llenar($request)
     function Delete($id_proexpediente){
         $conn= new Conexion();
          $conn->abrirConexion();
-         $sql="UPDATE public.tblproexpediente SET
+         $sql="UPDATE ".clConstantesModelo::correspondencia_table.self::TABLA." SET
          bolborrado=1
-         WHERE id_proexpediente=".$id_proexpediente;
+         WHERE id_proactuacion=".$id_proexpediente;
          $conn->sql=$sql;
          $data = $conn->ejecutarSentencia();
          return $data;
@@ -1403,7 +1405,7 @@ public function llenar($request)
     public function nextValExpediente() {
                $conn = new Conexion ();
                $conn->abrirConexion ();
-               $sql="SELECT last_value as maximo FROM " . clConstantesModelo::correspondencia_table . "tblproexpediente_id_proexpediente_seq";
+               $sql="SELECT last_value as maximo FROM " . clConstantesModelo::correspondencia_table . "tblactuaciones_id_proactuacion_seq";
                $conn->sql = $sql;
                $data = $conn->ejecutarSentencia (2);
                if ($data)
@@ -1417,7 +1419,7 @@ public function llenar($request)
      public function selectDocumentos($expediente){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $conn->sql= "SELECT strdocumentos FROM ".clConstantesModelo::correspondencia_table."tblproexpediente WHERE id_proexpediente= ".$expediente;
+        $conn->sql= "SELECT strdocumentos FROM ".clConstantesModelo::correspondencia_table.self::TABLA." WHERE id_proactuacion= ".$expediente;
         $retorno= $conn->ejecutarSentencia(2);
         $conn->cerrarConexion();
         return $retorno;
@@ -1426,7 +1428,7 @@ public function llenar($request)
     public function SelectAllExpedientesFiltro($pagina,$cedula_cliente="",$cedula_abogado_responsable="",$cedula_abogado_ejecutor="",$strexpediente=""){
          $conn= new Conexion();
          $conn->abrirConexion();
-         $sql="SELECT id_proexpediente,
+         $sql="SELECT id_proactuacion,
          id_proclientecasos,
          id_proabogadoscasos,
          id_documentoscasos,
@@ -1476,20 +1478,20 @@ public function llenar($request)
          id_abogado_ejecutor, 
          id_solicitante, 
          id_contrarios         
-         strdocumentos FROM public.tblproexpediente WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
+         strdocumentos FROM ".clConstantesModelo::correspondencia_table.self::TABLA." WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
          if($cedula_cliente != ""){
-             $sql .= " AND tblproexpediente.cedula_cliente LIKE '%$cedula_cliente%'";
+             $sql .= " AND ".self::TABLA.".cedula_cliente LIKE '%$cedula_cliente%'";
          }
          if($cedula_abogado_responsable != ""){
-             $sql .= " AND tblproexpediente.cedula_abogado_responsable LIKE '%$cedula_abogado_responsable%'";
+             $sql .= " AND ".self::TABLA.".cedula_abogado_responsable LIKE '%$cedula_abogado_responsable%'";
          }
          if($cedula_abogado_ejecutor != ""){
-             $sql .= " AND tblproexpediente.cedula_abogado_ejecutor LIKE '%$cedula_abogado_ejecutor%'";
+             $sql .= " AND ".self::TABLA.".cedula_abogado_ejecutor LIKE '%$cedula_abogado_ejecutor%'";
          }
          if($strexpediente != ""){
-             $sql .= " AND tblproexpediente.strnroexpediente LIKE '%$strexpediente%'";
+             $sql .= " AND ".self::TABLA.".strnroexpediente LIKE '%$strexpediente%'";
          }
-         $sql.=" order by id_proexpediente asc";         
+         $sql.=" order by id_proactuacion asc";
          $conn->sql=$sql;
          $_pagi_sql= $conn->sql;
          $_pagi_cuantos = 10;
@@ -1508,9 +1510,9 @@ public function llenar($request)
     function cerrarExpediente($id_proexpediente){
         $conn= new Conexion();
          $conn->abrirConexion();
-         $sql="UPDATE public.tblproexpediente SET
+         $sql="UPDATE ".clConstantesModelo::correspondencia_table.self::TABLA." SET
          feccierre=TO_DATE('".  date('d/m/Y')."','DD/MM/YYYY')
-         WHERE id_proexpediente=".$id_proexpediente;
+         WHERE id_proactuacion=".$id_proexpediente;
          $conn->sql=$sql;
          $data = $conn->ejecutarSentencia();
          return $data;
@@ -1519,9 +1521,9 @@ public function llenar($request)
     public function selectCountExpedientesAbiertos($id){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $sql="SELECT cedula_cliente, count(id_proexpediente) AS count
-                    FROM ".clConstantesModelo::correspondencia_table."tblproexpediente
-                WHERE feccierre IS NULL and cedula_cliente='".$id."' GROUP BY tblproexpediente.cedula_cliente";        
+        $sql="SELECT cedula_cliente, count(id_proactuacion) AS count
+                    FROM ".clConstantesModelo::correspondencia_table.self::TABLA."
+                    WHERE feccierre IS NULL and cedula_cliente='".$id."' GROUP BY ".self::TABLA.".cedula_cliente";
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
         $conn->cerrarConexion();
@@ -1531,9 +1533,9 @@ public function llenar($request)
     public function selectCountExpedientesCerrados($id){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $sql="SELECT cedula_cliente, count(id_proexpediente) AS count
-                    FROM ".clConstantesModelo::correspondencia_table."tblproexpediente
-                WHERE feccierre IS NOT NULL and cedula_cliente='".$id."' GROUP BY tblproexpediente.cedula_cliente";        
+        $sql="SELECT cedula_cliente, count(id_proactuacion) AS count
+                    FROM ".clConstantesModelo::correspondencia_table.self::TABLA."
+                WHERE feccierre IS NOT NULL and cedula_cliente='".$id."' GROUP BY ".self::TABLA.".cedula_cliente";
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
         $conn->cerrarConexion();
@@ -1542,7 +1544,7 @@ public function llenar($request)
     public static function getExpedienteCliente($id_cliente){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $sql="SELECT id_proexpediente FROM ".clConstantesModelo::correspondencia_table."tblproexpediente WHERE id_cliente=".$id_cliente;        
+        $sql="SELECT id_proactuacion FROM ".clConstantesModelo::correspondencia_table.self::TABLA." WHERE id_cliente=".$id_cliente;
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
         $conn->cerrarConexion();
@@ -1552,7 +1554,7 @@ public function llenar($request)
     public static function getExpedFecie($id){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $sql="SELECT feccierre FROM ".clConstantesModelo::correspondencia_table."tblproexpediente WHERE id_proexpediente=".$id;        
+        $sql="SELECT feccierre FROM ".clConstantesModelo::correspondencia_table.self::TABLA." WHERE id_proactuacion=".$id;
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
         $conn->cerrarConexion();
@@ -1581,11 +1583,12 @@ public function llenar($request)
         $conn= new Conexion();
         $conn->abrirConexion();
         $sql= "SELECT 
-            id_proexpediente_fase,id_tipo_fase,id_fase,strobservacion,id_proexpediente,
+            id_proactuacion_fase,id_tipo_fase,id_fase,strobservacion,id_proactuacion,
             (SELECT STRITEMA FROM ".clConstantesModelo::correspondencia_table."TBLMAESTROS A WHERE A.ID_MAESTRO=id_tipo_fase LIMIT 1) AS tipo_fase,
             (SELECT STRITEMA FROM ".clConstantesModelo::correspondencia_table."TBLMAESTROS A WHERE A.ID_MAESTRO=id_fase LIMIT 1) AS fase,
             to_char(fecfase,'DD/MM/YYYY') as fecfase
-            FROM ".clConstantesModelo::correspondencia_table."tblproexpediente_fases where bolborrado=0 and id_proexpediente=".$id_expediente;
+            FROM ".clConstantesModelo::correspondencia_table."tblactuacion_fases where bolborrado=0 and id_proactuacion=".$id_expediente;
+        //exit ($sql);
         $conn->sql=$sql;
         $retorno= $conn->ejecutarSentencia(2);
         $conn->cerrarConexion();
@@ -1596,7 +1599,7 @@ public function llenar($request)
          $conn= new Conexion();
          $conn->abrirConexion();
          $sql="SELECT 
-         a.id_proexpediente,
+         a.id_proactuacion,
          a.id_proclientecasos,
          a.id_proabogadoscasos,
          a.id_documentoscasos,
@@ -1647,9 +1650,9 @@ public function llenar($request)
          b.fecminuta as fechacompara, 
          to_char(b.fecminuta,'DD/MM/YYYY') as fecminuta       
          FROM 
-         public.tblproexpediente a,
-         public.tblproexpediente_situaciones b
-         WHERE a.id_proexpediente=b.id_proexpediente and a.bolborrado=0 and b.bolborrado=0 and a.id_usuario=".$_SESSION['id_contacto'];
+         public.".self::TABLA." a,
+         public.tblproactuacion_situaciones b
+         WHERE a.id_proactuacion=b.id_proactuacion and a.bolborrado=0 and b.bolborrado=0 and a.id_usuario=".$_SESSION['id_contacto'];
          if($cedula_cliente != ""){
              $sql .= " AND a.cedula_cliente LIKE '%$cedula_cliente%'";
          }
@@ -1662,7 +1665,7 @@ public function llenar($request)
          if($strexpediente != ""){
              $sql .= " AND a.strnroexpediente LIKE '%$strexpediente%'";
          }
-         $sql.=" order by a.id_proexpediente asc";      
+         $sql.=" order by a.id_proactuacion asc";
          $conn->sql=$sql;
          $_pagi_sql= $conn->sql;
          $_pagi_cuantos = 10;
@@ -1682,7 +1685,7 @@ public function llenar($request)
      public function SelectAllAgenda($pagina){
          $conn= new Conexion();
          $conn->abrirConexion();
-         $sql="SELECT a.id_proexpediente,
+         $sql="SELECT a.id_proactuacion,
          a.id_proclientecasos,
          a.id_proabogadoscasos,
          a.id_documentoscasos,
@@ -1734,17 +1737,17 @@ public function llenar($request)
          b.id_estado_minuta,
          to_char(b.fecminuta,'DD/MM/YYYY') as fecminuta       
          FROM 
-         public.tblproexpediente a,
-         public.tblproexpediente_situaciones b
+         public.".self::TABLA." a,
+         public.tblproactuacion_situaciones b
          WHERE 
-         a.bolborrado=0 and b.bolborrado=0 and a.id_proexpediente=b.id_proexpediente and
+         a.bolborrado=0 and b.bolborrado=0 and a.id_proactuacion=b.id_proactuacion and
          a.bolborrado=0 and b.id_estado_minuta>0 and b.id_estado_minuta<>13193 and a.id_usuario=".$_SESSION['id_contacto'];
          
 //         if($id_expediente !=""){
 //             $sql .=" AND id_proexpediente=".$id_expediente;
 //         }
 //         exit($sql);
-         $sql.=" order by a.id_proexpediente asc";
+         $sql.=" order by a.id_proactuacion asc";
          $conn->sql=$sql;
          $_pagi_sql= $conn->sql;
          $_pagi_cuantos = 10;
