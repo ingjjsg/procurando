@@ -44,9 +44,10 @@ body {
 	width: 100%;
 }
 .identificacion {
+        background-image:url(../images/banner.jpg) !important;    
 	padding: 0px;
 	float: left;
-	height: 24px;
+	height: 123px;
 	width: 100%;
 	text-align: left;
 	margin: 0px;
@@ -289,10 +290,8 @@ body {
 	float: left;
 	height: 320px;
 	width: 875px;
-	margin-top: 0px;
-	margin-right: 0px;
-	margin-bottom: 0px;
-	margin-left: 0px;
+    margin: 0 8px 0 0;
+    padding: 29px 10px 13px;
 	border-right-width: 1px;
 	border-left-width: 1px;
 	border-right-style: solid;
@@ -300,10 +299,7 @@ body {
 	border-right-color: #CCCCCC;
 	border-left-color: #CCCCCC;
 	text-align: left;
-	padding-top: 5px;
-	padding-right: 10px;
-	padding-bottom: 10px;
-	padding-left: 10px;
+
 }
 .desarrollo_superior2 {
 	background-image: url(../images/desarrollo_superior.png);
@@ -312,10 +308,7 @@ body {
 	float: left;
 	height: 5px;
 	width: 900px;
-	margin-top: 0px;
-	margin-right: 0px;
-	margin-bottom: 0px;
-	margin-left: 0px;
+        margin: -1px 0 0;
 }
 .desarrollo_inferior2 {
 	background-image: url(../images/desarrollo_inferior.png);

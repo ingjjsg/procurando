@@ -471,7 +471,7 @@
             if($formulario['strpassword'] == "0000"){
                 $_SESSION['passwd']= 1;
             }
-            $respuesta->script("location.href='correspondencia.php'");
+            $respuesta->script("location.href='agenda.php'");
         }else{
             $respuesta->script("$('noLog').show(); setTimeout(\"$('noLog').hide();\",5000);");
             $respuesta->script("$('noLog').setStyle({color:'#ffffff',background:'#c17878',border:'#c17878 4px solid'})");
