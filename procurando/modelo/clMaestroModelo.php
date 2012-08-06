@@ -164,7 +164,7 @@ class clMaestroModelo {
         $sql= "INSERT INTO ".clConstantesModelo::correspondencia_table."tblmaestros (id_origen, stritema, stritemb, stritemc, lngnumero, sngcant) VALUES ";
         $sql.= "(".$this->getId_origen().", '".$this->getStritema()."', '".$this->getStritemb()."', '".$this->getStritemc()."', ".$this->getLngnumero().", ";
         $sql.= $this->getSngcant().")";
-        exit($sql);        
+//        exit($sql);        
         $conn->sql=$sql;
         $retorno= $conn->ejecutarSentencia();
         $conn->cerrarConexion();
