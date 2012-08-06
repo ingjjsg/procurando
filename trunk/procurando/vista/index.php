@@ -1,24 +1,13 @@
 <?php
     session_start();
-    if (($_SESSION['login']!='') and ($_SESSION['password']!=''))
-    {
-        $body='<body bgcolor="#ffffff" onload="verificar_usuario_intranet(\''.$_SESSION['login'].'\',\''.$_SESSION['password'].'\')" >';
-        $espere='<img src="imagenes/nada_webco.gif" border="0"/>';
-
-    }
-    else
-    {
-        $body='<body bgcolor="#ffffff"';
-        $espere="";
-    }
+    session_destroy();
     require_once "../controlador/contactoControlador.php";
     require_once ('../comunes/xajax/xajax_core/xajax.inc.php');
 
     $xajax= new xajax();
     $xajax->registerFunction('verificarIngreso');
-    $xajax->registerFunction('verificarIngresoIntranet');
 	$xajax->processRequest();
-
+    
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -26,21 +15,22 @@
         <?php
             $xajax->printJavascript('../comunes/xajax/');
         ?>
-        <title>PROCURADURÍA | PROCURANDO</title>
+        <title>INDER | PROCURANDO</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" >
+        <link rel="shortcut icon" href="../comunes/images/favicon.ico" type="image/x-icon" >
+        <script src="../comunes/js/run2.js" type="text/javascript"></script>
+        <link href="../comunes/css/general.css" rel="stylesheet" type="text/css" />
         <script src="../comunes/js/prototype.js" type="text/javascript"></script>
-        <script src="../comunes/js/index.js" type="text/javascript"></script>
         <style type="text/css">
-            td img {
-                display: block;
-            }
+            <!--
             .Estilo1 {
                 font-size: 21px;
                 font-weight: bold;
                 letter-spacing: -1px;
             }
             .Estilo2 {
-                color: #000;
+                color: #CC0000;
                 font-weight: bold;
             }
             .input {
@@ -64,101 +54,109 @@
                 margin-left: 0px;
                 border: 1px dashed #999999;
             }
+            -->
         </style>
-        <link href="../comunes/css/general.css" rel="stylesheet" type="text/css" />
     </head>
-<?php  echo $body ?>
+    <body>
         <center>
-          <?php if ($espere!='')  echo $espere;
-          else
-          { ?>
-            <table border="0" cellpadding="0" cellspacing="0" width="899">
+            <table width="700" border="0">
                 <tr>
                     <td>
-                        <img src="images/spacer.gif" width="627" height="1" border="0" alt="" />
-                    </td>
-                    <td>
-                        <img src="images/spacer.gif" width="272" height="1" border="0" alt="" />
-                    </td>
-                    <td>
-                        <img src="images/spacer.gif" width="1" height="1" border="0" alt="" />
-                    </td>
-                </tr>
-                <!--<tr>
-                    <td colspan="2">
-                        <img name="img1" src="../comunes/images/cintillo_gobierno.png" width="899" height="63" border="0" id="img1" alt="" />
-                    </td>
-                    <td>
-                        <img src="images/spacer.gif" width="1" height="63" border="0" alt="" />
-                    </td>
-                </tr>
-                -->
-                <tr>
-                    <td colspan="2">
-                        <img name="img2" src="../comunes/images/img2.gif" width="899" height="109" border="0" id="img2" alt="" />
-                    </td>
-                    <td>
-                        <img src="images/spacer.gif" width="1" height="109" border="0" alt="" />
+                        <div class="contenedor_general">
+                            <?php
+//                                include('./cabecero.php');
+                                include('../comunes/php/utilidades.php');
+                            ?>
+                            <div class="identificacion">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="5">
+                                    <tr>
+                                        <td align="right" width="100%">
+<!--                                            <strong>Bienvenido</strong>
+                                            <strong>Venezuela,</strong>
+                                            <?php
+//                                                echo fechaActualCompleta();
+                                            ?>
+                                            <a href="#" target="contenido">Ayuda</a>-->
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                        <img name="img3" src="../comunes/images/img3.gif" width="627" height="357" border="0" id="img3" alt="" />
-                    </td>
-                    <td style="background-image:url(../comunes/images/img4-1.gif)">
-                        <form name="form1" id="form1" method="post" onsubmit="xajax_verificarIngreso(xajax.getFormValues('form1'));return false;">
-                            <table width="100%" align="center">
-                                <tr>
-                                    <?php if (isset($_REQUEST["key"])) $display = 'block'; else $display = 'none'; ?>
-                                    <td align="center" colspan="2">
-                                        <div id="noLog" align="center" style=" display:<?php echo $display;?>;-moz-border-radius:4px 4px 4px 4px; border:4px solid #c17878;width:75%; background:#c17878;color:#FFFFFF">
-                                            <b>&iexcl;Debe hacer Login!</b>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td align="right" style="padding-bottom:5px">
-                                        <span class="Estilo2">Usuario</span>
-                                    </td>
-                                    <td align="left" style="padding-bottom:10px">
-                                        <input type="text" name="strlogin" id="strlogin" style="font-size:10px;height:15px;margin:0px;padding:0px;width:112px;border:1px solid #BBBBBB;"/>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td align="right" class="Estilo2" style="padding-bottom:5px">
-                                         <span class="Estilo2">Contrase&ntilde;a</span>
-                                     </td>
-                                    <td align="left" style="padding-bottom:10px">
-                                        <input type="password" name="strpassword" id="strpassword" style="font-size:10px;height:15px;margin:0px;padding:0px;width:112px;border:1px solid #BBBBBB;" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td align="center" style="padding-bottom:15px" colspan="2">
-                                        <input type="submit" name="boton" id="boton" value="Login" onclick="xajax_verificarIngreso(xajax.getFormValues('form1'));" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td align="center" colspan="2">
-                                        <a href="#">&iquest;Olvido su contrase&ntilde;a?</a>
-                                    </td>
-                                </tr>
-                            </table>
-                        </form>
-                    </td>
-                    <td>
-                        <img src="images/spacer.gif" width="1" height="357" border="0" alt="" />
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <img name="img5" src="../comunes/images/img5-modificado.gif" width="899" height="65" border="0" id="img5" alt="" />
-                    </td>
-                    <td>
-                        <img src="images/spacer.gif" width="1" height="65" border="0" alt="" />
+                    <td width="50%" align="center">
+                        <div class="desarrollo_superior2">&nbsp;</div>
+                            <div class="desarrollo_contenedor2">
+                                <table border="0" width="850" align="center">
+                                    
+                                    <tr>
+                                        <td valign="middle">
+                                            <img src="../comunes/images/inicio_blanco.gif" width="100%" height="100%" align="middle"/>
+                                            <br><br>
+                                                <img src="../comunes/images/Untitled.jpg" width="20" height="20">&nbsp;&nbsp;&nbsp;
+                                                <b>La sesi&oacute;n expirar&aacute; si se encuentra inactiva por un per&iacute;odo de 5 minutos</b>
+                                            <br><br>
+                                        </td>
+                                        <td>
+                                            <div class="formulario_inicio">
+                                                <form name="form1" id="form1" method="post" onsubmit="xajax_verificarIngreso(xajax.getFormValues('form1'));return false;">
+                                                    <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                                        <tr>
+                                                            <td align="center" style="padding-top:25px">
+                                                                <span class="Estilo1">Ingresar</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <?php if (isset($_REQUEST["key"])) $display = 'block'; else $display = 'none'; ?>
+                                                            <td align="center">
+                                                                <div id="noLog" align="center" style=" display:<?php echo $display;?>;-moz-border-radius:4px 4px 4px 4px; border:4px solid #c17878;width:75%; background:#c17878;color:#FFFFFF">
+                                                                    <b>&iexcl;Debe hacer Login!</b>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align="center" style="padding-bottom:5px">
+                                                                <span class="Estilo2">Usuario</span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align="center" style="padding-bottom:10px">
+                                                                <input type="text" name="strlogin" id="strlogin" style="font-size:10px;height:15px;margin:0px;padding:0px;width:112px;border:1px solid #BBBBBB;"/>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align="center" class="Estilo2" style="padding-bottom:5px">
+                                                                 <span class="Estilo2">Contrase&ntilde;a</span>
+                                                             </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align="center" style="padding-bottom:10px">
+                                                                <input type="password" name="strpassword" id="strpassword" style="font-size:10px;height:15px;margin:0px;padding:0px;width:112px;border:1px solid #BBBBBB;" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align="center" style="padding-bottom:15px">
+                                                                <input type="submit" name="boton" id="boton" value="Login" onclick="xajax_verificarIngreso(xajax.getFormValues('form1'));" style="background-color:#B9D5E3;border:1px outset #B9D5E3;color:#004E7D;cursor:pointer;margin:1px;padding:1px; width:168px; font-size:11px;" />
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td align="center">
+                                                                <a href="#">&iquest;Olvido su contrase&ntilde;a?</a>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        <div class="desarrollo_inferior2">&nbsp;</div>
                     </td>
                 </tr>
             </table>
-            <?php } ?>
         </center>
     </body>
 </html>
+ 
