@@ -397,6 +397,21 @@ public function llenar($request)
         return $this->date=$date;
     }    
     
+    public function CountIntroNoLeidosAgenda(){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $conn->sql= "SELECT count(id_agenda) as total  FROM ".clConstantesModelo::correspondencia_table . "tblagenda where id_usuario=".$_SESSION['id_contacto']." and visto='0'";
+        $data= $conn->ejecutarSentencia(2);
+        return $data[0][total];        
+    }    
+    
+    public function CountIntroLeidosAgenda(){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $conn->sql= "SELECT count(id_agenda) as total  FROM ".clConstantesModelo::correspondencia_table . "tblagenda where id_usuario=".$_SESSION['id_contacto']." and visto='1'";
+        $data= $conn->ejecutarSentencia(2);
+        return $data[0][total];        
+    }        
     
     static public function getMaestro($id) {
         $conn= new Conexion();

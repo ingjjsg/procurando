@@ -4,6 +4,7 @@
     require_once '../modelo/clMaestroModelo.php';
     require_once '../modelo/clContactoModelo.php';    
     require_once '../modelo/ctblagendaModelo.php';
+    require_once '../modelo/ctbldocumentoModelo.php';    
     require_once '../modelo/ctblproexpedienteModelo.php';    
     require_once '../comunes/php/utilidades.php';
     require_once '../modelo/clConstantesModelo.php';
@@ -11,6 +12,17 @@
     require_once '../herramientas/herramientas.class.php';    
 
     verificarSession();
+    
+    function IntroAgenda(){
+        $respuesta=new xajaxResponse(); 
+            $agenda= new clTblagenda();            
+            $respuesta->assign("numagendanoleidos", "value", $agenda->CountIntroNoLeidosAgenda());              
+            $respuesta->assign("numagendaleidos", "value", $agenda->CountIntroLeidosAgenda());       
+            $documento= new clTblDocumento();            
+            $respuesta->assign("numdocumentosnoleidos", "value", $documento->CountIntroNoLeidosDocumentos());              
+            $respuesta->assign("numdocumentosleidos", "value", $documento->CountIntroLeidosDocumentos());               
+        return $respuesta;
+    }     
     
     function ActualizarItemAgendaAnexadas($id,$valor,$campo){
         $respuesta=new xajaxResponse(); 
@@ -49,7 +61,7 @@
                                 <th width='15%'>
                                     <a href='#' onclick=\"xajax_orden('id_tipo')\">Departamentto</a>
                                 </th>                                
-                                <th width='10%'>
+                                <th width='7%'>
                                     <a href='#' onclick=\"xajax_orden('id_tipo')\">Evento</a>
                                 </th>
                                 <th width='15%'>
@@ -74,7 +86,7 @@
                 $html.= "<td width='5%' align='center'><img src='../comunes/images/".$data[$i][origen].".png' height='20px' onmouseover=\"Tip('Prioridad Alta')\" onmouseout='UnTip()'\"></td>
                             <td width='10%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_tipo_agenda]."</td>
                             <td width='15%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".clTblagenda::getMaestro($data[$i][id_unidad])."</td>                    
-                            <td width='10%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_evento_agenda]."</td>
+                            <td width='7%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_evento_agenda]."</td>
                             <td width='15%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][strtitulo]."</td>                                
                             <td width='10%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_prioridad_agenda]."</td>
                             <td width='10%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_estado_agenda]."</td>                               
@@ -205,7 +217,7 @@
                                 <th width='15%'>
                                     <a href='#' onclick=\"xajax_orden('id_tipo')\">Departamentto</a>
                                 </th>                                
-                                <th width='10%'>
+                                <th width='7%'>
                                     <a href='#' onclick=\"xajax_orden('id_tipo')\">Evento</a>
                                 </th>
                                 <th width='15%'>
@@ -230,7 +242,7 @@
                 $html.= "<td width='5%' align='center'><img src='../comunes/images/".$data[$i][origen].".png' height='20px' onmouseover=\"Tip('Prioridad Alta')\" onmouseout='UnTip()'\"></td>
                             <td width='10%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_tipo_agenda]."</td>
                             <td width='15%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".clTblagenda::getMaestro($data[$i][id_unidad])."</td>                    
-                            <td width='10%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_evento_agenda]."</td>
+                            <td width='7%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_evento_agenda]."</td>
                             <td width='15%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][strtitulo]."</td>                                
                             <td width='10%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_prioridad_agenda]."</td>
                             <td width='10%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_estado_agenda]."</td>                               
@@ -906,7 +918,7 @@
                                 <th width='15%'>
                                     <a href='#' onclick=\"xajax_orden('id_tipo')\">Departamentto</a>
                                 </th>                                
-                                <th width='10%'>
+                                <th width='7%'>
                                     <a href='#' onclick=\"xajax_orden('id_tipo')\">Evento</a>
                                 </th>
                                 <th width='15%'>
@@ -931,7 +943,7 @@
                 $html.= "<td width='5%' align='center'><img src='../comunes/images/".$data[$i][origen].".png' height='20px' onmouseover=\"Tip('Prioridad Alta', TITLE, 'Origen')\" onmouseout='UnTip()'\"></td>
                             <td width='10%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_tipo_agenda]."</td>
                             <td width='15%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".clTblagenda::getMaestro($data[$i][id_unidad])."</td>                    
-                            <td width='10%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_evento_agenda]."</td>
+                            <td width='7%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_evento_agenda]."</td>
                             <td width='15%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][strtitulo]."</td>                                
                             <td width='10%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_prioridad_agenda]."</td>
                             <td width='10%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_estado_agenda]."</td>                               
@@ -1051,7 +1063,7 @@
                                 <th width='15%'>
                                     <a href='#' onclick=\"xajax_orden('id_tipo')\">Departamentto</a>
                                 </th>                                
-                                <th width='10%'>
+                                <th width='7%'>
                                     <a href='#' onclick=\"xajax_orden('id_tipo')\">Evento</a>
                                 </th>
                                 <th width='15%'>
@@ -1076,7 +1088,7 @@
                 $html.= "<td width='5%' align='center'><img src='../comunes/images/".$data[$i][origen].".png' height='20px' onmouseover=\"Tip('Prioridad Alta')\" onmouseout='UnTip()'\"></td>
                             <td width='10%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_tipo_agenda]."</td>
                             <td width='15%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".clTblagenda::getMaestro($data[$i][id_unidad])."</td>                    
-                            <td width='10%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_evento_agenda]."</td>
+                            <td width='7%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_evento_agenda]."</td>
                             <td width='15%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][strtitulo]."</td>                                
                             <td width='10%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_prioridad_agenda]."</td>
                             <td width='10%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_estado_agenda]."</td>                               

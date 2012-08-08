@@ -11,6 +11,7 @@
     require_once '../herramientas/herramientas.class.php';    
 
     verificarSession();
+
     
     function selectReenviarDocumento($id) {
     $respuesta = new xajaxResponse();

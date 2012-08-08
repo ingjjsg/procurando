@@ -442,6 +442,23 @@ public function llenar($request)
     }           
     
     
+    public function CountIntroNoLeidosDocumentos(){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $conn->sql= "SELECT count(id_documento) as total  FROM ".clConstantesModelo::correspondencia_table . "tbldocumento where id_usuario=".$_SESSION['id_contacto']." and visto='0'";
+        $data= $conn->ejecutarSentencia(2);
+        return $data[0][total];        
+    }    
+    
+    public function CountIntroLeidosDocumentos(){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $conn->sql= "SELECT count(id_documento) as total  FROM ".clConstantesModelo::correspondencia_table . "tbldocumento where id_usuario=".$_SESSION['id_contacto']." and visto='1'";
+        $data= $conn->ejecutarSentencia(2);
+        return $data[0][total];        
+    }       
+    
+    
     static public function getNroDocumento($numero) {
         $conn= new Conexion();
         $conn->abrirConexion();
