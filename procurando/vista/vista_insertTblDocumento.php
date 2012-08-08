@@ -377,6 +377,24 @@
                                                 </script>
                                         </td>
                                     </tr>                                    
+
+ 
+                                </table>
+                        </div>
+                    </td>
+                </tr>
+                       <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding-top:10px; padding-bottom:0px;">
+                          <tr>
+                           <td height="100%">
+                            <div align="left">
+                                <ul id="countrytabs" class="shadetabs">
+                                    <li><a id="link1" href="#" rel="country1"  class="selected">Documento</a></li> 
+                                    <li><a id="link2" href="#" rel="country2">Respuesta del Documento</a></li> 
+                                    <li><a id="link3" href="#" rel="country3">Ubicación del Documento</a></li>                                     
+                                </ul>
+                                <div style="background:#F8F8F8; border:solid 1px #cccccc; width:100%; height:340px" align="left">
+                                    <div id="country1"  class="tabcontent" style="height:100%; overflow-y:auto">
+                                        <table width="100%" border="0" class="tablaTitulo" >
                                     <tr>
                                         <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                             <div align="center" style="background-image: url('../comunes/images/barra.png')">
@@ -398,20 +416,73 @@
                                             ?>
 
                                         </td>
-                                    </tr>   
- 
-                                </table>
-                        </div>
-                    </td>
-                </tr>
-               
-              <!-- <tr>
-                    <td>
-                        <div id="contenedor" style="width:100%;" align="left">
-                            <div align="center"><img src="../comunes/images/ajax-loader.gif"></div>
-                        </div>
-                    </td>
-                </tr>-->
+                                    </tr>                                             
+                                           
+                                        </table>
+                                    </div>                        
+                                    <div id="country2"  class="tabcontent" style="height:100%; overflow-y:auto">
+                                            <table width="100%" border="0" class="tablaTitulo" >
+                                                <tr>
+                                                    <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                                        <div align="center" style="background-image: url('../comunes/images/barra.png')">
+                                                            <strong>Descripción de la Respuesta del Documento</strong>
+                                                        </div>
+                                                    </td>
+                                                </tr>                                                
+                                    <tr>
+                                        <input type="hidden" name="strdescripcionrespuesta" id="strdescripcionrespuesta" value="">
+                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                            <?php
+                                                $oFCKeditor = new FCKeditor('descripcionrespuesta') ;
+                                                $oFCKeditor->BasePath = '../comunes/fckeditor/' ;
+                                                $oFCKeditor->Height = '300' ;
+                                                $oFCKeditor->Width= '680';
+                                                $oFCKeditor->ToolbarSet = 'firma';
+                                                // $oFCKeditor->Value = stripslashes($_REQUEST['firmaCorreo']);
+                                                $oFCKeditor->Create();
+                                            ?>
+
+                                        </td>
+                                    </tr>                                                
+                                           </table>
+                                    </div>  
+                                    <div id="country3"  class="tabcontent" style="height:100%; overflow-y:auto">
+                                            <table width="100%" border="0" class="tablaTitulo" >
+                                                <tr>
+                                                    <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                                        <div align="center" style="background-image: url('../comunes/images/barra.png')">
+                                                            <strong>Ubicación del Documento</strong>
+                                                        </div>
+                                                    </td>
+                                                </tr>                                                
+                                    <tr>
+                                        <input type="hidden" name="descripcionubicacion" id="descripcionubicacion" value="">
+                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                            <?php
+                                                $oFCKeditor = new FCKeditor('descripcionubicacion') ;
+                                                $oFCKeditor->BasePath = '../comunes/fckeditor/' ;
+                                                $oFCKeditor->Height = '300' ;
+                                                $oFCKeditor->Width= '680';
+                                                $oFCKeditor->ToolbarSet = 'firma';
+                                                // $oFCKeditor->Value = stripslashes($_REQUEST['firmaCorreo']);
+                                                $oFCKeditor->Create();
+                                            ?>
+
+                                        </td>
+                                    </tr>                                             
+                                           </table>
+                                    </div>                                      
+                                </div>
+                          </div>
+                      </td>
+                          </tr>
+                           </table>
+        <script type="text/javascript">
+            var countries=new ddtabcontent("countrytabs");
+            countries.setpersist(false);
+            countries.setselectedClassTarget("link");
+            countries.init();
+        </script>                    
             </table>
             </form>
           </fieldset>            
