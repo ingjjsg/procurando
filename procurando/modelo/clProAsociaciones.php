@@ -236,6 +236,17 @@ public function llenar($request)
         return $this->id_cliente=$id_cliente;
     }    
 
+    public static function getrifAsociasion($rif){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $sql="SELECT strrif FROM ".clConstantesModelo::correspondencia_table."tblasociaciones WHERE strrif='".$rif."'";        
+        //exit($sql);
+        $conn->sql= $sql;
+        $data= $conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();
+        return $data[0][strrif];
+    }     
+
 	static public function getNombreAsociacion_vista_cliente($id_cliente) {
         $conn= new Conexion();
         $conn->abrirConexion();
@@ -376,6 +387,35 @@ public function llenar($request)
                $conn->cerrarConexion ();
                return $data;
      }
+     
+
+     public function selectDetalleAsociacionReporte($lngcodigo_asociacion) {
+               $conn = new Conexion ();
+               $conn->abrirConexion ();
+               $sql = "";
+               $sql="SELECT 
+                   b.lngcodigo_asociacion, 
+                   b.strnombre_asociacion, 
+                   b.strweb, 
+                   to_char(b.dtmfechafun,'DD/MM/YYYY') as dtmfechafun, 
+                   b.strtelefono_asociacion, 
+                   b.strdireccion_asociacion, 
+                   b.strrif, 
+                   b.id_municipio_asociacion, 
+                   b.id_parroquia_asociacion, 
+                   b.id_ramo, 
+                   b.id_cliente, 
+                   (SELECT a2.strcedula||'  '||a2.strapellido||', '||a2.strnombre FROM " . clConstantesModelo::scsd_table . "tbl_clientes a2 WHERE a2.id_cliente=b.id_cliente) AS cliente, 
+                   (SELECT stritema FROM " . clConstantesModelo::scsd_table . "tblmaestros a1 WHERE a1.id_maestro=b.id_municipio_asociacion) AS id_municipio_asociacion_text, 
+                   (SELECT stritema FROM " . clConstantesModelo::scsd_table . "tblmaestros a1 WHERE a1.id_maestro=b.id_parroquia_asociacion) AS id_parroquia_asociacion_text, 
+                   (SELECT stritema FROM " . clConstantesModelo::scsd_table . "tblmaestros a1 WHERE a1.id_maestro=b.id_ramo) AS id_ramo_text 
+                   from 
+                   " . clConstantesModelo::scsd_table . "tblasociaciones b where lngcodigo_asociacion=".$lngcodigo_asociacion;
+               $conn->sql = $sql;
+               $data = $conn->ejecutarSentencia (2);
+               $conn->cerrarConexion ();
+               return $data;
+     }     
 
      public function selectAllAsociacion() {
          $conn= new Conexion();

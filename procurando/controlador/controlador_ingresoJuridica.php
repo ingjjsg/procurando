@@ -9,6 +9,17 @@ require_once '../modelo/clPermisoModelo.php';
 
 verificarSession();
 
+    function buscar_rif($rif,$id)
+    {
+	if ($id=='')
+	{
+		$respuesta= new xajaxResponse();
+		$data= clTblasociaciones::getrifAsociasion($rif);
+		if($data) $respuesta->alert("RIF ya Existe");
+		return $respuesta;
+	}
+    }
+
     function validar($request){
         $respuesta = new xajaxResponse();
         if($request['strnombre_asociacion'] == ""){
@@ -82,7 +93,7 @@ verificarSession();
         $data= "";
         $html= "";
         $estados= clConstantesModelo::combos();
-        $data= $maestro->selectAllMaestroHijos($estados['honorarios'], 'stritema'); 
+        $data= $maestro->selectAllMaestroHijos($estados['ramo_asociaciones'], 'stritema'); 
         $html= "<select id='id_ramo' name='id_ramo' style='width:".$ancho."'>";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
@@ -224,7 +235,7 @@ function llenarId_ramo($select= "")
         $data= "";
         $html= "";
         $estados= clConstantesModelo::combos();
-        $data= $maestro->selectAllMaestroHijos($estados['municipio'], 'stritema');
+        $data= $maestro->selectAllMaestroHijos($estados['municipio'], 'stritema', 2);
         $html= "<select id='id_municipio_asociacion' name='id_municipio_asociacion' style='width:".$ancho."' onchange=\"xajax_llenarSelectParroquiaAsociacion(document.frmaAsociacion.id_municipio_asociacion.value)\">";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
@@ -246,7 +257,8 @@ function llenarId_ramo($select= "")
         $maestro= new clMaestroModelo();
         $data= "";
         $html= "";;
-        $data= $maestro->selectAllMaestroHijos($valor, 'stritema');
+        $data= $maestro->selectAllMaestroHijosCombo($valor, 'stritema', 2);
+//exit(print_r($data));
         $html= "<select id='id_parroquia_asociacion' name='id_parroquia_asociacion' style='width:".$ancho."' >";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
@@ -265,7 +277,7 @@ function llenarId_ramo($select= "")
 
 
 
-function selectAllJuridicas(){
+function selectAllJuridicas($id_municipio_asociacion=0, $id_parroquia_asociacion=0, $id_ramo=0, $strrif=''){
     $respuesta= new xajaxResponse();
     $asociacion= new clTblasociaciones();
     $data= "";
@@ -273,7 +285,7 @@ function selectAllJuridicas(){
     $formulario_accion=  clConstantesModelo::getFormulario_accion('asociaciones','asociaciones_litigio');
     //echo(print_r($formulario_accion));
     //exit($formulario_accion['accion']);
-    $datos= $asociacion->selectAllAsociacion();
+    $datos= $asociacion->selectAllAsociacion($id_municipio_asociacion, $id_parroquia_asociacion, $id_ramo, $strrif);
     if($datos){
     $html.= "<div style='border:solid 1px #CCCCCC;background:#f8f8f8'>
                         <table border='0' class='tablaTitulo' width='100%'>
@@ -301,7 +313,7 @@ function selectAllJuridicas(){
                                     <td align='center' >".$datos[$i][strtelefono_asociacion]."</td>
                                     <td align='center'>
                                         <a>
-                                            <img src='../comunes/images/ver.gif' onmouseover=\"Tip('Ver Ayudas de la Asociación')\" onmouseout='UnTip()' onclick=\"location.href='./reporteAsociacionVista.php?id=".$datos[$i][lngcodigo_asociacion]."'\">
+                                            <img src='../comunes/images/ver.gif' onmouseover=\"Tip('Ver Ayudas de la Asociación')\" onmouseout='UnTip()' onclick=\"location.href='../reportes/reporte_asociasion_individual.php?id=".$datos[$i][lngcodigo_asociacion]."'\">
                                         </a>";
                             if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario($formulario_accion['formulario']),'editar', $formulario_accion['accion'])){
                                 $html.="<a>

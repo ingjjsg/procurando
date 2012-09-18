@@ -1,4 +1,5 @@
 <?php
+echo $_GET['id'];
     session_start();
     include("../comunes/fckeditor/fckeditor.php") ;        
     require_once "../controlador/tblagendaControlador.php";
@@ -13,10 +14,16 @@
     if($_GET['clon']!=''){
         $clon=$_GET['clon'];
     }
+    
+    if($_GET['id_expediente']!=''){
+        $id_expediente=$_GET['id_expediente'];
+    }    
         
     
     $xajax= new xajax();
-    $xajax->registerFunction('verExpediente');
+    $xajax->registerFunction('validar_Agenda_Expediente');
+    $xajax->registerFunction('guardarAgendaExpediente');    
+    $xajax->registerFunction('verExpediente');    
     $xajax->registerFunction('buscarPersona');    
     $xajax->registerFunction('buscarPersonaPopup');    
     $xajax->registerFunction('verPersona');    
@@ -82,12 +89,26 @@
                 $("#datefecnac").mask("99/99/9999",{placeholder:" "});
             });
             
-            function cargar(id_agenda,clon){
+            function cargar(id_agenda,clon,id_expediente){
                 if((id_agenda!= "") && (clon=="")) {
                     xajax_selectAgenda(id_agenda);
                 }
                 else if((id_agenda!= "") && (clon!="")) {
                     xajax_selectClonarAgenda(id_agenda);                    
+                }
+                else if (id_expediente!='')
+                {
+                    xajax_buscarExpediente(id_expediente);
+                    $('CapaExpediente').show();
+                    xajax_llenarSelectTipoAgenda();
+                    xajax_llenarSelectTipoEvento();
+                    xajax_llenarSelectTipoEstadoAgenda();
+                    xajax_llenarSelectTipoPrioridad();
+                    xajax_llenarSelectTipoRecordatorio();
+                    xajax_selectRefiereAgenda();                    
+                    xajax_selectAllDpto();
+//                    xajax_llenarSelectOrganismo();
+                    xajax_llenarSelectTipoOrganismo();                      
                 }
                 else{
                     xajax_llenarSelectTipoAgenda();
@@ -104,7 +125,7 @@
             function validar()
             {
                document.frmAgenda.strdescripcion.value= FCKeditorAPI.__Instances['descripcion'].GetHTML();
-               xajax_validar_Agenda(xajax.getFormValues('frmAgenda'));
+               xajax_validar_Agenda_Expediente(xajax.getFormValues('frmAgenda'));
             }            
             
             function verForm(id){
@@ -142,18 +163,18 @@
             }
         </script>
     </head>
-    <body onload="cargar('<?php echo $id_agenda ?>','<?php echo $clon ?>')" >
+    <body onload="cargar('<?php echo $id_agenda ?>','<?php echo $clon ?>','<?php echo $id_expediente ?>')" >
         <script src="../comunes/js/wz_tooltip/wz_tooltip.js" type="text/javascript"></script>
         <center>
             <form name="frmAgenda" id="frmAgenda" method="post">
-            <fieldset style="border:#339933 2px solid">                
+            <fieldset>                
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                     <td width="65%" class="menu_izq_titulo"><?php echo $titulo_formulario ?></td>
                     <td width="10%" align="center" class="menu_izq_titulo">
                         <img src="../comunes/images/16_save.png" onmouseover="Tip('Guardar')" onmouseout="UnTip()" border="0" onclick="validar();"/>
-                        &nbsp;&nbsp;&nbsp;
-                        <img src="../comunes/images/arrow_undo.png" onmouseover="Tip('Volver')" onmouseout="UnTip()" border="0" onclick="javascript: history.go(-1)"/>
+                        <img src="../comunes/images/arrow_undo.png" onmouseover="Tip('Volver')" onmouseout="UnTip()" border="0" onclick="history.go(-1);"/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </td>
                 </tr>
             </table>
@@ -162,6 +183,8 @@
                     <td>
                         <div id="formulario" style=" width:100%;" align="left">
                                 <input type="hidden" class='inputbox82' id="id_agenda" name="id_agenda" size="30" />
+                                <input type="hidden" class='inputbox82' id="id_agenda_expediente" name="id_agenda_expediente" size="30" value="<?php echo $_GET['id_expediente']; ?>" />
+                                
                                 <table width="100%" border="0" class="tablaVer" >
                                     <tr>
                                         <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >

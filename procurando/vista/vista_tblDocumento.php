@@ -86,7 +86,7 @@
                         <img src="../comunes/images/verde.gif" height='17px' onmouseover="Tip('Faltan Más de 2 Días')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_insertTblDocumento.php'"/>                        
                         <img src="../comunes/images/amarillo.gif" height='17px' onmouseover="Tip('Falta 1 Día')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_insertTblDocumento.php'"/>                        
                         <img src="../comunes/images/rojo.gif" height='17px' onmouseover="Tip('Día Actual o Vencidas')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_insertTblDocumento.php'"/>                                                
-                        <img src="../comunes/images/page_add.png" onmouseover="Tip('Nuevo Item Documento')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_insertTblDocumento.php'"/>                        
+                        <img src="../comunes/images/page_add.png" onmouseover="Tip('Nuevo Item Documento')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_insertTblDocumento.php?nue=1'"/>                        
                     </td>
                 </tr>
 

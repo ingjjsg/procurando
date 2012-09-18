@@ -9,7 +9,8 @@
     }
     $formulario_accion=  clConstantesModelo::getFormulario_accion('asociaciones','asociaciones_litigio');
     $xajax= new xajax();
-    $xajax->registerFunction('buscarAsistido');  
+    $xajax->registerFunction('buscarAsistido');
+    $xajax->registerFunction('buscar_rif');    
     $xajax->registerFunction('buscarAsistidoPopup');    
     $xajax->registerFunction('llenarSelectTipoRamo');
     $xajax->registerFunction('llenarId_municipioAsociacion');
@@ -44,7 +45,7 @@
         <script type='text/javascript' src='../comunes/js/funciones.js'></script>
         <script type="text/javascript" src="../comunes/js/prototype.js"></script>
         <script type="text/javascript" src="../comunes/js/effects.js"></script>
-        <script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>
+        <!--<script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>-->
         <script type="text/javascript" src="../comunes/js/tabcontent.js"></script>
         <script type="text/javascript" src="../comunes/js/ajaxupload.js"></script>
         <script src="../comunes/js/calendar.js" type="text/javascript"></script>
@@ -61,7 +62,7 @@
         <script type="text/javascript">
             jQuery(function($){
                 $("#dtmfechafun").mask("99/99/9999");        
-                $("#strtelefono_asociacion").mask("9999-999-99-99");               
+                $("#strtelefono_asociacion").mask("(9999)-999-99-99");               
             });            
             
             
@@ -145,7 +146,7 @@
                                             RIF:
                                         </td>
                                         <td width="30%">
-                                            <input type="text" class='inputbox' id="strrif" name="strrif" size="30" />
+                                            <input type="text" class='inputbox' id="strrif" onBlur="xajax_buscar_rif(document.frmaAsociacion.strrif.value,document.frmaAsociacion.lngcodigo_asociacion.value);" name="strrif" size="30" />
                                         </td>
                                     </tr>
                                     <tr>

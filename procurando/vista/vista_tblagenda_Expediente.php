@@ -1,10 +1,11 @@
 <?php
+//echo $_GET['id'];
     session_start();
     require_once "../controlador/tblagendaControlador.php";
 //    require_once "../controlador/tblproexpedienteControlador.php";    
     require_once ('../comunes/xajax/xajax_core/xajax.inc.php');
     $xajax= new xajax();
-    $xajax->registerFunction('selectAllAgenda');
+    $xajax->registerFunction('selectAllAgendaExpediente');
     $xajax->registerFunction('llenarSelectTipoAgenda');
     $xajax->registerFunction('llenarSelectTipoEvento');
     $xajax->registerFunction('llenarSelectTipoPrioridad');    
@@ -74,18 +75,14 @@
             }
         </script>
     </head>
-    <body onload="xajax_selectAllAgenda();xajax_llenarSelectTipoAgenda('','',1);xajax_llenarSelectTipoEvento();xajax_selectAllDpto();xajax_llenarSelectTipoPrioridad();">
+    <body onload="xajax_selectAllAgendaExpediente('<?php echo $_GET['id']; ?>');">
         <form name="frmAgenda" id="frmAgenda" method="post" style="">
             <script src="../comunes/js/wz_tooltip/wz_tooltip.js" type="text/javascript"></script>
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
-                    <td width="65%" class="menu_izq_titulo">Agenda  Personal<div id='capaMaestro'></div></td>
+                    <td width="65%" class="menu_izq_titulo">Agenda  Expediente<div id='capaMaestro'></div></td>
                     <td width="10%" align="center" class="menu_izq_titulo">
-                        <img src="../comunes/images/filter.png" onmouseover="Tip('Filtros')" onmouseout="UnTip()" border="0" onclick="ver('formulario');"/>&nbsp;&nbsp;
-                        <img src="../comunes/images/verde.gif" height='17px' onmouseover="Tip('Faltan Más de 2 Días')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_insertTblAgenda.php'"/>                        
-                        <img src="../comunes/images/amarillo.gif" height='17px' onmouseover="Tip('Falta 1 Día')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_insertTblAgenda.php'"/>                        
-                        <img src="../comunes/images/rojo.gif" height='17px' onmouseover="Tip('Día Actual o Vencidas')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_insertTblAgenda.php'"/>                                                
-                        <img src="../comunes/images/page_add.png" onmouseover="Tip('Nuevo Item Agenda')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_insertTblAgenda.php'"/>                        
+                        <img src="../comunes/images/page_add.png" onmouseover="Tip('Nuevo Item Agenda')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_insertTblAgendaExpediente.php?id_expediente=<?php echo $_GET['id']; ?>'"/>                        
                     </td>
                 </tr>
 

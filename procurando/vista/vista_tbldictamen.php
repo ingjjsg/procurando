@@ -1,18 +1,14 @@
 <?php
     session_start();
-    require_once "../controlador/tblagendaControlador.php";
-//    require_once "../controlador/tblproexpedienteControlador.php";    
+    require_once "../controlador/tbldictamenesControlador.php";
     require_once ('../comunes/xajax/xajax_core/xajax.inc.php');
     $xajax= new xajax();
-    $xajax->registerFunction('selectAllAgenda');
-    $xajax->registerFunction('llenarSelectTipoAgenda');
-    $xajax->registerFunction('llenarSelectTipoEvento');
-    $xajax->registerFunction('llenarSelectTipoPrioridad');    
-    $xajax->registerFunction('selectAllDpto');
-    $xajax->registerFunction('ActualizarItemAgenda');    
-    
-//    $xajax->registerFunction('selectFiltrosHonorarios');
-//    $xajax->registerFunction('llenarDestinatarios');
+    $xajax->registerFunction('selectAllDictamenes');
+    $xajax->registerFunction('llenarSelectTipo');
+    $xajax->registerFunction('llenarTipoMateria');    
+    $xajax->registerFunction('llenarSelectTipoEstadoDictamen');
+    $xajax->registerFunction('llenarSelectOrganismo');
+    $xajax->registerFunction('llenarSelectTipoOrganismo');
     $xajax->processRequest();
     $xajax->printJavascript('../comunes/xajax/');
 ?>
@@ -65,27 +61,28 @@
                 }
             }
             function filtrar(){
-                var id_tipo= document.frmAgenda.id_tipo.value;
-                var id_evento= document.frmAgenda.id_evento.value;
-                var id_unidad= document.frmAgenda.id_unidad.value;
-                var id_prioridad= document.frmAgenda.id_prioridad.value;                
-                xajax_selectAllAgenda(id_tipo, id_evento, id_unidad, id_prioridad);                        
+                var id_materia= document.frmDictamen.id_materia.value;
+                var id_tipo_materia= document.frmDictamen.id_tipo_materia.value;
+                var id_tipo_organismo= document.frmDictamen.id_tipo_organismo.value;
+                var id_organismo= document.frmDictamen.id_organismo.value; 
+                var id_estado= document.frmDictamen.id_estado.value; 
+                var stranrodictamen= document.frmDictamen.stranrodictamen.value; 
+                var strtitulo= document.frmDictamen.strtitulo.value; 
+                var strpersonas= document.frmDictamen.strpersonas.value; 
+                xajax_selectAllDictamenes(id_materia, id_tipo_materia, id_tipo_organismo, id_organismo, id_estado, strtitulo, stranrodictamen, strpersonas);                        
                 ver('formulario');
             }
         </script>
     </head>
-    <body onload="xajax_selectAllAgenda();xajax_llenarSelectTipoAgenda('','',1);xajax_llenarSelectTipoEvento();xajax_selectAllDpto();xajax_llenarSelectTipoPrioridad();">
-        <form name="frmAgenda" id="frmAgenda" method="post" style="">
+    <body onload="xajax_selectAllDictamenes(); xajax_llenarSelectTipo();xajax_llenarSelectTipoEstadoDictamen();xajax_llenarSelectTipoOrganismo();">
+        <form name="frmDictamen" id="frmDictamen" method="post" style="">
             <script src="../comunes/js/wz_tooltip/wz_tooltip.js" type="text/javascript"></script>
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
-                    <td width="65%" class="menu_izq_titulo">Agenda  Personal<div id='capaMaestro'></div></td>
+                    <td width="65%" class="menu_izq_titulo">Dictamenes<div id='capaMaestro'></div></td>
                     <td width="10%" align="center" class="menu_izq_titulo">
                         <img src="../comunes/images/filter.png" onmouseover="Tip('Filtros')" onmouseout="UnTip()" border="0" onclick="ver('formulario');"/>&nbsp;&nbsp;
-                        <img src="../comunes/images/verde.gif" height='17px' onmouseover="Tip('Faltan Más de 2 Días')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_insertTblAgenda.php'"/>                        
-                        <img src="../comunes/images/amarillo.gif" height='17px' onmouseover="Tip('Falta 1 Día')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_insertTblAgenda.php'"/>                        
-                        <img src="../comunes/images/rojo.gif" height='17px' onmouseover="Tip('Día Actual o Vencidas')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_insertTblAgenda.php'"/>                                                
-                        <img src="../comunes/images/page_add.png" onmouseover="Tip('Nuevo Item Agenda')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_insertTblAgenda.php'"/>                        
+                        <img src="../comunes/images/table_edit.png" onmouseover="Tip('Nuevo Distamen')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_insertTblDictamenes.php'"/>                        
                     </td>
                 </tr>
 
@@ -96,50 +93,86 @@
                         <div id="formulario" style="width:100%;display:none;" align="left">
                             <fieldset style="border:#339933 2px solid">
                                 <table width="100%" border="0" class="tablaVer" >
-                                   <tr>
-                                        <td width="20%">
-                                            Tipo de Agenda:
+                                    <tr>
+                                       <td width="20%">
+                                            Tipos Materia:
                                         </td>
                                         <td width="30%">
                                             <div id="capaIdTipo">
-                                                <select id="id_tipo" name="id_tipo" style='width:90%'>
+                                                <select id="id_materia" name="id_materia" style='width:90%'>
                                                     <option value="0">Seleccione</option>
                                                 </select>
                                             </div>
                                         </td>
-                                        <td width="20%">
-                                            Tipo de Evento:
+                                        
+                                         <td width="20%">
+                                            Tipo Temas:
                                         </td>
                                         <td width="30%">
-                                            <div id="capaIdTipoEvento">
-                                                <select id="id_evento" name="id_evento" style='width:90%'>
+                                            <div id="capaIdTipoMateria">
+                                                <select id="id_tipo_materia" name="id_tipo_materia" style='width:90%'>
                                                     <option value="0">Seleccione</option>
                                                 </select>
                                             </div>
                                         </td>
                                     </tr>
-                                   <tr>
-                                        <td width="20%">
-                                            Tipo de Unidad:
+                                    <tr>
+                                       <td width="20%">
+                                            Tipo Organismo:
                                         </td>
                                         <td width="30%">
-                                            <div id="capaIdTipoUnidad">
-                                                <select id="id_unidad" name="id_unidad" style='width:60%'>
+                                            <div id="capaIdTipoOrganismo">
+                                                <select id="id_tipo_organismo" name="id_tipo_organismo" style='width:90%'>
                                                     <option value="0">Seleccione</option>
                                                 </select>
                                             </div>
                                         </td>
-                                        <td width="20%">
-                                           Tipo de Prioridad:
+                                        
+                                         <td width="20%">
+                                            Organismo:
                                         </td>
                                         <td width="30%">
-                                            <div id="capaIdTipoPrioridad">
-                                                <select id="id_prioridad" name="id_prioridad" style='width:90%'>
+                                            <div id="capaIdOrganismo">
+                                                <select id="id_organismo" name="id_organismo" style='width:60%'>
                                                     <option value="0">Seleccione</option>
                                                 </select>
                                             </div>
                                         </td>
-                                    </tr>                                    
+                                    </tr>                                      
+                                    <tr>
+                                       <td width="20%">
+                                            Tipo de Estado:
+                                        </td>
+                                        <td width="30%">
+                                            <div id="capaIdTipoEstado">
+                                                <select id="id_estado" name="id_estado" style='width:90%'>
+                                                    <option value="0">Seleccione</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        
+                                         <td width="20%">
+                                            Numero:
+                                        </td>
+                                        <td width="30%">
+						<input type="text" class='inputbox82' id="stranrodictamen" name="stranrodictamen" size="20" />     
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                       <td width="20%">
+                                            Titulo:
+                                        </td>
+                                        <td width="30%">
+						<input type="text" class='inputbox82' id="strtitulo" name="strtitulo" size="20" />   
+                                        </td>
+                                        
+                                         <td width="20%">Persona:
+                                        </td>
+                                        <td width="30%">
+						<input type="text" class='inputbox82' id="strpersonas" name="strpersonas" size="20" />   
+                                        </td>
+                                    </tr>
+                                 
                                     <tr>
                                         <td align="right" colspan="8">
                                             <input type="button" value="Filtrar" onclick="filtrar();">
@@ -152,7 +185,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <div id="contenedorAgenda" style="width:100%;" align="left">
+                        <div id="contenedorDictamenes" style="width:100%;" align="left">
                             <div align="center"><img src="../comunes/images/ajax-loader.gif"></div>
                         </div>
                         <div id="pagAgenda" style="width:100%;" align="left" class="pagination">

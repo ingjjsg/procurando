@@ -164,8 +164,8 @@ public function llenar($request)
          fecminuta
          ) VALUES ("
          .$this->get_id_tipo_minuta().","
-         .$this->get_id_minuta().",'"
-         .$this->get_id_estado_minuta().",'"                 
+         .$this->get_id_estado_minuta().","
+         .$this->get_id_minuta().",'"                 
          .$this->get_strobservacion()."',"
          .$this->get_id_proexpediente().",TO_DATE('"
          .$this->get_fecminuta()."', 'DD/MM/YYYY'))";     

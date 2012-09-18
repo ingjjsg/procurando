@@ -15,11 +15,17 @@
     }
     if($_GET['ree']!=''){
         $ree=$_GET['ree'];
+    }
+    if($_GET['nue']!=''){
+        $nue=$_GET['nue'];
     }    
         
     
     $xajax= new xajax();
     $xajax->registerFunction('selectReenviarDocumento');
+    $xajax->registerFunction('verEstatus');    
+    $xajax->registerFunction('reenviarDocumento');    
+    $xajax->registerFunction('rutaDocumento');    
     $xajax->registerFunction('verExpediente');
     $xajax->registerFunction('buscarPersona');    
     $xajax->registerFunction('buscarPersonaPopup');    
@@ -66,7 +72,6 @@
         <script type='text/javascript' src='../comunes/js/funciones.js'></script>
         <script type="text/javascript" src="../comunes/js/prototype.js"></script>
         <script type="text/javascript" src="../comunes/js/effects.js"></script>
-        <script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>
         <script type="text/javascript" src="../comunes/js/tabcontent.js"></script>
       
         <script src="../comunes/js/calendar.js" type="text/javascript"></script>
@@ -82,20 +87,23 @@
         <script language="javascript">
             jQuery(function($){
                 $("#strtelefono").mask("(9999) 999.99.99",{placeholder:" "});
+                $("#strtelefonorecibido").mask("(9999) 999.99.99",{placeholder:" "});                
                 $("#fecdocumento").mask("99/99/9999",{placeholder:" "});
             });
             
-            function cargar(id_documento,clon,ree){
-                if((id_documento!= "") && (clon=="")  && (ree=="")) {
+            function cargar(id_documento,clon,ree,nue){
+                if((id_documento!= "") && (clon=="") && (nue=="") && (ree=="")) {
                     xajax_selectDocumento(id_documento);
                 }
-                else if((id_documento!= "") && (clon!="") && (ree=="")) {
+                else if((id_documento!= "") && (clon!="") && (nue=="") && (ree=="")) {
                     xajax_selectClonarDocumento(id_documento);                    
                 }
-                else if((id_documento!= "")  && (clon=="") && (ree!="")) {
+                else if((id_documento!= "")  && (clon=="") && (nue=="") && (ree!="")) {
                     xajax_selectReenviarDocumento(id_documento);                    
                 }                
-                else{
+                else if((id_documento== "")  && (clon=="") && (ree=="") && (nue!="")) {
+                    document.frmDocumento.id_documento_accion.value='N';
+                    $('guardar').show();
                     xajax_llenarSelectTipoDocumento();
                     xajax_llenarSelectTipoEvento();
                     xajax_llenarSelectTipoEstadoDocumento();
@@ -110,8 +118,13 @@
             function validar()
             {
                document.frmDocumento.strdescripcion.value= FCKeditorAPI.__Instances['descripcion'].GetHTML();
+               document.frmDocumento.strrespuesta.value= FCKeditorAPI.__Instances['descripcionrespuesta'].GetHTML();
+               document.frmDocumento.strubicacion.value= FCKeditorAPI.__Instances['descripcionubicacion'].GetHTML();
                xajax_validar_Documento(xajax.getFormValues('frmDocumento'));
-            }            
+            }    
+
+   
+           
             
             function verForm(id){
                 //xajax_selectAllDpto();
@@ -140,7 +153,7 @@
             
         </script>
     </head>
-    <body onload="cargar('<?php echo $id_documento ?>','<?php echo $clon ?>','<?php echo $ree ?>')" >
+    <body onload="cargar('<?php echo $id_documento ?>','<?php echo $clon ?>','<?php echo $ree ?>','<?php echo $nue ?>')" >
         <script src="../comunes/js/wz_tooltip/wz_tooltip.js" type="text/javascript"></script>
         <center>
             <form name="frmDocumento" id="frmDocumento" method="post">
@@ -149,8 +162,10 @@
                 <tr>
                     <td width="65%" class="menu_izq_titulo"><?php echo $titulo_formulario ?></td>
                     <td width="10%" align="center" class="menu_izq_titulo">
-                        <img src="../comunes/images/16_save.png" onmouseover="Tip('Guardar')" onmouseout="UnTip()" border="0" onclick="validar();"/>
+                        <img id="guardar" style="display:none;" src="../comunes/images/16_save.png" onmouseover="Tip('Guardar')" onmouseout="UnTip()" border="0" onclick="validar();"/>
                         &nbsp;&nbsp;&nbsp;
+                        <img id="reenviar" style="display:none;" src="../comunes/images/save_go.png" onmouseover="Tip('Reenviar')" onmouseout="UnTip()" border="0" onclick="xajax_reenviarDocumento(xajax.getFormValues('frmDocumento'));"/>
+                        &nbsp;&nbsp;&nbsp;                        
                         <img src="../comunes/images/arrow_undo.png" onmouseover="Tip('Volver')" onmouseout="UnTip()" border="0" onclick="javascript: history.go(-1)"/>
                     </td>
                 </tr>
@@ -160,7 +175,8 @@
                     <td>
                         <div id="formulario" style=" width:100%;" align="left">
                                 <input type="hidden" class='inputbox82' id="id_documento" name="id_documento" size="30" />
-                                <input type="hidden" class='inputbox82' id="id_documento_reenviar" name="id_documento_reenviar" size="30" />                                
+<!--                                <input type="hidden" class='inputbox82' id="id_documento_reenviar" name="id_documento_reenviar" size="30" />                                -->
+                                <input type="hidden" class='inputbox82' id="id_documento_accion" name="id_documento_accion" size="30" />                                                                
                                 <table width="100%" border="0" class="tablaVer" >
                                     <tr>
                                         <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
@@ -332,10 +348,10 @@
                                                 </select>
                                             </div>
                                         </td>
-                                    </tr>    
-                                   <tr>
+                                    </tr>
+                                   <tr id="entrada" style="display:none;">
                                         <td width="20%">
-                                            Persona:
+                                            Entregado Por:
                                         </td>
                                         <td width="30%">
                                            <input type="text" class='inputbox82' id="strpersona" name="strpersona" size="20" />
@@ -345,6 +361,19 @@
                                         </td>
                                         <td width="30%">
                                             <input type="text" class='inputbox82' id="strtelefono"  name="strtelefono" size="20" />                                                                         
+                                        </td>                                        
+                                    </tr> 
+                                   <tr id="dirigido"  style="display:none;">
+                                        <td width="20%">
+                                            Dirigido A:
+                                        </td>
+                                        <td width="30%">
+                                           <input type="text" class='inputbox82' id="strdirigido" name="strdirigido" size="20" />
+                                        </td>
+                                        <td width="20%">Recibido Por
+                                        </td>
+                                        <td width="30%">
+                                           <input type="text" class='inputbox82' id="strrecibido" name="strrecibido" size="20" />                                            
                                         </td>                                        
                                     </tr>                                    
                                     <tr>
@@ -391,6 +420,7 @@
                                     <li><a id="link1" href="#" rel="country1"  class="selected">Documento</a></li> 
                                     <li><a id="link2" href="#" rel="country2">Respuesta del Documento</a></li> 
                                     <li><a id="link3" href="#" rel="country3">Ubicación del Documento</a></li>                                     
+                                    <li><a id="link4" href="#" rel="country4">Ruta del Documento</a></li>                                       
                                 </ul>
                                 <div style="background:#F8F8F8; border:solid 1px #cccccc; width:100%; height:340px" align="left">
                                     <div id="country1"  class="tabcontent" style="height:100%; overflow-y:auto">
@@ -430,7 +460,7 @@
                                                     </td>
                                                 </tr>                                                
                                     <tr>
-                                        <input type="hidden" name="strdescripcionrespuesta" id="strdescripcionrespuesta" value="">
+                                        <input type="hidden" name="strrespuesta" id="strrespuesta" value="">
                                         <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                             <?php
                                                 $oFCKeditor = new FCKeditor('descripcionrespuesta') ;
@@ -456,7 +486,7 @@
                                                     </td>
                                                 </tr>                                                
                                     <tr>
-                                        <input type="hidden" name="descripcionubicacion" id="descripcionubicacion" value="">
+                                        <input type="hidden" name="strubicacion" id="strubicacion" value="">
                                         <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                             <?php
                                                 $oFCKeditor = new FCKeditor('descripcionubicacion') ;
@@ -471,7 +501,25 @@
                                         </td>
                                     </tr>                                             
                                            </table>
-                                    </div>                                      
+                                    </div>               
+                                    <div id="country4"  class="tabcontent" style="height:100%; overflow-y:auto">
+                                            <table width="100%" border="0" class="tablaTitulo" >
+                                                <tr>
+                                                    <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                                        <div align="center" style="background-image: url('../comunes/images/barra.png')">
+                                                            <strong>Ruta del Documento</strong>
+                                                        </div>
+                                                    </td>
+                                                </tr>                                                
+                                            <tr>
+                                                <td>
+                                                    <div id="contenedorRutaDocumento" style="width:100%;" align="left">
+                                                        <div align="center"><img src="../comunes/images/ajax-loader.gif"></div>
+                                                    </div>
+                                                </td>
+                                            </tr>                                             
+                                           </table>
+                                    </div>                                       
                                 </div>
                           </div>
                       </td>

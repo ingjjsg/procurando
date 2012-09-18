@@ -41,7 +41,7 @@
         <script type='text/javascript' src='../comunes/js/funciones.js'></script>
         <script type="text/javascript" src="../comunes/js/prototype.js"></script>
         <script type="text/javascript" src="../comunes/js/effects.js"></script>
-        <script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>
+        <!--<script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>-->
         <script type="text/javascript" src="../comunes/js/tabcontent.js"></script>
       
         <script src="../comunes/js/calendar.js" type="text/javascript"></script>
@@ -93,7 +93,7 @@
             <form name="frmcontrarios" id="frmcontrarios" method="post">
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
-                    <td width="65%" class="menu_izq_titulo"><?php echo $nombre_modulo; ?></td>
+                    <td width="65%" class="menu_izq_titulo">Contrarios</td>
                     <td width="10%" align="center" class="menu_izq_titulo">
                         <?php 
                         if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario($formulario_accion['formulario']),'nuevo', $formulario_accion['accion'])) {?>

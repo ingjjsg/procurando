@@ -38,7 +38,9 @@ require_once '../herramientas/herramientas.class.php';
                         <tr>
                             <td>&nbsp;</td>
                         </tr>
-         </table>
+         </table>';
+if ($_GET['id_estado']==clConstantesModelo::documento_entrada)
+$html.='
        <table>
         <tr>
             <th align="center" bgcolor="#D8D8D8">N°</th>
@@ -46,10 +48,25 @@ require_once '../herramientas/herramientas.class.php';
             <th align="center" bgcolor="#D8D8D8">Departamento</th>
             <th align="center" bgcolor="#D8D8D8">Evento</th>
             <th align="center" bgcolor="#D8D8D8">Titulo</th>
-            <th align="center" bgcolor="#D8D8D8">Prioridad</th>
+            <th align="center" bgcolor="#D8D8D8">Entregado por</th>
+            <th align="center" bgcolor="#D8D8D8">Teléfono</th>
             <th align="center" bgcolor="#D8D8D8">Estado</th>
-            <th align="center" bgcolor="#D8D8D8">Días</th>
-         </tr>';
+         </tr>
+        <table>';
+else 
+$html.='<table>
+        <tr>
+            <th align="center" bgcolor="#D8D8D8">N°</th>
+            <th align="center" bgcolor="#D8D8D8">Documento</th>
+            <th align="center" bgcolor="#D8D8D8">Departamento</th>
+            <th align="center" bgcolor="#D8D8D8">Evento</th>
+            <th align="center" bgcolor="#D8D8D8">Titulo</th>
+            <th align="center" bgcolor="#D8D8D8">Dirigido por</th>
+            <th align="center" bgcolor="#D8D8D8">Recibido</th>
+            <th align="center" bgcolor="#D8D8D8">Estado</th>
+         </tr>      
+       </table>';
+
 $count=0;
 foreach ($data as $key => $value) {
     
@@ -59,9 +76,17 @@ foreach ($data as $key => $value) {
             $html.='<td align="center" class="departamento">'.$data[$key][id_unidad_documento].'</td>';
             $html.='<td align="center">'.$data[$key][id_evento_documento].'</td>';
             $html.='<td align="center">'.functions::decrypt($data[$key][strtitulo]).'</td>';
-            $html.='<td align="center" class="prioridad centrado">'.$data[$key][id_prioridad_documento].'</td>';
+            if ($_GET['id_estado']==clConstantesModelo::documento_entrada)
+                    {
+                        $html.='<td  align="center">'.$data[$key]['strpersona'].'</td>';
+                        $html.='<td align="center">'.$data[$key]['strtelefono'].'</td>';                         
+                    }
+                    else 
+                    {
+                        $html.='<td align="center">'.$data[$key]['strdirigido'].'</td>';
+                        $html.='<td align="center">'.$data[$key]['strrecibido'].'</td>';  
+                    }            
             $html.='<td align="center">'.$data[$key][id_estado_documento].'</td>';
-            $html.='<td align="center">0</td>';
         $html.="</tr>";
     
 }

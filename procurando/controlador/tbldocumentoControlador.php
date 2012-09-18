@@ -13,6 +13,79 @@
     verificarSession();
 
     
+    function reenviarDocumento($request){
+        $respuesta= new xajaxResponse();
+        $documento= new clTblDocumento();
+        $documento->llenar($request);
+        if($request['id_documento'] !="") 
+        {
+           $data= $documento->reenviarDocumento();
+           $respuesta->script("if(confirm('El Documento se Reenvio Exitosamente, ¿Desea Crear otro Item de Documento?')){ location.href='vista_insertTblDocumento.php';}else{location.href='vista_tblDocumento.php';}");            
+        }
+        if(!$data){
+            $respuesta->alert("El Documento no se ha Reenviado");
+        }            
+        return $respuesta;
+    }    
+    
+    
+    function rutaDocumento($id){
+        $respuesta= new xajaxResponse();
+        $documento= new clTblDocumento();    
+        $data= "";
+        $html= "";   
+        if ($id!='')
+        {    
+            $data=$documento->rutaDocumento($id);
+        }
+        else {
+                        $html="<div class='celda_etiqueta'>No Hay Items Registrados</div>";
+        }
+        if(is_array($data)){
+                $html= "<div style='border:solid 1px #CCCCCC;background:#f8f8f8'>
+                            <table style='text-align:center' border='0' class='tablaTitulo' width='100%'>
+                            <tr>
+                                <td colspan=\"5\" align=\"right\" style=\"color:white; border:#CCCCCC solid 0px;\" bgcolor=\"#273785\" >
+                                    <div align=\"center\" style=\"background-image: url('../comunes/images/barra.png')\">
+                                        <strong>Ruta del Documento</strong>
+                                    </div>                                
+                                </td>
+                            </tr>                               
+                                <tr>
+                                    <th width='10%'>
+                                        <a href='#' onclick=\"xajax_orden('id_maestro')\">Id</a>
+                                    </th>                                
+                                    <th width='14%'>
+                                        <a href='#' onclick=\"xajax_orden('id_maestro')\">N° Documento</a>
+                                    </th>
+                                    <th width='28%'>
+                                        <a href='#' onclick=\"xajax_orden('id_maestro')\">Remite</a>
+                                    </th>                                    
+                                    <th width='28%'>
+                                        <a href='#' onclick=\"xajax_orden('id_origen')\">Remitente</a>
+                                    </th>
+                                    <th width='15%'>
+                                        <a href='#' onclick=\"xajax_orden('id_origen')\">Fecha</a>
+                                    </th>                                    
+                                </tr>";
+                for ($i= 0; $i < count($data); $i++){
+                    $html.= "<tr bgcolor='#f8f8f8'onmouseover=\"this.style.background='#f0f0f0';this.style.color='blue'\" onmouseout=\"this.style.background='#f8f8f8';this.style.color='black'\" >
+                                <td align='center'>".$i."</td>
+                                <td align='center'>".$data[$i][strnumero]."</td>
+                                <td align='center'>".strtoupper($data[$i][remite])."</td>
+                                <td align='center'>".strtoupper($data[$i][remitente])."</td>                       
+                                <td align='center'>".$data[$i][fecha]."</td>                                             
+                            </tr>";
+                }
+                $html.= "</table></div>";
+            }
+            else {
+                    $html="<div class='celda_etiqueta'>No Hay Items Registrados</div>";
+            }
+        $respuesta->assign("contenedorRutaDocumento","innerHTML",$html);
+        return $respuesta;
+    }        
+    
     function selectReenviarDocumento($id) {
     $respuesta = new xajaxResponse();
     $documento= new clTblDocumento();
@@ -27,25 +100,28 @@
              $respuesta->script('xajax_buscarExpediente(' . $data[0][id_expediente] . ')');
              $respuesta->script("$('CapaExpediente').show();");             
         }
-//        if ($data[0][id_contacto]>0)
-//        {
-//             $respuesta->script('xajax_buscarPersona(' . $data[0][id_contacto] . ')');
-//             $respuesta->script("$('CapaTrabajador').show();");             
-//        }            
+        $respuesta->assign('id_documento_accion', 'value', 'R');     
+        $respuesta->script("$('guardar').hide();");              
+        $respuesta->script("$('reenviar').show();");          
         $respuesta->script('xajax_selectRefiereDocumento()');        
         $respuesta->script('xajax_llenarSelectTipoEvento(' . $data[0][id_evento] . ')');
         $respuesta->script('xajax_llenarSelectTipoPrioridad(' . $data[0][id_prioridad] . ')'); 
         $respuesta->script('xajax_llenarSelectTipoEstadoDocumento(' . $data[0][id_estado] . ')');   
-        $respuesta->script('xajax_llenarSelectTipoRecordatorio(' . $data[0][id_recordatorio] . ')');     
+        $respuesta->script('xajax_llenarSelectTipoRecordatorio(' . $data[0][id_recordatorio] . ')'); 
         $respuesta->script('xajax_selectAllDpto()');         
         $respuesta->script('xajax_llenarSelectTipoOrganismo(' . $data[0][id_tipo_organismo] . ')');
         $respuesta->script('xajax_llenarSelectOrganismo(' . $data[0][id_tipo_organismo] . ',' . $data[0][id_organismo] . ')');        
         $respuesta->assign('strpersona', 'value', $data[0][strpersona]);        
         $respuesta->assign('fecdocumento', 'value', $data[0][fecdocumento]);
+        $respuesta->assign('fechacreacion', 'value', $data[0][date]);                
         $respuesta->assign('strtitulo', 'value', functions::decrypt($data[0][strtitulo]));
-        $respuesta->assign('id_documento', 'value', '');   
+        $respuesta->assign('id_documento', 'value', $data[0][id_documento]);     
+        $respuesta->assign('strnumero', 'value', $data[0][strnumero]);                 
         $respuesta->assign('id_documento_reenviar', 'value', $data[0][id_seguimiento]);
         $respuesta->script("FCKeditorAPI.__Instances['descripcion'].SetHTML('".functions::decrypt($data[0][strdescripcion])."')");
+        $respuesta->script("FCKeditorAPI.__Instances['descripcion'].SetHTML('".functions::decrypt($data[0][strdescripcion])."')");
+        $respuesta->script("FCKeditorAPI.__Instances['descripcionrespuesta'].SetHTML('')");
+        $respuesta->script("FCKeditorAPI.__Instances['descripcionubicacion'].SetHTML('".$data[0][strubicacion]."')");        
     }
     return $respuesta;
 }
@@ -112,7 +188,7 @@
                                     <a href='#' onclick=\"xajax_orden('Unidad')\">Estado</a>
                                 </th>                    
                                 <th width='5%'>
-                                    <a href='#' onclick=\"xajax_orden('Unidad')\">Días</a>
+                                    <a href='#' onclick=\"xajax_orden('Unidad')\">Numero</a>
                                 </th>                                   
                                 <th width='35%'>Acci&oacute;n</th>
                             </tr></table>";
@@ -128,7 +204,7 @@
                             <td width='10%' align='left'>".functions::decrypt($data[$i][strtitulo])."</td>                                
                             <td width='10%' align='center'>".$data[$i][id_prioridad_documento]."</td>
                             <td width='10%' align='center'>".$data[$i][id_estado_documento]."</td>                               
-                            <td width='5%' align='center'>".functions::diterenciaFechasDiasDocumento($data[$i][fecdocumento])."</td>
+                            <td width='5%' align='center'>".$data[$i][strnumero]."</td>
                             <td width='35%' align='center'>";
                 $color=functions::diterenciaFechasSemaforoDocumento($data[$i]['fecdocumento'],clTblDocumento::getDiasRecordatorios($data[$i]['id_recordatorio']));
                 if ($data[$i][id_prioridad]==clConstantesModelo::prioridad_alta)
@@ -268,7 +344,7 @@
                                     <a href='#' onclick=\"xajax_orden('Unidad')\">Estado</a>
                                 </th>                    
                                 <th width='5%'>
-                                    <a href='#' onclick=\"xajax_orden('Unidad')\">Días</a>
+                                    <a href='#' onclick=\"xajax_orden('Unidad')\">Numero</a>
                                 </th>                                   
                                 <th width='35%'>Acci&oacute;n</th>
                             </tr></table>";
@@ -286,7 +362,7 @@
                             <td width='10%' align='left'>".functions::decrypt($data[$i][strtitulo])."</td>                                
                             <td width='10%' align='center'>".$data[$i][id_prioridad_documento]."</td>
                             <td width='10%' align='center'>".$data[$i][id_estado_documento]."</td>                               
-                            <td width='5%' align='center'>".functions::diterenciaFechasDiasDocumento($data[$i][fecdocumento])."</td>
+                            <td width='5%' align='center'>".$data[$i][strnumero]."</td>
                             <td width='35%' align='center'>";
                 $color=functions::diterenciaFechasSemaforoDocumento($data[$i]['fecdocumento'],clTblDocumento::getDiasRecordatorios($data[$i]['id_recordatorio']));
                 if ($data[$i][id_prioridad]==clConstantesModelo::prioridad_alta)
@@ -554,6 +630,15 @@
     $documento->updateDocumentoItem($id,0,'visto');    
     $data = $documento->selectDocumento($id);
     if ($data) {
+//        exit(print_r($data));
+        $campos_desactivar= array('strnumero');
+        $js=  functions::desactivarCampos('frmDocumento',$campos_desactivar);
+        if($js!=""){
+            $respuesta->script($js);
+        }
+        $respuesta->assign('id_documento_accion', 'value', 'U');     
+        $respuesta->script("$('guardar').show();");              
+        $respuesta->script("$('reenviar').hide();");          
         $respuesta->script('xajax_llenarSelectTipoDocumento(' . $data[0][id_tipo] . ')');
         if ($data[0][id_expediente]>0)
         {
@@ -569,12 +654,25 @@
         $respuesta->script('xajax_llenarSelectTipoEvento(' . $data[0][id_evento] . ')');
         $respuesta->script('xajax_llenarSelectTipoPrioridad(' . $data[0][id_prioridad] . ')'); 
         $respuesta->script('xajax_llenarSelectTipoEstadoDocumento(' . $data[0][id_estado] . ')');   
+        $respuesta->script('xajax_rutaDocumento(' . $data[0][id_documento] . ')');           
         $respuesta->script('xajax_llenarSelectTipoRecordatorio(' . $data[0][id_recordatorio] . ')');     
         $respuesta->script('xajax_selectAllDpto(' . $data[0][id_unidad] . ')');         
         $respuesta->script('xajax_llenarSelectTipoOrganismo(' . $data[0][id_tipo_organismo] . ')');
         $respuesta->script('xajax_llenarSelectOrganismo(' . $data[0][id_tipo_organismo] . ',' . $data[0][id_organismo] . ')');        
         $respuesta->assign('strtitulo', 'value', $data[0][strtitulo]);
-        $respuesta->assign('strpersona', 'value', $data[0][strpersona]);        
+        if ($data[0][strpersona]!='')
+        {
+            $respuesta->assign('strpersona', 'value', $data[0][strpersona]);  
+            $respuesta->script("$('entrada').show();");
+            $respuesta->script("$('dirigido').hide();");
+        }   
+        if ($data[0][strdirigido]!='')
+        {
+            $respuesta->assign('strdirigido', 'value', $data[0][strdirigido]);  
+            $respuesta->assign('strrecibido', 'value', $data[0][strrecibido]);              
+            $respuesta->script("$('entrada').hide();");
+            $respuesta->script("$('dirigido').show();");
+        }           
         $respuesta->assign('fecdocumento', 'value', $data[0][fecdocumento]);
         $respuesta->assign('fechacreacion', 'value', $data[0][date]);        
         $respuesta->assign('strtitulo', 'value', functions::decrypt($data[0][strtitulo]));
@@ -582,6 +680,8 @@
         $respuesta->assign('strnumero', 'value', $data[0][strnumero]);         
         $respuesta->assign('strtelefono', 'value', $data[0][strtelefono]);           
         $respuesta->script("FCKeditorAPI.__Instances['descripcion'].SetHTML('".functions::decrypt($data[0][strdescripcion])."')");
+        $respuesta->script("FCKeditorAPI.__Instances['descripcionrespuesta'].SetHTML('".$data[0][strrespuesta]."')");
+        $respuesta->script("FCKeditorAPI.__Instances['descripcionubicacion'].SetHTML('".$data[0][strubicacion]."')");
     }
     return $respuesta;
 }
@@ -591,21 +691,39 @@
         $respuesta= new xajaxResponse();
         $documento= new clTblDocumento();
         $documento->llenar($request);
+        $id_next='';
 //        if (functions::diterenciaFechasDiasDocumento($request['fecdocumento'])>0)
 //        {
             if($request['id_documento'] =="") 
             {
-                if (clTblDocumento::getNroDocumento($request['strnumero'])=='')
-                {
-                    $data= $documento->insertDocumento();
-                    $respuesta->script("if(confirm('La Documento se Creo exitosamente, ¿Desea Crear otro Item de Documento?')){ location.href='vista_insertTblDocumento.php';}else{location.href='vista_tblDocumento.php';}");            
-                }
-                else
-                    $respuesta->alert("El Numero del Documento ya Fue Registrado");                
+                    if ($request['strnumero']!='')
+                    {                
+                        if (clTblDocumento::getNroDocumento($request['strnumero'])=='')
+                        {
+                            $data= $documento->insertDocumento();
+                            $respuesta->alert("El Documento se creo Exitosamente");     
+                            $respuesta->script("location.href='vista_tblDocumento.php'");
+                        }
+                        else
+                            $respuesta->alert("El Numero del Documento ya Fue Registrado");        
+                    }
+                    else {
+                            $id_next=clTblDocumento::getverIdDocumentoSiguiente();  
+                            $data= $documento->insertDocumento($id_next);         
+                            $respuesta->alert("El Documento se creo Exitosamente");          
+                            $respuesta->script("location.href='vista_tblDocumento.php'");                            
+                   }
             }
             else 
             {
-                $data= $documento->updateDocumento();
+                $id_seguimiento=clTblDocumento::getOrigenDocumento($request['id_documento']);
+                $respuesta_documento=$request['strrespuesta']."<br />".clContactoModelo::getNombreUsuario($_SESSION['id_contacto'])."&nbsp;&nbsp;".date('d/m/Y')."&nbsp;&nbsp;<hr /><br type=\"_moz\" />";
+                $respuesta_compuesta=clTblDocumento::getRespuestaDocumento($id_seguimiento).$respuesta_documento;
+                $data= $documento->updateDocumento($respuesta_documento);
+                if ($id_seguimiento>0)
+                {
+                    clTblDocumento::getupdateDocumentoIRespuesta($id_seguimiento, $respuesta_compuesta);
+                }
                 $respuesta->script("if(confirm('La Documento se Actualizo exitosamente, ¿Desea Crear otro Item de Documento?')){ location.href='vista_insertTblDocumento.php';}else{location.href='vista_tblDocumento.php';}");                        
             }
             if(!$data){
@@ -627,7 +745,6 @@
             'Titulo del Evento'  => 'strtitulo',
             'Fecha de la Documento'    => 'fecdocumento',
             'Descripcion de la Documento' => 'strdescripcion',
-            'Nro del Documento' => 'strnumero',                
             );
             $validacion=  functions::validarFormulario('frmDocumento',$request,$campos_validar);
             if($validacion){
@@ -733,6 +850,25 @@
         return $respuesta;
     }       
     
+    function verEstatus($id){
+        $respuesta=new xajaxResponse(); 
+        if ($id)
+        {
+            $cod=clConstantesModelo::documento_entrada;
+            if($id==$cod){
+                $respuesta->script("$('entrada').show();");
+                $respuesta->script("$('dirigido').hide();");
+            }
+            else {
+                $respuesta->script("$('entrada').hide();");
+                $respuesta->script("$('dirigido').show();");
+     
+ }
+        }
+        return $respuesta;
+    }    
+    
+    
    function llenarSelectTipoEstadoDocumento($select= "", $ancho= "60%") {
         $respuesta= new xajaxResponse();
         $maestro= new clMaestroModelo();
@@ -741,7 +877,7 @@
         $estados= clConstantesModelo::combos();
         $data= $maestro->selectAllMaestroHijos($estados['tipo_estado_documento'], 'stritema');
 //        exit(print_r($data));        
-        $html= "<select id='id_estado' name='id_estado' style='width:".$ancho."'>";
+        $html= "<select id='id_estado' name='id_estado' style='width:".$ancho."' onchange=\"xajax_verEstatus(document.frmDocumento.id_estado.value)\">";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
             for ($i= 0; $i < count($data); $i++){
@@ -940,6 +1076,7 @@
         {
             $data= $documento->selectAllDocumento();
         }
+//        exit(print_r($data));
         if($data){
             $html= "<div style='border:solid 1px #CCCCCC;background:#f8f8f8'>
                         <table border='0' class='tablaTitulo' width='100%'>
@@ -966,10 +1103,11 @@
                                     <a href='#' onclick=\"xajax_orden('Unidad')\">Estado</a>
                                 </th>                    
                                 <th width='5%'>
-                                    <a href='#' onclick=\"xajax_orden('Unidad')\">Días</a>
+                                    <a href='#' onclick=\"xajax_orden('Unidad')\">Numero</a>
                                 </th>                                   
                                 <th width='35%'>Acci&oacute;n</th>
                             </tr></table>";
+//            exit($html);
             for ($i= 0; $i < count($data); $i++){
                 if ($data[$i][visto]==1)
                     $html.= "<table border='0' class='tablaTitulo' width='100%'><tr bgcolor='#fbffd7'onmouseover=\"this.style.background='#ffc05c';this.style.color='blue'\" onmouseout=\"this.style.background='#fbffd7';this.style.color='black'\" >";
@@ -979,12 +1117,12 @@
                 else $movimiento=$data[$i][id_seguimiento];
                 $html.= "<td width='5%' align='center'><img src='../comunes/images/".$data[$i][origen].".png' height='20px' onmouseover=\"Tip('".clTblDocumento::getMovimientoDocumentos($movimiento)."', TITLE, 'Ruta del Documento ".$data[$i][date]."')\" onmouseout='UnTip()'\"></td>
                             <td width='10%' align='center'>".$data[$i][id_tipo_documento]."</td>
-                            <td width='15%' align='center'>".clTblDocumento::getMaestro($data[$i][id_unidad])."</td>                    
+                            <td width='15%' align='center'>".$data[$i][id_unidad_documento]."</td>                    
                             <td width='10%' align='center'>".$data[$i][id_evento_documento]."</td>
                             <td width='10%' align='left'>".functions::decrypt($data[$i][strtitulo])."</td>                                
                             <td width='10%' align='center'>".$data[$i][id_prioridad_documento]."</td>
                             <td width='10%' align='center'>".$data[$i][id_estado_documento]."</td>                               
-                            <td width='5%' align='center'>".functions::diterenciaFechasDiasDocumento($data[$i][fecdocumento])."</td>
+                            <td width='5%' align='center'>".$data[$i][strnumero]."</td>
                             <td width='35%' align='center'>";
       
                 $color=functions::diterenciaFechasSemaforoDocumento($data[$i]['fecdocumento'],clTblDocumento::getDiasRecordatorios($data[$i]['id_recordatorio']));
@@ -1115,7 +1253,7 @@
                                     <a href='#' onclick=\"xajax_orden('Unidad')\">Estado</a>
                                 </th>                    
                                 <th width='5%'>
-                                    <a href='#' onclick=\"xajax_orden('Unidad')\">Días</a>
+                                    <a href='#' onclick=\"xajax_orden('Unidad')\">Numero</a>
                                 </th>                                   
                                 <th width='35%'>Acci&oacute;n</th>
                             </tr></table>";
@@ -1133,7 +1271,7 @@
                             <td width='10%' align='left'>".functions::decrypt($data[$i][strtitulo])."</td>                                
                             <td width='10%' align='center'>".$data[$i][id_prioridad_documento]."</td>
                             <td width='10%' align='center'>".$data[$i][id_estado_documento]."</td>                               
-                            <td width='5%' align='center'>".functions::diterenciaFechasDiasDocumento($data[$i][fecdocumento])."</td>
+                            <td width='5%' align='center'>".$data[$i][strnumero]."</td>
                             <td width='35%' align='center'>";
                 $color=functions::diterenciaFechasSemaforoDocumento($data[$i]['fecdocumento'],clTblDocumento::getDiasRecordatorios($data[$i]['id_recordatorio']));
                 if ($data[$i][id_prioridad]==clConstantesModelo::prioridad_alta)

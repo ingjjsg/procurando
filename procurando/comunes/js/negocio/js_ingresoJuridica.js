@@ -19,13 +19,13 @@
     else
       alert('Asociación no esta Registrada');
   }
-
-  function filtrar(){
-      var strrif=document.frmcontacto.strrif.value;
-      xajax_selectAllJuridicas(strrif);
-        $('contenedor').appear();
-        $('filtro').fade();
- }
+//
+//  function filtrar(){
+//      var strrif=document.frmcontacto.strrif.value;
+//      xajax_selectAllJuridicas(strrif);
+//        $('contenedor').appear();
+//        $('filtro').fade();
+// }
 
   function verfiltro(){
         xajax_formfiltro();

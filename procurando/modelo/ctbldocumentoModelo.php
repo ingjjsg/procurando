@@ -52,11 +52,20 @@
 
   private   $date;
   
-  private   $id_documento_reenviar;  
+  private   $id_documento_accion;  
 
   private   $strnumero;    
   
   private   $strtelefono;      
+  
+  private   $strrespuesta;
+
+  private   $strubicacion;  
+  
+  private   $strdirigido;
+
+  private   $strrecibido;
+  
   
   
 //=========================== FUNCION LLENAR ===================
@@ -170,8 +179,8 @@ public function llenar($request)
         $this->date= date('d/m/Y, h:i:s a');         
      }
 
-     if($request['id_documento_reenviar'] != ""){
-        $this->id_documento_reenviar= $request['id_documento_reenviar'];
+     if($request['id_documento_accion'] != ""){
+        $this->id_documento_accion= $request['id_documento_accion'];
      }      
      
      if($request['strnumero'] != ""){
@@ -181,6 +190,26 @@ public function llenar($request)
      if($request['strtelefono'] != ""){
         $this->strtelefono= $request['strtelefono'];
      }           
+     
+
+     if($request['strrespuesta'] != ""){
+        $this->strrespuesta= $request['strrespuesta'];
+     }
+
+
+     if($request['strubicacion'] != ""){
+        $this->strubicacion= $request['strubicacion'];
+     }     
+     
+     
+     if($request['strdirigido'] != ""){
+        $this->strdirigido= $request['strdirigido'];
+     }
+
+
+     if($request['strrecibido'] != ""){
+        $this->strrecibido= $request['strrecibido'];
+     }
      
      
 }//=========================== GET ===================
@@ -297,8 +326,8 @@ public function llenar($request)
         return $this->date;
     }
     
-    public function getId_documento_reenviar(){
-        return $this->id_documento_reenviar;
+    public function getId_documento_accion(){
+        return $this->id_documento_accion;
     }    
     
     
@@ -310,6 +339,32 @@ public function llenar($request)
     public function getStrtelefono(){
         return $this->strtelefono;
     }            
+    
+    
+
+    public function getStrrespuesta(){
+        return $this->strrespuesta;
+    }
+
+
+
+    public function getStrubicacion(){
+        return $this->strubicacion;
+    }
+    
+    
+
+    public function getStrdirigido(){
+        return $this->strdirigido;
+    }
+
+
+
+    public function getStrrecibido(){
+        return $this->strrecibido;
+    }
+
+    
     
 //=========================== SET ===================
 
@@ -429,8 +484,8 @@ public function llenar($request)
         return $this->date=$date;
     }    
     
-    public function setId_documento_reenviar($id_documento_reenviar){
-        return $this->id_documento_reenviar=$id_documento_reenviar;
+    public function setId_documento_accion($id_documento_accion){
+        return $this->id_documento_accion=$id_documento_accion;
     }        
     
     public function setStrnumero($strnumero){
@@ -442,10 +497,62 @@ public function llenar($request)
     }           
     
     
+    public function setStrrespuesta($strrespuesta){
+        return $this->strrespuesta=$strrespuesta;
+    }
+
+
+
+    public function setStrubicacion($strubicacion){
+        return $this->strubicacion=$strubicacion;
+    }
+    
+
+
+    public function setStrdirigido($strdirigido){
+        return $this->strdirigido=$strdirigido;
+    }
+
+
+    public function setStrrecibido($strrecibido){
+        return $this->strrecibido=$strrecibido;
+    }    
+    
+    static public function getverIdDocumentoSiguiente(){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $conn->sql= "SELECT nextval('tbldocumento_id_documento_seq') as id_documento";
+        $data= $conn->ejecutarSentencia(2);
+        return $data[0][id_documento];        
+    }        
+    
+    public function rutaDocumento($id){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $sql.= "SELECT  *  from ".clConstantesModelo::correspondencia_table."vista_movimiento_documentos  where id_documento=".$id;
+        $conn->sql= $sql;
+        $data= $conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();        
+        return $data;
+    }     
+        
+    
+    
+    static public function getupdateDocumentoIRespuesta($id,$valor){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $sql= "UPDATE ".clConstantesModelo::correspondencia_table."tbldocumento SET  strrespuesta='".$valor."' WHERE id_documento= ".$id;
+        $conn->sql=$sql;        
+        $retorno= $conn->ejecutarSentencia();
+        $conn->cerrarConexion();
+        return $retorno;
+    }          
+    
+    
     public function CountIntroNoLeidosDocumentos(){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $conn->sql= "SELECT count(id_documento) as total  FROM ".clConstantesModelo::correspondencia_table . "tbldocumento where id_usuario=".$_SESSION['id_contacto']." and visto='0'";
+        $conn->sql= "SELECT count(id_documento) as total  FROM ".clConstantesModelo::correspondencia_table . "tbldocumento where id_usuario=".$_SESSION['id_contacto']." and visto='1'";
         $data= $conn->ejecutarSentencia(2);
         return $data[0][total];        
     }    
@@ -453,11 +560,33 @@ public function llenar($request)
     public function CountIntroLeidosDocumentos(){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $conn->sql= "SELECT count(id_documento) as total  FROM ".clConstantesModelo::correspondencia_table . "tbldocumento where id_usuario=".$_SESSION['id_contacto']." and visto='1'";
+        $conn->sql= "SELECT count(id_documento) as total  FROM ".clConstantesModelo::correspondencia_table . "tbldocumento where id_usuario=".$_SESSION['id_contacto']." and visto='0'";
         $data= $conn->ejecutarSentencia(2);
         return $data[0][total];        
     }       
+ 
+    static public function getRespuestaDocumento($id) {
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $data='';
+        $sql = "select strrespuesta from ".clConstantesModelo::correspondencia_table . "tbldocumento  where id_documento=".$id;        
+//        exit($sql);
+        $conn->sql= $sql;
+        $data= $conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();
+        if (is_array($data)) return $data[0][strrespuesta]; else return '';
+    }      
     
+    static public function getOrigenDocumento($id) {
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $data='';
+        $sql = "select id_seguimiento from ".clConstantesModelo::correspondencia_table . "tbldocumento  where id_documento=".$id;        
+        $conn->sql= $sql;
+        $data= $conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();
+        if (is_array($data)) return $data[0][id_seguimiento]; else return '';
+    }       
     
     static public function getNroDocumento($numero) {
         $conn= new Conexion();
@@ -546,8 +675,9 @@ public function llenar($request)
         $conn= new Conexion();
         $conn->abrirConexion();
         $sql.= "SELECT  id_documento, id_usuario, id_tipo, id_evento, id_prioridad, id_estado,date, 
-         id_recordatorio, id_unidad, to_char(fecdocumento,'DD/MM/YYYY') as fecdocumento, strdescripcion, strtitulo, strpersona, id_refiere, id_contacto, id_seguimiento, strnumero, strtelefono, 
-         id_expediente, bolborrado, id_tipo_organismo, id_organismo  from ".clConstantesModelo::correspondencia_table."tbldocumento  where id_documento=".$id;
+         id_recordatorio, id_unidad, to_char(fecdocumento,'DD/MM/YYYY') as fecdocumento, strdescripcion, strtitulo, strpersona, id_refiere, id_contacto, id_seguimiento, strnumero, strtelefono, strrespuesta, strubicacion, 
+       strnumero, strtelefono, strdirigido, strrecibido, id_expediente, bolborrado, id_tipo_organismo, id_organismo  from ".clConstantesModelo::correspondencia_table."tbldocumento  where id_documento=".$id;
+//        exit($sql);
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
         $conn->cerrarConexion();        
@@ -557,7 +687,7 @@ public function llenar($request)
     public function selectAllDocumento(){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $sql.= "SELECT id_documento, id_usuario, id_tipo, id_evento, id_prioridad, id_estado, id_recordatorio, id_unidad, fecdocumento, strdescripcion, strtitulo, id_expediente, bolborrado, strpersona, id_refiere, visto, id_seguimiento, origen, strnumero, strtelefono, date  ";
+        $sql.= "SELECT id_documento, id_usuario, id_tipo, id_evento, id_prioridad, id_estado, id_recordatorio, id_unidad, fecdocumento, strdescripcion, strtitulo, id_expediente, bolborrado, strpersona, id_refiere, visto, id_seguimiento, origen, strnumero, strtelefono, strrespuesta, strubicacion, date  ";
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_tipo) AS id_tipo_documento ";
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_evento) AS id_evento_documento ";
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_prioridad) AS id_prioridad_documento ";
@@ -577,7 +707,7 @@ public function llenar($request)
     public function selectFiltrarDocumento($fil_id_tipo, $fil_id_evento, $fil_id_unidad, $fil_id_prioridad){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $sql.= "SELECT id_documento, id_usuario, id_tipo, id_evento, id_prioridad, id_estado, id_recordatorio, id_unidad, fecdocumento, strdescripcion, strtitulo, id_expediente, bolborrado, strpersona, id_refiere, visto, id_seguimiento, origen, strnumero, strtelefono, date  ";
+        $sql.= "SELECT id_documento, id_usuario, id_tipo, id_evento, id_prioridad, id_estado, id_recordatorio, id_unidad, fecdocumento, strdescripcion, strtitulo, id_expediente, bolborrado, strpersona, id_refiere, visto, id_seguimiento, origen, strnumero, strtelefono, strrespuesta, strubicacion, date  ";
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_tipo) AS id_tipo_documento ";
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_evento) AS id_evento_documento ";
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_prioridad) AS id_prioridad_documento ";
@@ -607,7 +737,7 @@ public function llenar($request)
         $conn->abrirConexion();
         $conn->sql= "SELECT CURRVAL('tbldocumento_id_documento_seq') as id_documento";
         $data= $conn->ejecutarSentencia(2);
-        //exit(print_r($data));
+//        exit(print_r($data));
         return $data;
     }    
 
@@ -623,100 +753,28 @@ public function llenar($request)
                return $maximo;
      }    
     
-    public function insertDocumento(){
-        $conn= new Conexion();
-        $conn->abrirConexion();
-        $tipo=clConstantesModelo::buscar_expediente;
-        $expediente=0;
-        if (($this->getId_tipo()==$tipo) and ($this->getId_expediente()!=''))
-            $expediente=$this->getId_expediente();
-        //crea su propio item 
 
-        if ($this->getId_documento_reenviar()=='')
-        {
-            $sql= "INSERT INTO ".clConstantesModelo::correspondencia_table."tbldocumento (id_usuario, id_tipo, id_evento, id_prioridad, id_estado,id_recordatorio, id_unidad, fecdocumento, strdescripcion, strtitulo,id_expediente, id_tipo_organismo, id_organismo, strpersona, id_refiere, id_contacto, date, origen, strnumero, strtelefono) values ";
-            $sql.= "(".$this->getId_usuario().",".$this->getId_tipo().",".$this->getId_evento().",".$this->getId_prioridad().",".$this->getId_estado().",".$this->getId_recordatorio().",".$this->getId_unidad().",TO_DATE('".$this->getFecdocumento()."', 'DD/MM/YYYY'),'".functions::encrypt($this->getStrdescripcion())."','".functions::encrypt($this->getStrtitulo())."',".$expediente.",".$this->getId_tipo_organismo().",".$this->getId_organismo().",'".$this->getStrpersona()."',".$this->getId_refiere().",".$this->getId_contacto().",'".$this->getDate()."','E','".$this->getStrnumero()."','".$this->getStrtelefono()."')";
-//            exit($sql);
-            $conn->sql=$sql;
-            $conn->ejecutarSentencia();                
-            $sql="SELECT last_value as maximo FROM " . clConstantesModelo::correspondencia_table . "tbldocumento_id_documento_seq";
-            $conn->sql = $sql;
-            $data = $conn->ejecutarSentencia (2);
-            if ($data) $id_seguimiento=$data[0]['maximo'];            
-        }
-        else
-        {
-//            $sql= "INSERT INTO ".clConstantesModelo::correspondencia_table."tbldocumento (id_usuario, id_tipo, id_evento, id_prioridad, id_estado,id_recordatorio, id_unidad, fecdocumento, strdescripcion, strtitulo,id_expediente, id_tipo_organismo, id_organismo, strpersona, id_refiere, id_contacto, date, origen) values ";
-//            $sql.= "(".$this->getId_usuario().",".$this->getId_tipo().",".$this->getId_evento().",".$this->getId_prioridad().",".$this->getId_estado().",".$this->getId_recordatorio().",".$this->getId_unidad().",TO_DATE('".$this->getFecdocumento()."', 'DD/MM/YYYY'),'".$this->getStrdescripcion()."','".$this->getStrtitulo()."',".$expediente.",".$this->getId_tipo_organismo().",".$this->getId_organismo().",'".$this->getStrpersona()."',".$this->getId_refiere().",".$this->getId_contacto().",'".$this->getDate()."','L')";
-//            $conn->sql=$sql;
-//            $conn->ejecutarSentencia();                
-            $id_seguimiento=$this->getId_documento_reenviar(); 
-        }
-        //refiere todo el departamento        
-        if ($this->getId_refiere()==clConstantesModelo::buscar_refiere)  
-        {
-            $sql_contacto= "SELECT  *  from ".clConstantesModelo::correspondencia_table."tblcontacto  where id_coord_maestro=".$this->getId_unidad();
-            $conn->sql= $sql_contacto;
-            $datos= $conn->ejecutarSentencia(2);   
-            for ($i= 0; $i < count($datos); $i++){
-                $sql_dos= "INSERT INTO ".clConstantesModelo::correspondencia_table."tbldocumento (id_usuario, id_tipo, id_evento, id_prioridad, id_estado,id_recordatorio, id_unidad, fecdocumento, strdescripcion, strtitulo,id_expediente, id_tipo_organismo, id_organismo, strpersona, id_refiere, date, id_seguimiento, origen, strnumero, strtelefono) values ";
-                $sql_dos.= "(".$datos[$i][id_contacto].",".$this->getId_tipo().",".$this->getId_evento().",".$this->getId_prioridad().",".$this->getId_estado().",".$this->getId_recordatorio().",".$_SESSION['id_coord_maestro'].",TO_DATE('".$this->getFecdocumento()."', 'DD/MM/YYYY'),'".functions::encrypt($this->getStrdescripcion())."','".functions::encrypt($this->getStrtitulo())."',".$expediente.",".$this->getId_tipo_organismo().",".$this->getId_organismo().",'".$this->getStrpersona()."',".$this->getId_refiere().",'".$this->getDate()."',".$id_seguimiento.",'R','".$this->getStrnumero()."','".$this->getStrtelefono()."')";
-                $conn->sql=$sql_dos;
-                $conn->ejecutarSentencia();   
-                $sql_seguimiento= "INSERT INTO ".clConstantesModelo::correspondencia_table."tbldocumento_seguimiento (id_documento, id_remite, id_origen,id_remitente, fecdocumento_movimiento) values ";
-                $sql_seguimiento.= "(".$id_seguimiento.",".$this->getId_usuario().",'E',".$datos[$i][id_contacto].",TO_DATE('".$this->getFecdocumento()."', 'DD/MM/YYYY'))";
-                $conn->sql=$sql_seguimiento;
-                $conn->ejecutarSentencia();                    
-            }            
-        }
-        //refiere solo personas
-        if ($this->getId_refiere()==clConstantesModelo::buscar_persona)  
-        {
-            $sql='';
-            $sql= "INSERT INTO ".clConstantesModelo::correspondencia_table."tbldocumento (id_usuario, id_tipo, id_evento, id_prioridad, id_estado,id_recordatorio, id_unidad, fecdocumento, strdescripcion, strtitulo,id_expediente, id_tipo_organismo, id_organismo, strpersona, id_refiere, id_contacto, date, id_seguimiento, origen, strnumero, strtelefono) values ";
-            $sql.= "(".$this->getId_contacto().",".$this->getId_tipo().",".$this->getId_evento().",".$this->getId_prioridad().",".$this->getId_estado().",".$this->getId_recordatorio().",".$_SESSION['id_coord_maestro'].",TO_DATE('".$this->getFecdocumento()."', 'DD/MM/YYYY'),'".functions::encrypt($this->getStrdescripcion())."','".functions::encrypt($this->getStrtitulo())."',".$expediente.",".$this->getId_tipo_organismo().",".$this->getId_organismo().",'".$this->getStrpersona()."',".$this->getId_refiere().",".$this->getId_usuario().",'".$this->getDate()."',".$id_seguimiento.",'R','".$this->getStrnumero()."','".$this->getStrtelefono()."')";
-//            exit($sql);
-            $conn->sql=$sql;             
-            $conn->ejecutarSentencia();        
-                $sql="SELECT last_value as maximo FROM " . clConstantesModelo::correspondencia_table . "tbldocumento_id_documento_seq";
-                $conn->sql = $sql;
-                $data = $conn->ejecutarSentencia (2);          
-                if ($data)
-                {
-                    $id_seguimiento_registrado=$data[0]['maximo'];        
-                    $sql_update= "UPDATE ".clConstantesModelo::correspondencia_table."tbldocumento SET  id_seguimiento=".$id_seguimiento." WHERE id_documento= ".$id_seguimiento_registrado;
-                    $conn->sql=$sql_update;            
-                    $conn->ejecutarSentencia();                    
-                }
-                $sql_seguimiento= "INSERT INTO ".clConstantesModelo::correspondencia_table."tbldocumento_seguimiento (id_documento, id_remite, id_origen,id_remitente, fecdocumento_movimiento) values ";
-                $sql_seguimiento.= "(".$id_seguimiento.",".$this->getId_usuario().",'E',".$this->getId_contacto().",TO_DATE('".date('d/m/Y')."', 'DD/MM/YYYY'))";
-//                exit($sql_seguimiento);
-                $conn->sql=$sql_seguimiento;
-                $conn->ejecutarSentencia();                     
-        }        
-        $retorno= $this->verIdDocumento();
-        $conn->cerrarConexion();
-        return $retorno;
-    }
 
-    public function updateDocumento(){
+    public function updateDocumento($respuesta){
         $conn= new Conexion();
         $conn->abrirConexion();
         $sql= "UPDATE ".clConstantesModelo::correspondencia_table."tbldocumento SET ";
-        $sql.= "id_tipo= ".$this->getId_tipo().", ";
-        $sql.= "id_evento= ".$this->getId_evento().", ";        
-        $sql.= "id_prioridad= ".$this->getId_prioridad().", ";   
-        $sql.= "id_estado= ".$this->getId_estado().", ";           
-        $sql.= "id_recordatorio= ".$this->getId_recordatorio().", ";
-        $sql.= "id_unidad= ".$this->getId_unidad().", "; 
-        $sql.= "fecdocumento=TO_DATE('".$this->getFecdocumento()."','DD/MM/YYYY'),";                  
-        $sql.= "strdescripcion= '".functions::encrypt($this->getStrdescripcion())."', ";
-        $sql.= "strtitulo= '".$this->getStrtitulo()."', ";
-        $sql.= "id_expediente= ".$this->getId_expediente().", ";        
-        $sql.= "id_tipo_organismo= ".$this->getId_tipo_organismo().", ";   
-        $sql.= "id_organismo= ".$this->getId_organismo().", ";
-        $sql.= "strpersona= '".$this->getStrpersona()."' ";        
-        $sql.= "strtelefono= '".$this->getStrtelefono()."' ";           
+//        $sql.= "id_tipo= ".$this->getId_tipo().", ";
+//        $sql.= "id_evento= ".$this->getId_evento().", ";        
+//        $sql.= "id_prioridad= ".$this->getId_prioridad().", ";   
+//        $sql.= "id_estado= ".$this->getId_estado().", ";           
+//        $sql.= "id_recordatorio= ".$this->getId_recordatorio().", ";
+//        $sql.= "id_unidad= ".$this->getId_unidad().", "; 
+//        $sql.= "fecdocumento=TO_DATE('".$this->getFecdocumento()."','DD/MM/YYYY'),";                  
+//        $sql.= "strdescripcion= '".functions::encrypt($this->getStrdescripcion())."', ";
+//        $sql.= "strtitulo= '".$this->getStrtitulo()."', ";
+//        $sql.= "id_expediente= ".$this->getId_expediente().", ";        
+//        $sql.= "id_tipo_organismo= ".$this->getId_tipo_organismo().", ";   
+//        $sql.= "id_organismo= ".$this->getId_organismo().", ";
+//        $sql.= "strpersona= '".$this->getStrpersona()."', ";        
+//        $sql.= "strtelefono= '".$this->getStrtelefono()."', ";           
+        $sql.= "strrespuesta= '".$respuesta."', ";        
+        $sql.= "strubicacion= '".$this->getStrubicacion()."' ";             
         $sql.= "WHERE id_documento= ".$this->getId_documento();
 //      exit($sql);
         $conn->sql=$sql;        
@@ -892,7 +950,7 @@ public function llenar($request)
     public function selectDocumentoReporte($fil_id_tipo, $fil_id_evento, $fil_id_prioridad,$fil_id_estado,$fil_id_recordatorio,$fil_id_unidad,$fil_id_refiere,$fil_id_tipo_organismo,$fil_id_organismo){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $sql.= "SELECT id_documento, id_usuario, id_tipo, id_evento, id_prioridad, id_estado, id_recordatorio, id_unidad, fecdocumento, strdescripcion, strtitulo, id_expediente, bolborrado, strpersona, id_refiere, visto, id_seguimiento, origen  ";
+        $sql.= "SELECT id_documento, id_usuario, id_tipo, id_evento, id_prioridad, id_estado, id_recordatorio, id_unidad, fecdocumento, strdescripcion, strtitulo, id_expediente, bolborrado, strpersona, id_refiere, visto, id_seguimiento, origen, strdirigido, strrecibido, strtelefono, strnumero, date  ";
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_tipo) AS id_tipo_documento ";
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_evento) AS id_evento_documento ";
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_prioridad) AS id_prioridad_documento ";
@@ -945,6 +1003,126 @@ public function llenar($request)
         $conn->cerrarConexion();        
         return $data;
     }      
+    
+    
+    public function reenviarDocumento(){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $data_reenviado=  $this->selectDocumento($this->getId_documento());
+        $conn->cerrarConexion();
+//        exit(print_r($data_reenviado));
+
+        //refiere todo el departamento            
+        if ($this->getId_refiere()==clConstantesModelo::buscar_refiere)  
+        {
+            $conn->abrirConexion();
+            $sql_contacto= "SELECT  *  from ".clConstantesModelo::correspondencia_table."tblcontacto  where id_coord_maestro=".$this->getId_unidad();
+            $conn->sql= $sql_contacto;
+            $datos= $conn->ejecutarSentencia(2);   
+            for ($i= 0; $i < count($datos); $i++){
+                $sql_dos= "INSERT INTO ".clConstantesModelo::correspondencia_table."tbldocumento (id_usuario, id_contacto, id_tipo, id_evento, id_prioridad, id_estado,id_recordatorio, id_unidad, fecdocumento, strdescripcion, strtitulo,id_expediente, id_tipo_organismo, id_organismo, strpersona, id_refiere, date, id_seguimiento, origen, strnumero, strtelefono, strubicacion, strdirigido, strrecibido) values ";
+                $sql_dos.= "(".$datos[$i][id_contacto].",".$this->getId_usuario().",".$data_reenviado[0][id_tipo].",".$data_reenviado[0][id_evento].",".$data_reenviado[0][id_prioridad].",".$data_reenviado[0][id_estado].",".$data_reenviado[0][id_recordatorio].",".$_SESSION['id_coord_maestro'].",TO_DATE('".$data_reenviado[0][fecdocumento]."', 'DD/MM/YYYY'),'".$data_reenviado[0][strdescripcion]."','".$data_reenviado[0][strtitulo]."',".$data_reenviado[0][id_expediente].",".$data_reenviado[0][id_tipo_organismo].",".$data_reenviado[0][id_organismo].",'".$data_reenviado[0][strpersona]."',".$data_reenviado[0][id_refiere].",'".$data_reenviado[0][date]."',".$data_reenviado[0][id_documento].",'R','".$data_reenviado[0][strnumero]."','".$data_reenviado[0][strtelefono]."','".$data_reenviado[0][strubicacion]."','".$data_reenviado[0][strdirigido]."','".$data_reenviado[0][strrecibido]."')";
+//                exit($sql_dos);
+                $conn->sql=$sql_dos;
+                $conn->ejecutarSentencia();   
+                $sql_seguimiento= "INSERT INTO ".clConstantesModelo::correspondencia_table."tbldocumento_seguimiento (id_documento, id_remite, id_origen,id_remitente, fecdocumento_movimiento) values ";
+                $sql_seguimiento.= "(".$data_reenviado[0][id_documento].",".$this->getId_usuario().",'E',".$datos[$i][id_contacto].",TO_DATE('".$this->getFecdocumento()."', 'DD/MM/YYYY'))";
+                $conn->sql=$sql_seguimiento;
+                $conn->ejecutarSentencia();             
+            }            
+            $conn->cerrarConexion();                            
+        }
+        //refiere solo personas
+        if ($this->getId_refiere()==clConstantesModelo::buscar_persona)  
+        {
+            $conn->abrirConexion();
+            $sql_tres='';
+            $sql_tres= "INSERT INTO ".clConstantesModelo::correspondencia_table."tbldocumento (id_usuario, id_contacto,id_tipo, id_evento, id_prioridad, id_estado,id_recordatorio, id_unidad, fecdocumento, strdescripcion, strtitulo,id_expediente, id_tipo_organismo, id_organismo, strpersona, id_refiere, date, id_seguimiento, origen, strnumero, strtelefono, strubicacion, strdirigido, strrecibido) values ";
+            $sql_tres.= "(".$this->getId_contacto().",".$this->getId_usuario().",".$data_reenviado[0][id_tipo].",".$data_reenviado[0][id_evento].",".$data_reenviado[0][id_prioridad].",".$data_reenviado[0][id_estado].",".$data_reenviado[0][id_recordatorio].",".$_SESSION['id_coord_maestro'].",TO_DATE('".$data_reenviado[0][fecdocumento]."', 'DD/MM/YYYY'),'".$data_reenviado[0][strdescripcion]."','".$data_reenviado[0][strtitulo]."',".$data_reenviado[0][id_expediente].",".$data_reenviado[0][id_tipo_organismo].",".$data_reenviado[0][id_organismo].",'".$data_reenviado[0][strpersona]."',".$data_reenviado[0][id_refiere].",'".$data_reenviado[0][date]."',".$data_reenviado[0][id_documento].",'R','".$data_reenviado[0][strnumero]."','".$data_reenviado[0][strtelefono]."','".$data_reenviado[0][strubicacion]."','".$data_reenviado[0][strdirigido]."','".$data_reenviado[0][strrecibido]."')";
+//            exit($sql_tres);            
+            $conn->sql=$sql_tres;     
+            $conn->ejecutarSentencia();             
+                $sql_seguimiento= "INSERT INTO ".clConstantesModelo::correspondencia_table."tbldocumento_seguimiento (id_documento, id_remite, id_origen,id_remitente, fecdocumento_movimiento) values ";
+                $sql_seguimiento.= "(".$data_reenviado[0][id_documento].",".$this->getId_usuario().",'E',".$this->getId_contacto().",TO_DATE('".date('d/m/Y')."', 'DD/MM/YYYY'))";
+//                exit($sql_seguimiento);
+                $conn->sql=$sql_seguimiento;            
+            $conn->ejecutarSentencia();   
+            $conn->cerrarConexion();            
+        }       
+        $retorno= $this->getId_documento();
+//        $conn->cerrarConexion();
+        return $retorno;
+    }
+    
+    
+    public function insertDocumento($id_next=''){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $tipo=clConstantesModelo::buscar_expediente;
+        if ($this->getStrnumero()=='') $this->setStrnumero('S/N-'.$id_next);
+        $expediente=0;
+        if (($this->getId_tipo()==$tipo) and ($this->getId_expediente()!=''))
+            $expediente=$this->getId_expediente();
+        //crea su propio item 
+
+        if ($this->getId_documento_accion()=='N')
+        {
+            $sql= "INSERT INTO ".clConstantesModelo::correspondencia_table."tbldocumento (id_usuario, id_tipo, id_evento, id_prioridad, id_estado,id_recordatorio, id_unidad, fecdocumento, strdescripcion, strtitulo,id_expediente, id_tipo_organismo, id_organismo, strpersona, id_refiere, id_contacto, date, origen, strnumero, strtelefono, strrespuesta, strubicacion, strdirigido, strrecibido) values ";
+            $sql.= "(".$this->getId_usuario().",".$this->getId_tipo().",".$this->getId_evento().",".$this->getId_prioridad().",".$this->getId_estado().",".$this->getId_recordatorio().",".$this->getId_unidad().",TO_DATE('".$this->getFecdocumento()."', 'DD/MM/YYYY'),'".functions::encrypt($this->getStrdescripcion())."','".functions::encrypt($this->getStrtitulo())."',".$expediente.",".$this->getId_tipo_organismo().",".$this->getId_organismo().",'".$this->getStrpersona()."',".$this->getId_refiere().",".$this->getId_contacto().",'".$this->getDate()."','E','".$this->getStrnumero()."','".$this->getStrtelefono()."','".$this->getStrrespuesta()."','".$this->getStrubicacion()."','".$this->getStrdirigido()."','".$this->getStrrecibido()."')";
+//            exit($sql);
+            $conn->sql=$sql;
+            $conn->ejecutarSentencia();                
+            $sql="SELECT last_value as maximo FROM " . clConstantesModelo::correspondencia_table . "tbldocumento_id_documento_seq";
+            $conn->sql = $sql;
+            $data = $conn->ejecutarSentencia (2);
+            if ($data) $id_seguimiento=$data[0]['maximo'];            
+        }
+        //refiere todo el departamento            
+        if ($this->getId_refiere()==clConstantesModelo::buscar_refiere)  
+        {
+            $sql_contacto= "SELECT  *  from ".clConstantesModelo::correspondencia_table."tblcontacto  where id_coord_maestro=".$this->getId_unidad();
+            $conn->sql= $sql_contacto;
+            $datos= $conn->ejecutarSentencia(2);   
+            for ($i= 0; $i < count($datos); $i++){
+                $sql_dos= "INSERT INTO ".clConstantesModelo::correspondencia_table."tbldocumento (id_usuario, id_tipo, id_evento, id_prioridad, id_estado,id_recordatorio, id_unidad, fecdocumento, strdescripcion, strtitulo,id_expediente, id_tipo_organismo, id_organismo, strpersona, id_refiere, date, id_seguimiento, origen, strnumero, strtelefono, strrespuesta, strubicacion, strdirigido, strrecibido) values ";
+                $sql_dos.= "(".$datos[$i][id_contacto].",".$this->getId_tipo().",".$this->getId_evento().",".$this->getId_prioridad().",".$this->getId_estado().",".$this->getId_recordatorio().",".$_SESSION['id_coord_maestro'].",TO_DATE('".$this->getFecdocumento()."', 'DD/MM/YYYY'),'".functions::encrypt($this->getStrdescripcion())."','".functions::encrypt($this->getStrtitulo())."',".$expediente.",".$this->getId_tipo_organismo().",".$this->getId_organismo().",'".$this->getStrpersona()."',".$this->getId_refiere().",'".$this->getDate()."',".$id_seguimiento.",'R','".$this->getStrnumero()."','".$this->getStrtelefono()."','".$this->getStrrespuesta()."','".$this->getStrubicacion()."','".$this->getStrdirigido()."','".$this->getStrrecibido()."')";
+                $conn->sql=$sql_dos;
+                $conn->ejecutarSentencia();   
+                $sql_seguimiento= "INSERT INTO ".clConstantesModelo::correspondencia_table."tbldocumento_seguimiento (id_documento, id_remite, id_origen,id_remitente, fecdocumento_movimiento) values ";
+                $sql_seguimiento.= "(".$id_seguimiento.",".$this->getId_usuario().",'E',".$datos[$i][id_contacto].",TO_DATE('".$this->getFecdocumento()."', 'DD/MM/YYYY'))";
+                $conn->sql=$sql_seguimiento;
+                $conn->ejecutarSentencia();                    
+            }            
+        }
+        //refiere solo personas
+        if ($this->getId_refiere()==clConstantesModelo::buscar_persona)  
+        {
+            $sql='';
+            $sql= "INSERT INTO ".clConstantesModelo::correspondencia_table."tbldocumento (id_usuario, id_tipo, id_evento, id_prioridad, id_estado,id_recordatorio, id_unidad, fecdocumento, strdescripcion, strtitulo,id_expediente, id_tipo_organismo, id_organismo, strpersona, id_refiere, id_contacto, date, id_seguimiento, origen, strnumero, strtelefono, strrespuesta, strubicacion, strdirigido, strrecibido) values ";
+            $sql.= "(".$this->getId_contacto().",".$this->getId_tipo().",".$this->getId_evento().",".$this->getId_prioridad().",".$this->getId_estado().",".$this->getId_recordatorio().",".$_SESSION['id_coord_maestro'].",TO_DATE('".$this->getFecdocumento()."', 'DD/MM/YYYY'),'".functions::encrypt($this->getStrdescripcion())."','".functions::encrypt($this->getStrtitulo())."',".$expediente.",".$this->getId_tipo_organismo().",".$this->getId_organismo().",'".$this->getStrpersona()."',".$this->getId_refiere().",".$this->getId_usuario().",'".$this->getDate()."',".$id_seguimiento.",'R','".$this->getStrnumero()."','".$this->getStrtelefono()."','".$this->getStrrespuesta()."','".$this->getStrubicacion()."','".$this->getStrdirigido()."','".$this->getStrrecibido()."')";
+//            exit($sql);
+            $conn->sql=$sql;             
+            $conn->ejecutarSentencia();        
+                $sql="SELECT last_value as maximo FROM " . clConstantesModelo::correspondencia_table . "tbldocumento_id_documento_seq";
+                $conn->sql = $sql;
+                $data = $conn->ejecutarSentencia (2);          
+                if ($data)
+                {
+                    $id_seguimiento_registrado=$data[0]['maximo'];        
+                    $sql_update= "UPDATE ".clConstantesModelo::correspondencia_table."tbldocumento SET  id_seguimiento=".$id_seguimiento." WHERE id_documento= ".$id_seguimiento_registrado;
+                    $conn->sql=$sql_update;            
+                    $conn->ejecutarSentencia();                    
+                }
+                $sql_seguimiento= "INSERT INTO ".clConstantesModelo::correspondencia_table."tbldocumento_seguimiento (id_documento, id_remite, id_origen,id_remitente, fecdocumento_movimiento) values ";
+                $sql_seguimiento.= "(".$id_seguimiento.",".$this->getId_usuario().",'E',".$this->getId_contacto().",TO_DATE('".date('d/m/Y')."', 'DD/MM/YYYY'))";
+//                exit($sql_seguimiento);
+                $conn->sql=$sql_seguimiento;
+                $conn->ejecutarSentencia();                     
+        }            
+        $retorno= $this->verIdDocumento();
+        $conn->cerrarConexion();
+        return $retorno;
+    }    
         
     
  } 

@@ -162,11 +162,11 @@ public function llenar($request)
                $conn->abrirConexion ();
                $sql = "";
                $sql = "SELECT
-			id_proexpediente_actuaciones, id_proexpediente, id_tipo_actuacion, id_actuacion, id_escrito, strdescripcionactuacion, to_char(fecactuacion,'DD/MM/YYYY') as fecactuacion, strobservacion, strexpedientetribunal, activo
+			id_proexpediente_actuaciones, id_proexpediente, id_tipo_actuacion, id_actuacion, id_escrito, strdescripcionactuacion, to_char(fecactuacion,'DD/MM/YYYY') as fecactuacion, strobservacion, strexpedientetribunal
                     from
                     " . clConstantesModelo::scsd_table . "tblproexpediente_actuaciones"; 
                    $sql.=" where id_proexpediente_actuaciones=".$id_proactuaciones." and id_proexpediente=".$id_expediente_actuacion;
-                   exit($sql);
+//                   exit($sql);
                $conn->sql = $sql;
                $data = $conn->ejecutarSentencia (2);
                $conn->cerrarConexion ();
@@ -275,27 +275,6 @@ public function llenar($request)
                $conn->cerrarConexion ();
                return true;
      }
-
-     public function insertarActuacionExpediente($id_tipo_actuacion,$id_actuacion_hijo,$id_nombre_actuacion,$actu_strobservacion,$id_proexpediente,$actu_fecha,$strdescripcionactuacion,$strexpedientetribunal) {
-              $conn = new Conexion ();
-               $conn->abrirConexion ();
-               $sql = "insert into " . clConstantesModelo::scsd_table . "tblproexpediente_actuaciones (
-               id_tipo_actuacion, id_actuacion,id_escrito, strobservacion, id_proexpediente, fecactuacion,strdescripcionactuacion,strexpedientetribunal) values(";
-               $sql.= $id_tipo_actuacion.",";
-               $sql.= $id_actuacion_hijo.",";
-               $sql.= $id_nombre_actuacion.",'";
-               $sql.= $actu_strobservacion."',";
-               $sql.= $id_proexpediente.",";
-               $sql.= "to_date('".$actu_fecha."','dd/mm/yyyy'),'";
-               $sql.= $strdescripcionactuacion."','";  
-               $sql.= $strexpedientetribunal."')";  
-//               exit($sql);               
-               $conn->sql = $sql;
-               $conn->ejecutarSentencia ();
-               $conn->cerrarConexion ();
-               return true;
-     }
-
 
 
 /*

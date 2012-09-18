@@ -33,7 +33,7 @@
         <script src="../comunes/js/prototype.js" type="text/javascript"></script>
         <script src="../comunes/js/negocio/js_ingresoJuridica.js" type="text/javascript"></script>
         <script type="text/javascript" src="../comunes/js/effects.js"></script>
-        <script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>
+<!--        <script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>-->
         <form name="frmcontacto" method="post">
             <input type="hidden" name="iduser" value="">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">

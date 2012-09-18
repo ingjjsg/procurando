@@ -1,6 +1,7 @@
 <?php
     session_start();
-    require_once '../modelo/clProActuaciones.php';
+    require_once '../modelo/clProActuacionesExpediente.php';
+    require_once '../modelo/clProActuaciones.php';    
     require_once '../modelo/clProAsociaciones.php';    
     require_once '../modelo/clMaestroModelo.php';
     require_once '../modelo/clProExpediente_Fases.php';    
@@ -18,13 +19,14 @@
 
     verificarSession();
     
+    
     function llenarSelectFormularioTipoEstadoMinuta($select="") {
         $respuesta= new xajaxResponse();
         $maestro= new clMaestroModelo();
         $data= "";
         $html= "";
         $estados= clConstantesModelo::combos();
-        $data= $maestro->selectAllMaestroHijos($estados['estados_minuta'], 2);
+        $data= $maestro->selectAllMaestroHijos($estados['estados_minuta'], 'stritema', 2);
         $html= "<select id='id_estado_minuta' name='id_estado_minuta' style='width:50%' onchange=\"xajax_llenarSelectComboItemTipoActuacion(document.frminscribir.id_tipo_actuacion.value);\">";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
@@ -55,7 +57,7 @@
             $respuesta->script('xajax_llenarSelectNombreItemTipoActuacion('.$data[0]['id_tipo_actuacion'].',' . $data[0]['id_actuacion'] . ',' . $data[0]['id_escrito'] . ')');           
             $respuesta->assign("actu_strobservacion", "value", $data[0]['strobservacion']);
             $respuesta->assign("strexpedientetribunal", "value", $data[0]['strexpedientetribunal']);           
-            $respuesta->assign("actu_fecha", "value", $data[0]['fecactuacion']);           
+            $respuesta->assign("fecactuacion", "value", $data[0]['fecactuacion']);           
             $respuesta->assign("id_proexpediente_actuaciones", "value", $data[0]['id_proexpediente_actuaciones']);
             $respuesta->script("FCKeditorAPI.__Instances['descripcionact'].SetHTML('".$data[0]['strdescripcionactuacion']."')");           
 
@@ -323,7 +325,7 @@
         $data= "";
         $html= "";
         $estados= clConstantesModelo::combos();
-        $data= $maestro->selectAllMaestroHijos($estados['gaveta_archivador'], 2);
+        $data= $maestro->selectAllMaestroHijos($estados['gaveta_archivador'], 'stritema', 2);
         $html= "<select id='id_tipo_archivador_gaveta' name='id_tipo_archivador_gaveta' style='width:50%'>";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
@@ -346,7 +348,7 @@
         $data= "";
         $html= "";
         $estados= clConstantesModelo::combos();
-        $data= $maestro->selectAllMaestroHijos($estados['piso_archivador'], 2);
+        $data= $maestro->selectAllMaestroHijos($estados['piso_archivador'], 'stritema', 2);
         $html= "<select id='id_tipo_piso_archivador' name='id_tipo_piso_archivador' style='width:50%'>";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
@@ -369,7 +371,7 @@
         $data= "";
         $html= "";
         $estados= clConstantesModelo::combos();
-        $data= $maestro->selectAllMaestroHijos($estados['tipo_archivador'], 2);
+        $data= $maestro->selectAllMaestroHijos($estados['tipo_archivador'], 'stritema', 2);
         $html= "<select id='id_tipo_archivador' name='id_tipo_archivador' style='width:50%'>";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
@@ -392,7 +394,7 @@
         $data= "";
         $html= "";
         $estados= clConstantesModelo::combos();
-        $data= $maestro->selectAllMaestroHijos($estados['estado_fisico_expediente'], 2);
+        $data= $maestro->selectAllMaestroHijos($estados['estado_fisico_expediente'], 'stritema', 2);
         $html= "<select id='id_estado_fisico_expediente' name='id_estado_fisico_expediente' style='width:50%'>";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
@@ -416,7 +418,7 @@
         $data= "";
         $html= "";
         $estados= clConstantesModelo::combos();
-        $data= $maestro->selectAllMaestroHijos($estados['espacios'], 2);
+        $data= $maestro->selectAllMaestroHijos($estados['espacios'], 'stritema', 2);
         $html= "<select id='id_tipo_espacio' name='id_tipo_espacio' style='width:50%'>";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
@@ -473,19 +475,19 @@ function selectAllActuaciones($id_expediente){
                                     <td align='center'>".$datos[$i][strnombreactuacion]."</td>                                        
                                     <td align='center' >".$datos[$i][fecactuacion]."</td>
                                     <td align='center'>
-                                        <a>
+                                        <!--<a>
                                             <img src='../comunes/images/script_go.png' onmouseover=\"Tip('Ver Texto de la Actuación')\" onmouseout='UnTip()' onclick=\"location.href='./reporteAsociacionVista.php?id=".$datos[$i][id_proexpediente_actuaciones]."'\">
-                                        </a>";
+                                        </a>-->";
                             if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario('actuaciones'),'editar', clConstantesModelo::acciones_actuaciones())){
                                 $html.="<a>
                                            <img src='../comunes/images/script_attach.png' onmouseover=\"Tip('Editar Actuación')\" onmouseout='UnTip()' onclick=\"xajax_selectSituacionDetalle('".$datos[$i][id_proexpediente_actuaciones]."','".$datos[$i][id_proexpediente]."');\">
                                         </a>";
                             }
-                            if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario('actuaciones'),'eliminar', clConstantesModelo::acciones_actuaciones())){
-                                $html.="<a>
-                                            <img src='../comunes/images/script_delete.png' onmouseover='Tip(\"Eliminar Asociacion\")' onmouseout='UnTip()'  onclick=\"if(confirm('¿Desea Eliminar Esta Actuación?')){ xajax_eliminarActuacion('".$datos[$i][id_proexpediente_actuaciones]."','".$datos[$i][id_proexpediente]."');alert('Datos Eliminados Correctamente');location.href='./vista_listaAsociaciones.php'}\">
-                                        </a>";
-                            }
+//                            if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario('actuaciones'),'eliminar', clConstantesModelo::acciones_actuaciones())){
+//                                $html.="<a>
+//                                            <img src='../comunes/images/script_delete.png' onmouseover='Tip(\"Eliminar Asociacion\")' onmouseout='UnTip()'  onclick=\"if(confirm('¿Desea Eliminar Esta Actuación?')){ xajax_eliminarActuacion('".$datos[$i][id_proexpediente_actuaciones]."','".$datos[$i][id_proexpediente]."');alert('Datos Eliminados Correctamente');location.href='./vista_listaAsociaciones.php'}\">
+//                                        </a>";
+//                            }
                              $html.="</td>
                                 </tr>
                                 <tr>
@@ -503,18 +505,43 @@ function selectAllActuaciones($id_expediente){
 }
     
 
+    function editar_actuacion($request){
+        $respuesta= new xajaxResponse();
+        $actuacion= new clTblproexpediente_actuaciones();
+        $actuacion->llenar($request);
+        $data= $actuacion->Update();
+        if($data){
+            $respuesta->alert("La Actuación del Expediente se actualizo exitosamente");
+            $respuesta->script("$('formularioActuacion').hide()");            
+            $respuesta->assign("id_proexpediente_actuaciones", "value", "");
+            $respuesta->script('xajax_llenarSelectFormularioTipoActuacion("frminscribir")');
+            $respuesta->assign("id_actuacion", "value", "0");
+            $respuesta->assign("id_escrito", "value", "0");            
+            $respuesta->assign("actu_strobservacion", "value", "");
+            $respuesta->assign("strexpedientetribunal", "value", "");            
+            $respuesta->assign("strdescripcionactuacion", "value", "");            
+            $respuesta->script("FCKeditorAPI.__Instances['descripcionact'].SetHTML('')");        
+            $respuesta->assign("fecactuacion", "value", "");              
+            $respuesta->script("xajax_selectAllActuaciones('".$request['id_proexpediente']."')");          
+           
+        }else{
+            $respuesta->alert("La Actuación del Expediente no se ha actualizado");
+        }
+        return $respuesta;
+    }
+
     function validar_actuacion($request){
         $respuesta = new xajaxResponse();
         
         if( $request['id_proexpediente_actuaciones'] !=""){
-            $respuesta->script("xajax_editar_fase(xajax.getFormValues('frminscribir'),'".$request['id_proexpediente_actuaciones']."')");
+            $respuesta->script("xajax_editar_actuacion(xajax.getFormValues('frminscribir'))");
         }else{
             $campos_validar= array(
             'Tipo de Actuación'    => 'id_tipo_actuacion',
-            'Actuación'    => 'id_actuacion_hijo',
-            'Modelo Actuación'  => 'id_nombre_actuacion',
+            'Actuación'    => 'id_actuacion',
+            'Modelo Actuación'  => 'id_escrito',
             'Observacion'  => 'actu_strobservacion',
-            'Fecha de la Actuación'    => 'actu_fecha',
+            'Fecha de la Actuación'    => 'fecactuacion',
             'Descripción de la Actuación' => 'strdescripcionactuacion', 
             );
             $validacion=  functions::validarFormulario('frminscribir',$request,$campos_validar);
@@ -522,6 +549,7 @@ function selectAllActuaciones($id_expediente){
                 $respuesta->alert($validacion['msg']);
                 $respuesta->script($validacion['focus']);
             }else{
+//                exit('paso');
                 $respuesta->script("xajax_guardar_actuacion(xajax.getFormValues('frminscribir'))");
             }
         }
@@ -530,20 +558,21 @@ function selectAllActuaciones($id_expediente){
 
     function guardar_actuacion($request){
         $respuesta= new xajaxResponse();
-	$actuaciones= new clTblproactuaciones();
+	$actuaciones= new clTblproexpediente_actuaciones();
         $actuaciones->llenar($request);
-        if ($actuaciones->insertarActuacionExpediente($request['id_tipo_actuacion'],$request['id_actuacion_hijo'],$request['id_nombre_actuacion'],$request['actu_strobservacion'],$request['id_proexpediente'],$request['actu_fecha'],$request['strdescripcionactuacion'],$request['strexpedientetribunal']))
+        if ($actuaciones->insertar())
         {
             $respuesta->alert("La Actuación del Expediente se inserto exitosamente");
+            $respuesta->script("$('formularioActuacion').hide()");            
             $respuesta->assign("id_proexpediente_actuaciones", "value", "");
             $respuesta->script('xajax_llenarSelectFormularioTipoActuacion("frminscribir")');
             $respuesta->assign("id_actuacion", "value", "0");
-            $respuesta->assign("id_nombre_actuacion", "value", "0");            
+            $respuesta->assign("id_escrito", "value", "0");            
             $respuesta->assign("actu_strobservacion", "value", "");
             $respuesta->assign("strexpedientetribunal", "value", "");            
             $respuesta->assign("strdescripcionactuacion", "value", "");            
             $respuesta->script("FCKeditorAPI.__Instances['descripcionact'].SetHTML('')");        
-            $respuesta->assign("actu_fecha", "value", "");              
+            $respuesta->assign("fecactuacion", "value", "");              
             $respuesta->script("xajax_selectAllActuaciones('".$request['id_proexpediente']."')");            
         }else{
             $respuesta->alert("La Actuación en el Expediente no se ha guardado");
@@ -569,7 +598,7 @@ function selectAllActuaciones($id_expediente){
         $html= "";
 	$actuaciones= new clTblproactuaciones();
         $data= $actuaciones->selectAllActuacionesHijos($id_maestro,$id_detalle);
-        $html= "<select id='id_nombre_actuacion' name='id_nombre_actuacion' style='width:50%' onchange=\"xajax_selectActuacionHijo(document.frminscribir.id_nombre_actuacion.value);\">";
+        $html= "<select id='id_escrito' name='id_escrito' style='width:50%' onchange=\"xajax_selectActuacionHijo(document.frminscribir.id_escrito.value);\">";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
             for ($i= 0; $i < count($data); $i++){
@@ -590,8 +619,8 @@ function selectAllActuaciones($id_expediente){
         $maestro= new clMaestroModelo();
         $data= "";
         $html= "";
-        $data= $maestro->selectAllMaestroHijos($id_maestro, 2);
-        $html= "<select id='id_actuacion_hijo' name='id_actuacion_hijo' style='width:50%' onchange=\"xajax_llenarSelectNombreItemTipoActuacion(document.frminscribir.id_tipo_actuacion.value,document.frminscribir.id_actuacion_hijo.value);\">";
+        $data= $maestro->selectAllMaestroHijos($id_maestro,'stritema', 2);
+        $html= "<select id='id_actuacion' name='id_actuacion' style='width:50%' onchange=\"xajax_llenarSelectNombreItemTipoActuacion(document.frminscribir.id_tipo_actuacion.value,document.frminscribir.id_actuacion.value);\">";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
             for ($i= 0; $i < count($data); $i++){
@@ -613,7 +642,7 @@ function selectAllActuaciones($id_expediente){
         $data= "";
         $html= "";
         $estados= clConstantesModelo::combos();
-        $data= $maestro->selectAllMaestroHijos($estados['actuaciones'], 2);
+        $data= $maestro->selectAllMaestroHijos($estados['actuaciones'], 'stritema', 2);
         $html= "<select id='id_tipo_actuacion' name='id_tipo_actuacion' style='width:50%' onchange=\"xajax_llenarSelectComboItemTipoActuacion(document.frminscribir.id_tipo_actuacion.value);\">";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
@@ -1123,7 +1152,7 @@ function selectAllActuaciones($id_expediente){
                                 <td align='center'>".$data[$i]['strapellido']."</td>                                    
                                 <td align='center'>
                                         <a>
-                                            <img src='../comunes/images/s_success.png' onmouseover='Tip(\"Elegir Abogado\")' onmouseout='UnTip()' onclick=\"xajax_buscarAsistido('".$data[$i]['id_solicitante']."','ejecutor')\">
+                                            <img src='../comunes/images/s_success.png' onmouseover='Tip(\"Elegir Abogado\")' onmouseout='UnTip()' onclick=\"xajax_buscarAsistido('".$data[$i]['id_cliente']."','ejecutor')\">
                                         </a>                                   
                                 </td>
                             </tr>";
@@ -1278,7 +1307,7 @@ function selectAllActuaciones($id_expediente){
                 if($data_asistido){
                     $nombre_asistido=$data_asistido[0]['strnombre']." ".$data_asistido[0]['strapellido'];
                 }
-                $data_abogado_responsable= $abogado->buscarAbogado($data[$i][id_abogado_resp],"responsabkle");
+                $data_abogado_responsable= $abogado->buscarAbogadoResponsable($data[$i]['id_abogado_resp']);
                 if($data_abogado_responsable){
                     $nombre_abogado_responsable=$data_abogado_responsable[0]['strnombre']." ".$data_abogado_responsable[0]['strapellido'];
                 }
@@ -1561,7 +1590,7 @@ function selectAllActuaciones($id_expediente){
         return $respuesta;
     }
     
-    function llenarSelectMinuta($valor, $select= "", $ancho= "60%") {
+    function llenarSelectMinuta($valor="", $select= "", $ancho= "60%") {
         $respuesta= new xajaxResponse();
         $maestro= new clMaestroModelo();
         $data= "";
@@ -1587,9 +1616,9 @@ function selectAllActuaciones($id_expediente){
          $respuesta= new xajaxResponse();
          $tipo_tramite=  clConstantesModelo::tipo_tramite();
          if($pestana == $tipo_tramite['divorcio']){
-             $respuesta->assign("link7","style.display","inline");
+             $respuesta->assign("link8","style.display","inline");
          }else{
-              $respuesta->assign("link7","style.display","none");
+              $respuesta->assign("link8","style.display","none");
          }
          return $respuesta;
     }
@@ -1738,7 +1767,12 @@ function selectAllActuaciones($id_expediente){
         $respuesta->script('xajax_llenarSelectFormularioTipoEstadoMinuta()');        
         $respuesta->script('xajax_llenarSelectFormularioTipoActuacion()');
         $respuesta->script('xajax_llenarSelectTipoFase("frminscribir")');        
-        $respuesta->script('xajax_buscarAbogado(' . $data[0][id_abogado_resp] . ',"responsable")');        
+//        $respuesta->script('xajax_buscarAbogado(' . $data[0][id_abogado_resp] . ',"responsable")');   
+        
+        $respuesta->assign("strnombre_abogado_responsable", "value", $_SESSION['strnombre']. " " . $_SESSION['strapellido']);
+        $respuesta->assign("cedula_abogado_responsable", "value", $_SESSION['strdocumento']);
+        $respuesta->assign("id_abogado_resp", "value", $_SESSION['id_contacto']);       
+                
         $respuesta->script('xajax_verCountExpediente(' . $data[0][cedula_cliente] . ')');     
         $respuesta->script('xajax_buscarAsistido(' . $data[0][id_solicitante] . ')');
         $respuesta->script('xajax_buscarConyugue(' . $data[0][id_contrarios] . ')');    
@@ -2042,7 +2076,14 @@ function editar_expediente($request){
         $expediente->llenar($request);
         $data= $expediente->insertar();
         if($data){
-            $respuesta->script("xajax_buscarDatosSituaciones('".$request['id_proexpediente']."')");            
+            $respuesta->script("xajax_buscarDatosSituaciones('".$request['id_proexpediente']."')");   
+           $respuesta->script('xajax_llenarSelectTipoMinuta("frminscribir","")');
+           $respuesta->script('xajax_llenarSelectFormularioTipoEstadoMinuta("")');           
+           $respuesta->script('xajax_llenarSelectMinuta("","")');
+           $respuesta->assign("strobservacion", "value", "");
+           $respuesta->assign("fecminuta", "value", "");           
+           $respuesta->assign("id_proexpediente_situacion", "value", "");            
+            $respuesta->alert("La Situación se Creo Exitosamente");            
         }else{
             $respuesta->alert("La Situación no se ha guardado");
         }
@@ -2072,10 +2113,12 @@ function editar_expediente($request){
         if($data){
             $respuesta->alert("El Expediente se actualizo exitosamente");
             $respuesta->script("xajax_buscarDatosSituaciones('".$request['id_proexpediente']."')");
-            $respuesta->assign("id_proexpediente_situacion", "value", "");
-            $respuesta->script('xajax_llenarSelectTipoMinuta("frminscribir")');
-            $respuesta->assign("id_minuta", "value", "0");
-            $respuesta->assign("strobservacion", "value", "");
+           $respuesta->script('xajax_llenarSelectTipoMinuta("frminscribir","")');
+           $respuesta->script('xajax_llenarSelectFormularioTipoEstadoMinuta("")');           
+           $respuesta->script('xajax_llenarSelectMinuta("","")');
+           $respuesta->assign("strobservacion", "value", "");
+           $respuesta->assign("fecminuta", "value", "");           
+           $respuesta->assign("id_proexpediente_situacion", "value", "");  
         }else{
             $respuesta->alert("El Expediente no se ha actualizado");
         }

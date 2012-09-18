@@ -408,6 +408,17 @@ public function llenar($request)
     }
 
 
+    public static function getCedulaContrario($cedula){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $sql="SELECT strcedula FROM ".clConstantesModelo::correspondencia_table."tbl_contrarios WHERE strcedula::integer=".$cedula;        
+        //exit($sql);
+        $conn->sql= $sql;
+        $data= $conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();
+        return $data[0][strcedula];
+    }     
+
 
 //================================FUNCION INSERTAR============================================
 
@@ -429,12 +440,7 @@ public function llenar($request)
          inthijos,
          strcodigopostal,
          datefecnac,
-         strobservacion,
-         id_representante,
-         id_organizacion,
-         strdocumentoconst,
-         strrif,
-         strmovil) VALUES ('"
+         strobservacion) VALUES ('"
          .$this->get_strnombre()."','"
          .$this->get_strapellido()."','"
          .$this->get_strcedula()."','"
@@ -448,12 +454,7 @@ public function llenar($request)
          .$this->get_inthijos().",'"
          .$this->get_strcodigopostal()."',TO_DATE('"
          .$this->get_datefecnac()."', 'DD/MM/YYYY'),'"
-         .$this->get_strobservacion()."',"
-         .$this->get_id_representante().","
-         .$this->get_id_organizacion().",'"
-         .$this->get_strdocumentoconst()."','"
-         .$this->get_strrif()."','"
-         .$this->get_strmovil()."')";
+         .$this->get_strobservacion()."')";
          $conn->sql=$sql;
          if($conn->ejecutarSentencia()){
              $retorno=true;
@@ -501,6 +502,8 @@ public function llenar($request)
 //======================================FUNCION ACTUALIZAR===============================================
 
 
+
+
      public function Update(){
          $conn= new Conexion();
          $conn->abrirConexion();
@@ -518,12 +521,7 @@ public function llenar($request)
          inthijos=".$this->get_inthijos().",
          strcodigopostal='".$this->get_strcodigopostal()."',
          datefecnac=TO_DATE('".$this->get_datefecnac()."','DD/MM/YYYY'),
-         strobservacion='".$this->get_strobservacion()."',
-         id_representante=".$this->get_id_representante().",
-         id_organizacion=".$this->get_id_organizacion().",
-         strdocumentoconst='".$this->get_strdocumentoconst()."',
-         strrif='".$this->get_strrif()."',
-         strmovil='".$this->get_strmovil()."' WHERE id_contrarios=".$this->get_id_contrarios();
+         strobservacion='".$this->get_strobservacion()."' WHERE id_contrarios=".$this->get_id_contrarios();
          $conn->sql=$sql;
          $data = $conn->ejecutarSentencia();
          return $data;

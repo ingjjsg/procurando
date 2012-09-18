@@ -3,7 +3,6 @@
     require_once '../controlador/contactoControlador.php';
     require_once '../controlador/menuControlador.php';
     $_SESSION["AD"]="ASC";
-    $_SESSION['id_oficina']="O";
 
 
 ?>
@@ -51,11 +50,11 @@
   ?>
   <div class="menu_enlaces">
         <div class="menu_enlaces_texto">
-          <?php echo crearMenu($_SESSION['id_profile'],clConstantesModelo::ModulosOAS()); ?>
+          <?php echo crearMenu($_SESSION['id_profile'],clConstantesModelo::ModulosDictamenes()); ?>
       </div>
   </div>
   <div class="desarrollo" id="largo">
-    <div class="desarrollo_contenido"><iframe  id="contenido" name="contenido" src="../vista/vista_tblproexpediente.php" scrolling="auto" frameborder="0" width="100%" height="1000"></iframe></div>
+    <div class="desarrollo_contenido"><iframe  id="contenido" name="contenido" src="../vista/vista_tbldictamen.php" scrolling="auto" frameborder="0" width="100%" height="600"></iframe></div>
   </div>
   <!-- derecha -->
 </div>
