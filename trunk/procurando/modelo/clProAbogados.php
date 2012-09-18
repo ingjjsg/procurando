@@ -669,6 +669,22 @@ public function llenar($request)
          $data = $conn->ejecutarSentencia(2);
          return $data;
     }
+       public function buscarAbogadoResponsable($id=""){
+         $conn= new Conexion();
+         $conn->abrirConexion();
+         $sql="SELECT id_contacto,
+         strnombre,
+         strapellido,
+         strdocumento FROM public.tblcontacto WHERE bolborrado=0";
+         if($id != ""){
+             $sql.=" AND id_contacto='$id'";
+         }
+         
+//         exit($sql);
+         $conn->sql=$sql;
+         $data = $conn->ejecutarSentencia(2);
+         return $data;
+    }    
  }
 
 ?>

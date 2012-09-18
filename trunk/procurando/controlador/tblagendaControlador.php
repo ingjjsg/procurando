@@ -13,6 +13,188 @@
 
     verificarSession();
     
+    
+    function guardarAgendaExpediente($request){
+        $respuesta= new xajaxResponse();
+        $agenda= new clTblagenda();
+        $agenda->llenar($request);
+        if (functions::VerificarFechaActual(str_replace('/', '-', $request['fecagenda'])))
+        {        
+            if( $request['id_agenda'] =="") 
+            {
+                $data= $agenda->insertAgenda();
+                $respuesta->alert("La Agenda se creo Exitosamente");                
+                $respuesta->script("location.href='vista_tblagenda_Expediente.php?id=".$request['id_agenda_expediente']."';");            
+            }
+            else 
+            {
+                $data= $agenda->updateAgenda();
+                $respuesta->alert("La Agenda se Actualizo Exitosamente");                    
+                $respuesta->script("location.href='vista_tblagenda_Expediente.php?id=".$request['id_agenda_expediente']."';"); 
+            }
+            if(!$data){
+                $respuesta->alert("La Agenda no se ha guardado");
+            }
+        }
+        else
+            $respuesta->alert("La fecha del Item de Agenda no puede vencer el mismo día, o ser menor a la fecha de Registro");
+        return $respuesta;
+    }      
+    
+    function validar_Agenda_Expediente($request){
+        $respuesta = new xajaxResponse();
+            $campos_validar= array(
+            'Tipo de Agenda'    => 'id_tipo',
+            'Tipo de Prioridad'    => 'id_prioridad',
+            'Tipo de Evento'    => 'id_evento',                
+            'Tipo de Estado'    => 'id_estado',
+            'Tipo de Recordatorio'    => 'id_recordatorio',                
+            'Titulo del Evento'  => 'strtitulo',
+            'Fecha de la Agenda'    => 'fecagenda',
+            'Descripcion de la Agenda' => 'strdescripcion',
+            );
+            $validacion=  functions::validarFormulario('frmAgenda',$request,$campos_validar);
+            if($validacion){
+                $respuesta->alert($validacion['msg']);
+                $respuesta->script($validacion['focus']);
+            }else{
+                $respuesta->script("xajax_guardarAgendaExpediente(xajax.getFormValues('frmAgenda'))");
+            }
+        return $respuesta;
+    }        
+    
+    function selectAllAgendaExpediente($id){
+        $respuesta= new xajaxResponse();
+        $proagenda= new clTblagenda();
+        $data= "";
+        $html= "";
+	if ($id)
+        {
+            $data= $proagenda->selectAllAgendaExpediente($id);
+        }
+        if($data){
+            $html= "<div style='border:solid 1px #CCCCCC;background:#f8f8f8'>
+                        <table border='0' class='tablaTitulo' width='100%'>
+                            <tr>
+                                <th width='5%'>
+                                    <a href='#' onclick=\"xajax_orden('id_honorarios')\"></a>
+                                </th>                               
+                                <th width='10%'>
+                                    <a href='#' onclick=\"xajax_orden('id_honorarios')\">Agenda</a>
+                                </th>  
+                                <th width='15%'>
+                                    <a href='#' onclick=\"xajax_orden('id_tipo')\">Departamentto</a>
+                                </th>                                
+                                <th width='7%'>
+                                    <a href='#' onclick=\"xajax_orden('id_tipo')\">Evento</a>
+                                </th>
+                                <th width='15%'>
+                                    <a href='#' onclick=\"xajax_orden('id_tipo')\">Titulo</a>
+                                </th>                                
+                                <th width='10%'>
+                                    <a href='#' onclick=\"xajax_orden('Tramite')\">Prioridad</a>
+                                </th>
+                                <th width='10%'>
+                                    <a href='#' onclick=\"xajax_orden('Unidad')\">Estado</a>
+                                </th>                    
+                                <th width='5%'>
+                                    <a href='#' onclick=\"xajax_orden('Unidad')\">Días</a>
+                                </th>                                   
+                                <th width='30%'>Acci&oacute;n</th>
+                            </tr></table>";
+            for ($i= 0; $i < count($data); $i++){
+                if ($data[$i][visto]==1)
+                    $html.= "<table border='0' class='tablaTitulo' width='100%'><tr bgcolor='#fbffd7'onmouseover=\"this.style.background='#ffc05c';this.style.color='blue'\" onmouseout=\"this.style.background='#fbffd7';this.style.color='black'\" >";
+                else
+                    $html.= "<table border='0' class='tablaTitulo' width='100%'><tr bgcolor='#f8f8f8'onmouseover=\"this.style.background='#f0f0f0';this.style.color='blue'\" onmouseout=\"this.style.background='#f8f8f8';this.style.color='black'\" >";                    
+                $html.= "<td width='5%' align='center'><img src='../comunes/images/".$data[$i][origen].".png' height='20px' onmouseover=\"Tip('Prioridad Alta', TITLE, 'Origen')\" onmouseout='UnTip()'\"></td>
+                            <td width='10%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_tipo_agenda]."</td>
+                            <td width='15%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".clTblagenda::getMaestro($data[$i][id_unidad])."</td>                    
+                            <td width='7%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_evento_agenda]."</td>
+                            <td width='15%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][strtitulo]."</td>                                
+                            <td width='10%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_prioridad_agenda]."</td>
+                            <td width='10%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".$data[$i][id_estado_agenda]."</td>                               
+                            <td width='5%'  align='center' onmouseover=\"Tip('".$data[$i][strtitulo]."', TITLE, 'Asunto')\" onmouseout='UnTip()'>".functions::diterenciaFechasDiasAgenda($data[$i][fecagenda])."</td>
+                            <td width='30%'  align='center'>";
+                $color=functions::diterenciaFechasSemaforoAgenda($data[$i]['fecagenda'],clTblagenda::getDiasRecordatorios($data[$i]['id_recordatorio']));
+                if ($data[$i][id_prioridad]==clConstantesModelo::prioridad_alta)
+                {
+                    $html.="<a>
+                                    <img src='../comunes/images/flag_red.png' height='17px' onmouseover=\"Tip('Prioridad Alta')\" onmouseout='UnTip()'\">
+                                </a>";
+                }elseif ($data[$i][id_prioridad]==clConstantesModelo::prioridad_media) {
+                    $html.="<a>
+                                    <img src='../comunes/images/flag_green.png' height='17px' onmouseover=\"Tip('Prioridad Media')\" onmouseout='UnTip()'\">
+                                </a>";                
+                }else{
+                    $html.="<a>
+                                    <img src='../comunes/images/flag_yellow.png' height='17px' onmouseover=\"Tip('Prioridad Baja')\" onmouseout='UnTip()'\">
+                                </a>";                
+                }                      
+                if ($data[$i][id_refiere]==clConstantesModelo::buscar_refiere)
+                {
+                    $html.="<a>
+                                    <img src='../comunes/images/UserGroup.png' height='17px' onmouseover=\"Tip('Refiere Departamento')\" onmouseout='UnTip()'\">
+                                </a>";
+                }                      
+                if ($data[$i][id_refiere]==clConstantesModelo::buscar_persona)
+                {
+                    if ($data[$i][id_seguimiento]!='')
+                    {
+                        if (clTblagenda::getEstadoAgendaSeguimiento($data[$i][id_seguimiento])==1)
+                        {
+                            $image='group_error.png';
+                            $msg='Mensaje no Leido';
+                        }
+                        else
+                        { 
+                            $image='group.png';         
+                            $msg='Mensaje Leido';                            
+                        }
+                    }
+                    else
+                        $image='group.png';                     
+                          
+                    $html.="<a>
+                                    <img src='../comunes/images/".$image."' height='17px' onmouseover=\"Tip('".$msg."')\" onmouseout='UnTip()'\">
+                                </a>";
+                }                      
+                if ($color=='R')
+                {
+                    $html.="<a>
+                                    <img src='../comunes/images/rojo.gif' height='17px' onmouseover=\"Tip('Agenda Pendiente Vencidas')\" onmouseout='UnTip()' onclick=\"javascript:location.href='vista_insertTblAgendaExpediente.php?id=".$data[$i]['id_agenda']."'\";\">
+                                </a>";
+                }
+                elseif ($color=='A')
+                {        
+                    $html.="<a>
+                                    <img src='../comunes/images/amarillo.gif' height='17px'  onmouseover=\"Tip('Agenda Pendiente por Vencer')\" onmouseout='UnTip()' onclick=\"javascript:location.href='vista_insertTblAgendaExpediente.php?id=".$data[$i]['id_agenda']."'\";\">
+                                </a>";                
+                }
+                elseif ($color=='V')
+                {
+                    $html.="<a>
+                                    <img src='../comunes/images/verde.gif' height='17px'  onmouseover=\"Tip('Agenda Pendiente')\" onmouseout='UnTip()' onclick=\"javascript:location.href='vista_insertTblAgendaExpediente.php?id=".$data[$i]['id_agenda']."'\";\">
+                                </a>";                   
+                }                            
+                $html.="        <a>
+                                    <img src='../comunes/images/page_edit.png' onmouseover='Tip(\"Editar Item Agenda ".$data[$i]['id_agenda']."\")' onmouseout='UnTip()' onclick=\"javascript:location.href='vista_insertTblAgendaExpediente.php?id=".$data[$i]['id_agenda']."'\";\">
+                                </a>";  
+                $html.="<a>
+                                    <img src='../comunes/images/ver.gif' onmouseover=\"Tip('Detalle de la Agenda')\" onmouseout='UnTip()' onclick=\"location.href='../reportes/reporte_agenda_individual.php?id=".$data[$i]['id_agenda']."'\">
+                                </a>";
+                
+                
+                 $html.="</td></tr></table>";
+            }
+            $html.= "</div>";
+        }else{
+            $html="<div class='celda_etiqueta'>No Hay Items Registrados</div>";
+        }
+        $respuesta->assign("contenedorAgenda","innerHTML",$html);
+        return $respuesta;
+    }       
+    
     function IntroAgenda(){
         $respuesta=new xajaxResponse(); 
             $agenda= new clTblagenda();            

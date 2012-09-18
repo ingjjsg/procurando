@@ -21,6 +21,7 @@
     $xajax= new xajax();
    
     $xajax->registerFunction('buscarDatosContrarios');
+    $xajax->registerFunction('buscar_cedula_contrario');
     $xajax->registerFunction('selectAllContrariosFiltro');
     $xajax->registerFunction('llenarSelectEstados');
     $xajax->registerFunction('llenarSelectMunicipio');
@@ -57,7 +58,7 @@
         <script type='text/javascript' src='../comunes/js/funciones.js'></script>
         <script type="text/javascript" src="../comunes/js/prototype.js"></script>
         <script type="text/javascript" src="../comunes/js/effects.js"></script>
-        <script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>
+        <!--<script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>-->
         <script type="text/javascript" src="../comunes/js/tabcontent.js"></script>
       
         <script src="../comunes/js/calendar.js" type="text/javascript"></script>
@@ -99,14 +100,7 @@
                 }
             }
             
-            function filtrar(){
-                var nombre= document.frmclientes.strnombre.value;
-                var apellido= document.frmclientes.strapellido.value;
-                var cedula= document.frmclientes.strcedula.value;
-                
-                xajax_selectAllClientesFiltro(nombre, apellido,cedula);
-                verForm('formulario');
-            }
+
         </script>
     </head>
     <body onload="cargar('<?php echo $lngcodigo_cliente ?>')" >
@@ -116,7 +110,7 @@
             <fieldset style="border:#339933 2px solid">                     
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
-                    <td width="65%" class="menu_izq_titulo"><?php echo $titulo_formulario ?></td>
+                    <td width="65%" class="menu_izq_titulo">Editar Contrario</td>
                     <td width="10%" align="center" class="menu_izq_titulo">
                         <?php 
                         if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario($formulario_accion['formulario']),'guardar', $formulario_accion['accion'])) {?>
@@ -159,7 +153,7 @@
                                             Cedula:
                                         </td>
                                         <td width="30%">
-                                            <input type="text" class='inputbox' id="strcedula" name="strcedula" size="30" />
+                                            <input type="text" class='inputbox' id="strcedula" name="strcedula" onBlur="xajax_buscar_cedula_contrario(document.frmcontrario_nuevo.strcedula.value,document.frmcontrario_nuevo.id_contrarios.value);" size="30" />
                                         </td>
                                     </tr>
                                     <tr>
@@ -272,14 +266,12 @@
                                             <textarea id="strobservacion" rows="2" cols="25" name="strobservacion"></textarea>
                                         </td>
                                         <td width="20%">
-                                            Representante:
-                                        </td>
-                                        <td width="30%">
-                                            <input type="checkbox" class="inputbox"  name="id_representante" id="id_representante"/>
                                             
                                         </td>
+                                        <td width="30%">
+                                        </td>
                                     </tr>
-                                    
+<!--                                    
                                     <tr>
                                         <td width="20%">
                                             Organizacion:
@@ -311,7 +303,7 @@
                                         </td>
                                     </tr>
                                   
-                                    
+-->                                    
                                 </table>
                         </div>
                     </td>

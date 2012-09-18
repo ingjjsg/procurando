@@ -14,7 +14,8 @@
     }
 
     $xajax= new xajax();
-    $xajax->registerFunction('selectSituacionDetalle');    
+    $xajax->registerFunction('selectSituacionDetalle');  
+    $xajax->registerFunction('editar_actuacion');      
     $xajax->registerFunction('llenarSelectFormularioTipoEstadoMinuta');      
     $xajax->registerFunction('llenarSelectTipoTramite');
     $xajax->registerFunction('llenarSelectTipoAtencion');
@@ -98,8 +99,8 @@
         <script src="../comunes/js/funciones.js" type="text/javascript"></script>
         <script src="../comunes/js/prototype.js" type="text/javascript"></script>
         <script src="../comunes/js/tool.js" type="text/javascript"></script>        
-        <script type="text/javascript" src="../comunes/js/effects.js"></script>
-        <script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>
+<!--        <script type="text/javascript" src="../comunes/js/effects.js"></script>-->
+<!--        <script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>-->
         <script type="text/javascript" src="../comunes/js/tabcontent.js"></script>   
         <script src="../comunes/js/calendar.js" type="text/javascript"></script>
         <script src="../comunes/js/calendar_es.js" type="text/javascript"></script>
@@ -369,14 +370,15 @@
                             <div align="left">
                                 <ul id="countrytabs" class="shadetabs">
                                     <li><a id="link1" href="#" rel="country1"  class="selected">Datos Generales</a></li> 
-                                    <li><a id="link2" href="#" rel="country2">Descripción del Caso</a></li> 
+                                    <li><a id="link2" href="#" rel="country2">Descripción</a></li> 
                                     <li><a id="link3" href="#" rel="country3">Situaciónes</a></li>
-                                    <li><a id="link4" href="#" rel="country4">Documentos</a></li>                        
-                                    <li><a id="link5" href="#" rel="country5">Fase</a></li>    
-                                    <li><a id="link6" href="#" rel="country6">Actuaciones</a></li>                                                            
-                                    <li><a id="link7" href="#" rel="country7" style="display:none">Divorcio/Sep</a></li>                                        
+                                    <li><a id="link4" href="#" rel="country4">Agenda</a></li>                                    
+                                    <li><a id="link5" href="#" rel="country5">Documentos</a></li>                        
+                                    <li><a id="link6" href="#" rel="country6">Fase</a></li>    
+                                    <li><a id="link7" href="#" rel="country7">Actuaciones</a></li>                                                            
+                                    <li><a id="link8" href="#" rel="country8" style="display:none">Divorcio/Sep</a></li>                                        
                                 </ul>
-                                <div style="background:#F8F8F8; border:solid 1px #cccccc; width:100%; height:340px" align="left">
+                                <div style="background:#F8F8F8; border:solid 1px #cccccc; width:100%; height:400px" align="left">
                                     <div id="country1"  class="tabcontent" style="height:100%; overflow-y:auto">
                                         <table width="100%" border="0" class="tablaTitulo" >
                                             <tr>
@@ -618,6 +620,7 @@
                                                         </div>
                                                     </td>    
                                                 </tr>
+                                                
                                                 <tr>
                                                     <td width="20%">
                                                         Fecha del Minuta:
@@ -668,8 +671,23 @@
                                                 </td>
                                             </tr>
                                             </table>
+                                    </div>                                    
+                                    <div id="country4" class="tabcontent" style="height:900px; overflow-y:auto">
+                                            <table width="100%" border="0" class="tablaTitulo" >
+                                            <tr>
+                                                <td colspan="6">
+                                                    
+                                                    <?php 
+                                                    if ($lngcodigo_expediente)
+                                                    {
+                                                        $scr="../vista/vista_tblagenda_Expediente.php?id=".$lngcodigo_expediente; ?>
+                                                        <iframe  width="100%" scrolling="auto" height="800" frameborder="0" src="<?php echo $scr; ?>" scrolling="auto" frameborder="0" width="100%" height="600"></iframe>
+                                                     <?php } ?>
+                                                </td>
+                                            </tr>
+                                            </table>
                                     </div>
-                                    <div id="country4"  class="tabcontent" style="height:100%; overflow-y:auto">
+                                    <div id="country5"  class="tabcontent" style="height:100%; overflow-y:auto">
                                             <table width="100%" border="0" class="tablaTitulo" >
                                                 <tr>
                                                     <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
@@ -754,7 +772,7 @@
                                                 </tr>                                                  
                                             </table>
                                     </div>
-                                    <div id="country5"  class="tabcontent" style="height:100%; overflow-y:auto;">
+                                    <div id="country6"  class="tabcontent" style="height:100%; overflow-y:auto;">
                                         <table width="100%" border="0" class="tablaTitulo" >
                                             <tr>
                                                 <td colspan="6" bgcolor="#F8F8F8" >
@@ -823,24 +841,38 @@
                                             </tr>                                                    
                                         </table>
                                     </div>
-                                    <div id="country6"  class="tabcontent" style="height:100%; overflow-y:auto;">
+                                    <div id="country7"  class="tabcontent" style="height:100%; overflow-y:auto;">
                                         <table width="100%" border="0" class="tablaTitulo" >
-                                            <tr>
-                                                <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
-                                                    <div align="left" style="background-image: url('../comunes/images/barra.png')">
-                                                        <strong>ACTUACIONES DEL EXPEDIENTE</strong>
-                                                    </div>
-                                                </td>
-                                            </tr>  
                                             <tr>
                                                 <td colspan="6" bgcolor="#F8F8F8" >
                                                     <div align="right">
-                                                    <img id="saveActuacion" style="display:none;" name="saveActuacion" src="../comunes/images/disk.png" onmouseover="Tip('Guardar Actuación')" onmouseout="UnTip()" border="0" onclick="document.frminscribir.strdescripcionactuacion.value= FCKeditorAPI.__Instances['descripcionact'].GetHTML();xajax_validar_actuacion(xajax.getFormValues('frminscribir'));"/>
-<!--                                                        <img id="delete" name="delete" src="../comunes/images/page_delete.png" onmouseover="Tip('Eliminar Honorario')" onmouseout="UnTip()" border="0" onclick="if (confirm('¿Seguro desea eliminar el Honorario?'))xajax_eliminarHonorario(xajax.getFormValues('frminserthonorarios'));"/>                            
-                                                    <img id="back" name="back" src="../comunes/images/arrow_undo.png" onmouseover="Tip('Volver')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_tblprohonorarios.php'"/>-->
+                                                    <img  src="../comunes/images/application_form_add.png" onmouseover="Tip('Guardar Actuación')" onmouseout="UnTip()" border="0" onclick="$('formularioActuacion').show();"/>
+                                                    <img id="saveActuacion" style="display:none;" name="saveActuacion" src="../comunes/images/disk.png" onmouseover="Tip('Guardar Actuación')" onmouseout="UnTip()" border="0" onclick="document.frminscribir.strdescripcionactuacion.value= FCKeditorAPI.__Instances['descripcionact'].GetHTML();xajax_validar_actuacion(xajax.getFormValues('frminscribir'));"/>                                                    
                                                     </div>
                                                 </td>
-                                            </tr>                                             
+                                            </tr>                                                
+                                            <tr>
+                                                    <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                                        <div align="center" style="background-image: url('../comunes/images/barra.png')">
+                                                            <strong>ACTUACIONES ANEXADAS</strong>
+                                                        </div>
+                                                    </td>
+                                             </tr>   
+                                            <tr>
+                                                <td colspan="6">
+                                                    <div id="contenedorActuaciones" style="width:100%;display: none;" align="left">
+                                                        <div align="center"></div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+<!--                                            <table id="formularioActuacion" style="display:none;" border="0" class="tablaTitulo"><tr><td>-->
+                                            <tr>
+                                                    <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                                        <div align="center" style="background-image: url('../comunes/images/barra.png')">
+                                                            <strong>NUEVA ACTUACIÓN</strong>
+                                                        </div>
+                                                    </td>
+                                             </tr>                                               
                                             <tr>
                                                 <td width="20%">
                                                     Tipo de Actuación:
@@ -868,35 +900,34 @@
                                                 </td>
                                                 <td width="30%">
                                                     <div id="capaIdItemNombreActuacion">
-                                                        <select id="id_nombre_actuacion" name="id_nombre_actuacion" style='width:50%'>
+                                                        <select id="id_escrito" name="id_escrito" style='width:50%'>
                                                             <option value="0">Seleccione</option>
                                                         </select>
                                                     </div>                                                
                                                 </td>
                                                 <td width="20%">Expediente Tribunal:</td>
                                                 <td width="30%">
-                                                    <input type="text" class='inputbox82' id="strexpedientetribunal" name="strexpedientetribunal" size="30" />
+                                                    <input type="text" class='inputbox82' id="strexpedientetribunal" name="strexpedientetribunal" size="15" />
                                                 </td> 
-                                                          
-                                                 </td>
                                             </tr>   
                                             <tr>
                                                 <td width="20%">
                                                     Observación:
                                                 </td>
                                                 <td width="30%">
-                                                    <input type="text" class='inputbox82' id="actu_strobservacion"  name="actu_strobservacion" size="30" />                                                    
+                                                    <input type="text" class='inputbox82' id="actu_strobservacion"  name="actu_strobservacion" size="15" />                                                    
+                                                </td>                                                    
                                                 <td width="20%">
                                                     Fecha:
                                                 </td>
                                                 <td width="30%">
-                                                        <input id="actu_fecha" name="actu_fecha" type="text"  class='inputbox82' maxlength='20' size='15' value="">
-                                                        <img name="button"  id="lanzador_actu_fecha"  src="../comunes/images/calendar.png" align="middle"/>
+                                                        <input id="fecactuacion" name="fecactuacion" type="text"  class='inputbox82' maxlength='20' size='15' value="">
+                                                        <img name="button"  id="lanzador_fecactuacion"  src="../comunes/images/calendar.png" align="middle"/>
                                                         <script type="text/javascript">
                                                             Calendar.setup({
-                                                                inputField     :    "actu_fecha",      // id del campo de texto
+                                                                inputField     :    "fecactuacion",      // id del campo de texto
                                                                 ifFormat       :    "%d/%m/%Y",       // formato de la fecha, cuando se escriba en el campo de texto
-                                                                button         :    "lanzador_actu_fecha"   // el id del botn que lanzar el calendario
+                                                                button         :    "lanzador_fecactuacion"   // el id del botn que lanzar el calendario
                                                             });
                                                         </script>
                                                 </td>                                                        
@@ -924,15 +955,10 @@
 
                                                 </td>
                                             </tr>                                             
-                                            <tr>
-                                                <td colspan="6">
-                                                    <div id="contenedorActuaciones" style="width:100%;display: none;" align="left">
-                                                        <div align="center"></div>
-                                                    </div>
-                                                </td>
-                                            </tr>                                                    
-                                        </table>                                    </div>
-                                    <div id="country7"  class="tabcontent" style="height:100%; overflow-y:auto;">
+<!--                                                    </td></tr></table>   -->
+                                        </table>                                    
+                                    </div>
+                                    <div id="country8"  class="tabcontent" style="height:100%; overflow-y:auto;">
                                         <table width="100%" border="0" class="tablaTitulo" >
                                             <tr>
                                                 <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >

@@ -1,40 +1,27 @@
 <?php
     session_start();
     include("../comunes/fckeditor/fckeditor.php") ;        
-    require_once "../controlador/tblagendaControlador.php";
+    require_once "../controlador/tbldictamenesControlador.php";
     require_once ('../comunes/xajax/xajax_core/xajax.inc.php');
 
     if($_GET['id']==''){
-        $titulo_formulario = 'Nuevo Item de Agenda';
+        $titulo_formulario = 'Nuevo Item de Dictamen';
     }else{
-        $id_agenda = $_GET['id'];        
-        $titulo_formulario = 'Edición de Item de Agenda';
-    }
-    if($_GET['clon']!=''){
-        $clon=$_GET['clon'];
+        $id_dictamen = $_GET['id'];        
+        $titulo_formulario = 'Edición de Item de Dictamen';
     }
         
     
     $xajax= new xajax();
-    $xajax->registerFunction('verExpediente');
-    $xajax->registerFunction('buscarPersona');    
-    $xajax->registerFunction('buscarPersonaPopup');    
-    $xajax->registerFunction('verPersona');    
-    $xajax->registerFunction('buscarExpedientePopup');
-    $xajax->registerFunction('buscarExpediente');   
-    $xajax->registerFunction('llenarSelectTipoAgenda');
-    $xajax->registerFunction('llenarSelectTipoEvento');
-    $xajax->registerFunction('llenarSelectTipoPrioridad');
-    $xajax->registerFunction('llenarSelectTipoEstadoAgenda');
-    $xajax->registerFunction('llenarSelectTipoRecordatorio');
-    $xajax->registerFunction('selectAllDpto');
+    $xajax->registerFunction('llenarSelectTipo');
+    $xajax->registerFunction('llenarTipoMateria');    
+    $xajax->registerFunction('llenarSelectTipoEstadoDictamen');
     $xajax->registerFunction('llenarSelectOrganismo');
     $xajax->registerFunction('llenarSelectTipoOrganismo');
-    $xajax->registerFunction('validar_Agenda');
-    $xajax->registerFunction('guardarAgenda');
-    $xajax->registerFunction('selectAgenda'); 
-    $xajax->registerFunction('selectRefiereAgenda');     
-    $xajax->registerFunction('selectClonarAgenda');         
+    $xajax->registerFunction('validar_Dictamen');
+    $xajax->registerFunction('guardarDictamen');
+    $xajax->registerFunction('selectDictamen'); 
+       
     
     
     $xajax->processRequest();
@@ -82,29 +69,20 @@
                 $("#datefecnac").mask("99/99/9999",{placeholder:" "});
             });
             
-            function cargar(id_agenda,clon){
-                if((id_agenda!= "") && (clon=="")) {
-                    xajax_selectAgenda(id_agenda);
-                }
-                else if((id_agenda!= "") && (clon!="")) {
-                    xajax_selectClonarAgenda(id_agenda);                    
+            function cargar(id_dictamen){
+                if(id_dictamen!= "") {
+                    xajax_selectDictamen(id_dictamen);
                 }
                 else{
-                    xajax_llenarSelectTipoAgenda();
-                    xajax_llenarSelectTipoEvento();
-                    xajax_llenarSelectTipoEstadoAgenda();
-                    xajax_llenarSelectTipoPrioridad();
-                    xajax_llenarSelectTipoRecordatorio();
-                    xajax_selectRefiereAgenda();                    
-                    xajax_selectAllDpto();
-//                    xajax_llenarSelectOrganismo();
+                    xajax_llenarSelectTipo();
+                    xajax_llenarSelectTipoEstadoDictamen();
                     xajax_llenarSelectTipoOrganismo();                    
                 }
             }
             function validar()
             {
-               document.frmAgenda.strdescripcion.value= FCKeditorAPI.__Instances['descripcion'].GetHTML();
-               xajax_validar_Agenda(xajax.getFormValues('frmAgenda'));
+               document.frmDictamen.strasunto.value= FCKeditorAPI.__Instances['descripcion'].GetHTML();
+               xajax_validar_Dictamen(xajax.getFormValues('frmDictamen'));
             }            
             
             function verForm(id){
@@ -118,19 +96,6 @@
                 }
             }
             
-            function vercatalogo(num)
-            { 
-              if (num==1)
-              {
-                $('contenedorExpediente').toggle();
-                xajax_buscarExpedientePopup('','','');                  
-              }
-              else if (num==2)
-              {
-                $('contenedorTrabajador').toggle();
-                xajax_buscarPersonaPopup(document.frmAgenda.id_unidad.value);                  
-              }
-            }               
             
             function filtrar(){
                 var nombre= document.frmclientes.strnombre.value;
@@ -142,10 +107,10 @@
             }
         </script>
     </head>
-    <body onload="cargar('<?php echo $id_agenda ?>','<?php echo $clon ?>')" >
+    <body onload="cargar('<?php echo $id_dictamen ?>')" >
         <script src="../comunes/js/wz_tooltip/wz_tooltip.js" type="text/javascript"></script>
         <center>
-            <form name="frmAgenda" id="frmAgenda" method="post">
+            <form name="frmDictamen" id="frmDictamen" method="post">
             <fieldset style="border:#339933 2px solid">                
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
@@ -161,161 +126,38 @@
                 <tr>
                     <td>
                         <div id="formulario" style=" width:100%;" align="left">
-                                <input type="hidden" class='inputbox82' id="id_agenda" name="id_agenda" size="30" />
+                                <input type="hidden" class='inputbox82' id="id_dictamen" name="id_dictamen" size="30" />
                                 <table width="100%" border="0" class="tablaVer" >
                                     <tr>
                                         <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                             <div align="center" style="background-image: url('../comunes/images/barra.png')">
-                                                <strong>Datos del Nuevo Evento</strong>
+                                                <strong>Datos del Dictamen</strong>
                                             </div>
                                         </td>
                                     </tr>         
-                                    <tr id="fecha">
-                                        <td width="20%">
-                                           Fecha de Creación:
-                                        </td>
-                                        <td width="30%">
-                                            <input type="text" class='inputbox82' id="fechacreacion" readonly="true" name="fechacreacion" size="20" />                             
-                                        </td>
-                                        <td width="20%">
-                                        </td>
-                                        <td width="30%">
-                                        </td>
-                                    </tr>                                         
                                     <tr>
                                        <td width="20%">
-                                            Tipo Agenda:
+                                            Tipos Materia:
                                         </td>
                                         <td width="30%">
                                             <div id="capaIdTipo">
-                                                <select id="id_tipo" name="id_tipo" style='width:90%'>
+                                                <select id="id_materia" name="id_materia" style='width:90%'>
                                                     <option value="0">Seleccione</option>
                                                 </select>
                                             </div>
                                         </td>
                                         
                                          <td width="20%">
-                                            Tipo Evento:
+                                            Tipo Temas:
                                         </td>
                                         <td width="30%">
-                                            <div id="capaIdTipoEvento">
-                                                <select id="id_evento" name="id_evento" style='width:90%'>
+                                            <div id="capaIdTipoMateria">
+                                                <select id="id_tipo_materia" name="id_tipo_materia" style='width:90%'>
                                                     <option value="0">Seleccione</option>
                                                 </select>
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr>
-                                       <td width="20%">
-                                            Tipo de Prioridad:
-                                        </td>
-                                        <td width="30%">
-                                            <div id="capaIdTipoPrioridad">
-                                                <select id="id_prioridad" name="id_prioridad" style='width:90%'>
-                                                    <option value="0">Seleccione</option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                        
-                                         <td width="20%">
-                                            Tipo de Estado:
-                                        </td>
-                                        <td width="30%">
-                                            <div id="capaIdTipoEstado">
-                                                <select id="id_estado" name="id_estado" style='width:90%'>
-                                                    <option value="0">Seleccione</option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                       <td width="20%">
-                                            Tipo de Recordatorio:
-                                        </td>
-                                        <td width="30%">
-                                            <div id="capaIdTipoRecordatorio">
-                                                <select id="id_recordatorio" name="id_recordatorio" style='width:90%'>
-                                                    <option value="0">Seleccione</option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                        
-                                         <td width="20%">
-                                            Departamento:
-                                        </td>
-                                        <td width="30%">
-                                            <div id="capaIdTipoUnidad">
-                                                <select id="id_unidad" name="id_unidad" style='width:60%'>
-                                                    <option value="0">Seleccione</option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                    </tr>  
-                                   <tr>
-                                        <td width="20%">
-                                            Refire Agenda:
-                                        </td>
-                                        <td width="30%">
-                                           <div id="capaIdRefiere">
-                                                <select id="id_refiere" name="id_refiere" style='width:60%'>
-                                                    <option value="0">Seleccione</option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                        <td width="20%">
-                                        </td>
-                                        <td width="30%">
-                                        </td>
-                                    </tr>                                        
-                                    <tr id="CapaTrabajador" style="display: none;">
-                                        <td width="20%">
-                                           Nombre del Trabajador:
-                                        </td>
-                                        <td width="30%">
-                                            <input type="text" class='inputbox82' id="strnombre" name="strnombre" size="20" onKeyDown="xajax_buscarPersonaPopup(document.frmAgenda.id_unidad.value);" onKeyUp="xajax_buscarPersonaPopup(document.frmAgenda.id_unidad.value);"/>                             
-                                            <input type="hidden" class='inputbox82' id="id_contacto" name="id_contacto" size="30" />                                            
-                                            <img src="../comunes/images/ico_18_127.gif" onmouseover="Tip('Buscar Persona')" onmouseout="UnTip()" border="0" onclick="vercatalogo(2);"/>                                                                                        
-                                        </td>
-                                        <td width="20%">
-                                        </td>
-                                        <td width="30%">
-                                        </td>
-                                    </tr>     
-                                    <tr>
-                                        <td colspan="6">
-                                            <div id="contenedorTrabajador" style="width:100%;display: none;" align="left">
-                                                <div align="center"></div>
-                                            </div>
-                                        </td>
-                                    </tr>                                        
-                                    <tr id="CapaExpediente" style="display: none;">
-                                        <td width="20%">
-                                            Codigo Expediente:
-                                        </td>
-                                        <td width="30%">
-                                            <input type="text" class='inputbox82' id="strnroexpediente" name="strnroexpediente" size="20" onKeyDown="xajax_buscarExpedientePopup(document.frmAgenda.id_expediente.value);" onKeyUp="xajax_buscarExpedientePopup(document.frmAgenda.id_expediente.value);"/>                             
-                                            <input type="hidden" class='inputbox82' id="id_proexpediente" name="id_proexpediente" size="30" />                                            
-                                            <img src="../comunes/images/ico_18_127.gif" onmouseover="Tip('Buscar Expediente')" onmouseout="UnTip()" border="0" onclick="vercatalogo(1);"/>                                                                                        
-                                        </td>
-                                        <td width="20%">
-                                        </td>
-                                        <td width="30%">
-                                        </td>
-                                    </tr>     
-                                    <tr>
-                                        <td colspan="6">
-                                            <div id="contenedorExpediente" style="width:100%;display: none;" align="left">
-                                                <div align="center"></div>
-                                            </div>
-                                        </td>
-                                    </tr>                                      
-                                    <tr>
-                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
-                                            <div align="center" style="background-image: url('../comunes/images/barra.png')">
-                                                <strong>Datos de Organismos Externos a Comunicar</strong>
-                                            </div>
-                                        </td>
-                                    </tr>                                     
                                     <tr>
                                        <td width="20%">
                                             Tipo Organismo:
@@ -338,24 +180,51 @@
                                                 </select>
                                             </div>
                                         </td>
-                                    </tr>    
-                                   <tr>
-                                        <td width="20%">
-                                            Persona:
+                                    </tr>                                      
+                                    <tr>
+                                       <td width="20%">
+                                            Tipo de Estado:
                                         </td>
                                         <td width="30%">
-                                           <input type="text" class='inputbox82' id="strpersona" name="strpersona" size="20" />
+                                            <div id="capaIdTipoEstado">
+                                                <select id="id_estado" name="id_estado" style='width:90%'>
+                                                    <option value="0">Seleccione</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        
+                                         <td width="20%">Numero:
+                                            
+                                        </td>
+                                        <td width="30%">
+                                           <input type="text" class='inputbox82' id="stranrodictamen" name="stranrodictamen" size="20" /> 
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                            <div align="center" style="background-image: url('../comunes/images/barra.png')">
+                                                <strong>Datos de Intervinientes en el Dictamen</strong>
+                                            </div>
+                                        </td>
+                                    </tr>                                     
+                                   <tr>
+                                        <td width="20%">
+                                            Personas Intervinientes:
+                                        </td>
+                                        <td width="30%">
+                                    <textarea id="strpersonas" name="strpersonas" cols="25" rows="4"></textarea>
                                         </td>
                                         
                                         <td width="20%">
                                         </td>
                                         <td width="30%">
+                                          
                                         </td>
-                                    </tr>                                    
+                                    </tr>         
                                     <tr>
                                         <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                             <div align="center" style="background-image: url('../comunes/images/barra.png')">
-                                                <strong>Cuerpo del Item de la Agenda</strong>
+                                                <strong>Cuerpo del Item de la Dictamen</strong>
                                             </div>
                                         </td>
                                     </tr>    
@@ -368,14 +237,14 @@
                                         </td>
                                         
                                         <td width="20%">
-                                            Fecha del Evento:                                            
+                                            Fecha del Dictamen:                                            
                                         </td>
                                         <td width="30%">
-                                            <input type="text" class='inputbox82' id="fecagenda" name="fecagenda" size="10" />
+                                            <input type="text" class='inputbox82' id="fecdictamen" name="fecdictamen" size="10" />
                                             <img name="button"  id="lanzador1"  src="../comunes/images/calendar.png" align="middle"/>
                                                 <script type="text/javascript">
                                                     Calendar.setup({
-                                                        inputField     :    "fecagenda",      // id del campo de texto
+                                                        inputField     :    "fecdictamen",      // id del campo de texto
                                                         ifFormat       :    "%d/%m/%Y",       // formato de la fecha, cuando se escriba en el campo de texto
                                                         button         :    "lanzador1"   // el id del botn que lanzar el calendario
                                                     });
@@ -385,12 +254,12 @@
                                     <tr>
                                         <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                             <div align="center" style="background-image: url('../comunes/images/barra.png')">
-                                                <strong>Descripción del Evento</strong>
+                                                <strong>Descripción del Dictamen</strong>
                                             </div>
                                         </td>
                                     </tr>                                                
                                     <tr>
-                                        <input type="hidden" name="strdescripcion" id="strdescripcion" value="">
+                                        <input type="hidden" name="strasunto" id="strasunto" value="">
                                         <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                             <?php
                                                 $oFCKeditor = new FCKeditor('descripcion') ;

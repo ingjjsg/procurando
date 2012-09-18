@@ -90,19 +90,19 @@
             <form name="frmexpedientes" id="frmexpedientes" method="post">
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
-                    <td width="65%" class="menu_izq_titulo">Actuaciones</td>
+                    <td width="65%" class="menu_izq_titulo">Expedientes Litigio</td>
                     <td width="10%" align="center" class="menu_izq_titulo">
                         <?php 
                         if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario('expedientes'),'nuevo', clConstantesModelo::acciones_expedientes())) {?>
-                        <img src="../comunes/images/note_add.png" onmouseover="Tip('Nuevo Expediente')" onmouseout="UnTip()" onclick="location.href='vista_Ingresotblexpediente.php'"/>
+                        <img src="../comunes/images/note_add.png" onmouseover="Tip('Nuevo Expediente')" onmouseout="UnTip()" onclick="location.href='vista_Ingresotblactuaciones.php'"/>
                         &nbsp;&nbsp;&nbsp;
                         <?php }?>
                         <img src="../comunes/images/filter.png" onmouseover="Tip('Filtros')" onmouseout="UnTip()" border="0" onclick="verForm('formulario');"/>
                         &nbsp;&nbsp;&nbsp;
                         <?php 
-                        if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario('expedientes'),'agenda', clConstantesModelo::acciones_expedientes())) {?>
-                        <img src="../comunes/images/ico_16_4201.gif" onmouseover="Tip('Agenda')" onmouseout="UnTip()" border="0" onclick="location.href='vista_agenda_expediente.php'"/>
-                        <?php }?>
+                        //if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario('expedientes'),'agenda', clConstantesModelo::acciones_expedientes())) {?>
+<!--                        <img src="../comunes/images/ico_16_4201.gif" onmouseover="Tip('Agenda')" onmouseout="UnTip()" border="0" onclick="location.href='vista_agenda_expediente.php'"/>-->
+                        <?php //}?>
                     </td>
                 </tr>
             </table>

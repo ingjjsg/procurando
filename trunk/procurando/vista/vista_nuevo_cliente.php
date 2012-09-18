@@ -15,6 +15,7 @@
     $xajax= new xajax();
    
     $xajax->registerFunction('buscarDatosClientes');
+    $xajax->registerFunction('buscar_cedula_cliente');
     $xajax->registerFunction('selectAllClientesFiltro');
     $xajax->registerFunction('llenarSelectEstados');
     $xajax->registerFunction('llenarSelectMunicipio');
@@ -51,7 +52,7 @@
         <script type='text/javascript' src='../comunes/js/funciones.js'></script>
         <script type="text/javascript" src="../comunes/js/prototype.js"></script>
         <script type="text/javascript" src="../comunes/js/effects.js"></script>
-        <script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>
+        <!--<script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>-->
         <script type="text/javascript" src="../comunes/js/tabcontent.js"></script>
       
         <script src="../comunes/js/calendar.js" type="text/javascript"></script>
@@ -150,7 +151,7 @@
                                             Cedula:
                                         </td>
                                         <td width="30%">
-                                            <input type="text" class='inputbox82' id="strcedula" name="strcedula" size="30" />
+                                            <input type="text" class='inputbox' id="strcedula" name="strcedula" onBlur="xajax_buscar_cedula_cliente(document.frmcliente_nuevo.strcedula.value,document.frmcliente_nuevo.id_cliente.value);" size="30" />
                                         </td>
                                     </tr>
                                     <tr>
@@ -263,15 +264,14 @@
                                             <textarea id="strobservacion" rows="2" cols="25" name="strobservacion"></textarea>
                                         </td>
                                         <td width="20%">
-                                            Representante:
+
                                         </td>
                                         <td width="30%">
-                                            <input type="checkbox" class="inputbox"  name="id_representante" id="id_representante"/>
-                                            
+                                           
                                         </td>
                                     </tr>
                                     
-                                    <tr>
+<!--                                    <tr>
                                         <td width="20%">
                                             Organizacion:
                                         </td>
@@ -300,7 +300,7 @@
                                         <td width="30%">
                                             <input type="text" class='inputbox82' id="strmovil" name="strmovil" size="30" />
                                         </td>
-                                    </tr>
+                                    </tr>-->
                                   
                                     
                                 </table>

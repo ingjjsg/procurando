@@ -230,6 +230,17 @@ class clContactoModelo {
         $this->id_profile_maestro= $id_profile_maestro;
     }
 
+    static public function getNombreUsuario($id) {
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $sql = "select strapellido,strnombre from ".clConstantesModelo::correspondencia_table . "tblcontacto  where id_contacto=".$id;        
+        $conn->sql= $sql;
+        $data= $conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();
+        return $data[0][strapellido].", ".$data[0][strnombre];
+    }           
+    
+    
     public function insertContacto(){
         $contactoProfile= new clContactoProfileModelo();
         $conn= new Conexion();

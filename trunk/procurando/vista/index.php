@@ -1,13 +1,15 @@
 <?php
     session_start();
     session_destroy();
+
     require_once "../controlador/contactoControlador.php";
     require_once ('../comunes/xajax/xajax_core/xajax.inc.php');
 
     $xajax= new xajax();
     $xajax->registerFunction('verificarIngreso');
 	$xajax->processRequest();
-    
+
+//    exit('paso'); 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -15,7 +17,7 @@
         <?php
             $xajax->printJavascript('../comunes/xajax/');
         ?>
-        <title>INDER | PROCURANDO</title>
+        <title>YARACUY | PROCURANDO</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" >
         <link rel="shortcut icon" href="../comunes/images/favicon.ico" type="image/x-icon" >
@@ -65,7 +67,7 @@
                         <div class="contenedor_general">
                             <?php
 //                                include('./cabecero.php');
-                                include('../comunes/php/utilidades.php');
+                                //include('../comunes/php/utilidades.php');
                             ?>
                             <div class="identificacion">
                                 <table width="100%" border="0" cellspacing="0" cellpadding="5">
@@ -159,4 +161,3 @@
         </center>
     </body>
 </html>
- 

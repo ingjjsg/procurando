@@ -4,6 +4,8 @@ require_once '../modelo/ctbldocumentoModelo.php';
 
 function selectDocumentoReporte($request,$tipoReporte){
         $respuesta= new xajaxResponse();
+        if ($request['id_estado']!=0)
+        {
             $url.="id_tipo=".$request['id_tipo'];
             $url.="&id_evento=".$request['id_evento'];
             $url.="&id_prioridad=". $request['id_prioridad'];
@@ -18,6 +20,9 @@ function selectDocumentoReporte($request,$tipoReporte){
             }else if($tipoReporte == 'ods'){
                 $respuesta->script("location.href='../reportes/reporte_documento_ods.php?".$url."'");
             }
+        }
+        else
+                $respuesta->alert("Seleccione un Tipo de Estado del Documento");            
        return $respuesta;
             
         

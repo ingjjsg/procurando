@@ -6,10 +6,10 @@
     
     if(isset($_GET['id'])){
         $lngcodigo_expediente = $_GET['id'];
-        $titulo_formulario = 'Editar Actuacion';
+        $titulo_formulario = 'Editar Expediente Litigio';
         $funcion = 'editar';
     }else{
-        $titulo_formulario = 'Nueva Actuacion';
+        $titulo_formulario = 'Nuevo Expediente Litigio';
         $funcion = 'validar';
     }
 

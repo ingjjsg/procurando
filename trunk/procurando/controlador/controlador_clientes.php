@@ -6,6 +6,18 @@ require_once '../modelo/clMaestroModelo.php';
 require_once '../modelo/clPermisoModelo.php';
 
 
+
+    function buscar_cedula_cliente($cedula,$id)
+    {
+	if ($id=='')
+	{
+		$respuesta= new xajaxResponse();
+		$data= clProClientes::getCedulaCliente($cedula);
+		if($data) $respuesta->alert("Cedula ya Existe");
+		return $respuesta;
+	}
+    }
+
 function buscarDatosClientes(){
         $respuesta= new xajaxResponse();
         $clientes= new clProClientes();
@@ -249,14 +261,14 @@ function buscarDatosClientes(){
             $respuesta->assign('strcodigopostal', 'value', $data[0]['strcodigopostal']);
             $respuesta->assign('datefecnac', 'value', $data[0]['datefecnac']);
             $respuesta->assign('strobservacion', 'value', $data[0]['strobservacion']);
-            if($data[0]['id_representante'] == 1){
+            /*if($data[0]['id_representante'] == 1){
                 $respuesta->assign('id_representante', 'checked',true);
             }
             
             $respuesta->assign('id_organizacion', 'value', $data[0]['id_organizacion']);
             $respuesta->assign('strdocumentoconst', 'value', $data[0]['strdocumentoconst']);
             $respuesta->assign('strrif', 'value', $data[0]['strrif']);
-            $respuesta->assign('strmovil', 'value', $data[0]['strmovil']);
+            $respuesta->assign('strmovil', 'value', $data[0]['strmovil']);*/
             
         }
         return $respuesta;

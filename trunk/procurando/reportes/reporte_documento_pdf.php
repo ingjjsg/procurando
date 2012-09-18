@@ -26,43 +26,68 @@ $html='
         .nro{
             width:30px;
         }
-        
+
+        .normal {
+            width:70px;
+        }
+
         .departamento {
-            width:150px;
+            width:140px;
         }
         
         .prioridad {
             width:70px;
         }
-    </style>
-
-    <table>
+    </style>';
+if ($_GET['id_estado']==clConstantesModelo::documento_entrada)
+$html.='<table>
+        <tr>
+            <th class="nro">N°</th>
+            <th >Documento</th>
+            <th class="departamento">Departamento</th>
+            <th class="normal">Evento</th>
+            <th class="normal">Titulo</th>
+            <th class="departamento">Entregado por</th>
+            <th  class="departamento">Teléfono</th>            
+            <th  class="normal">Estado</th>
+         </tr>';
+else 
+$html.='<table>
         <tr>
             <th class="nro">N°</th>
             <th>Documento</th>
-            <th class="departamento">Departamento</th>
-            <th>Evento</th>
-            <th>Titulo</th>
-            <th class="prioridad">Prioridad</th>
-            <th>Estado</th>
-            <th>Días</th>
-         </tr>';
+            <th class="departamento">Departamento</th>          
+            <th class="normal">Evento</th>
+            <th class="normal">Titulo</th>
+            <th class="departamento">Dirigido</th>            
+            <th class="departamento">Recibido</th>
+            <th class="normal">Estado</th>
+         </tr>';    
 $count=0;
     $prodocumento= new clTblDocumento();
     $data= "";
     $data= $prodocumento->selectDocumentoReporte($_GET['id_tipo'], $_GET['id_evento'], $_GET['id_prioridad'],$_GET['id_estado'],$_GET['id_recordatorio'],$_GET['id_unidad'],$_GET['id_refiere'],$_GET['id_tipo_organismo'],$_GET['id_organismo']);
-    if($data){    
+    if($data){  
+//        print_r($data);
         foreach ($data as $key => $value) {
 
                 $html.='<tr>';
                     $html.='<td class="nro">'.++$count.'</td>';
-                    $html.='<td>'.$data[$key]['id_tipo_documento'].'</td>';
+                    $html.='<td>'.$data[$key]['id_tipo_documento'].', N°: '.$data[$key]['strnumero'].'</td>';
                     $html.='<td class="departamento">'.$data[$key]['id_unidad_documento'].'</td>';
                     $html.='<td>'.$data[$key]['id_evento_documento'].'</td>';
                     $html.='<td>'.functions::decrypt($data[$key]['strtitulo']).'</td>';
-                    $html.='<td class="prioridad centrado">'.$data[$key]['id_prioridad_documento'].'</td>';
+                    if ($_GET['id_estado']==clConstantesModelo::documento_entrada)
+                    {
+                        $html.='<td>'.$data[$key]['strpersona'].', Día: '.$data[$key]['date'].'</td>';
+                        $html.='<td>'.$data[$key]['strtelefono'].'</td>';                         
+                    }
+                    else 
+                    {
+                        $html.='<td>'.$data[$key]['strdirigido'].', Día: '.$data[$key]['date'].'</td>';
+                        $html.='<td>'.$data[$key]['strrecibido'].'</td>';  
+                    }
                     $html.='<td>'.$data[$key]['id_estado_documento'].'</td>';
-                    $html.='<td>0</td>';
                 $html.="</tr>";
 
         }

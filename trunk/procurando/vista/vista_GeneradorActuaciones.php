@@ -37,7 +37,7 @@
         <script type='text/javascript' src='../comunes/js/funciones.js'></script>
         <script type="text/javascript" src="../comunes/js/prototype.js"></script>
         <script type="text/javascript" src="../comunes/js/effects.js"></script>
-        <script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>
+<!--        <script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>-->
         <script type="text/javascript" src="../comunes/js/tabcontent.js"></script>
         <script type="text/javascript" src="../comunes/js/ajaxupload.js"></script>
         <script src="../comunes/js/calendar.js" type="text/javascript"></script>

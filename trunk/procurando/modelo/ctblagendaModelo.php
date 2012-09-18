@@ -397,10 +397,28 @@ public function llenar($request)
         return $this->date=$date;
     }    
     
+    public function selectAllAgendaExpediente($id){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $sql.= "SELECT id_agenda, id_usuario, id_tipo, id_evento, id_prioridad, id_estado, id_recordatorio, id_unidad, fecagenda, strdescripcion, strtitulo, id_expediente, bolborrado, strpersona, id_refiere, visto, id_seguimiento, origen  ";
+        $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_tipo) AS id_tipo_agenda ";
+        $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_evento) AS id_evento_agenda ";
+        $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_prioridad) AS id_prioridad_agenda ";
+        $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_estado) AS id_estado_agenda ";
+        $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_recordatorio) AS id_recordatorio_agenda ";
+        $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_unidad) AS id_unidad_agenda ";        
+        $sql.=" from ".clConstantesModelo::correspondencia_table."tblagenda where  bolborrado=0 and id_expediente=".$id." and id_usuario=".$_SESSION['id_contacto']." order by id_agenda desc";
+//        exit($sql);
+        $conn->sql= $sql;
+        $data= $conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();        
+        return $data;
+    }         
+    
     public function CountIntroNoLeidosAgenda(){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $conn->sql= "SELECT count(id_agenda) as total  FROM ".clConstantesModelo::correspondencia_table . "tblagenda where id_usuario=".$_SESSION['id_contacto']." and visto='0'";
+        $conn->sql= "SELECT count(id_agenda) as total  FROM ".clConstantesModelo::correspondencia_table . "tblagenda where id_usuario=".$_SESSION['id_contacto']." and visto='1'";
         $data= $conn->ejecutarSentencia(2);
         return $data[0][total];        
     }    
@@ -408,7 +426,7 @@ public function llenar($request)
     public function CountIntroLeidosAgenda(){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $conn->sql= "SELECT count(id_agenda) as total  FROM ".clConstantesModelo::correspondencia_table . "tblagenda where id_usuario=".$_SESSION['id_contacto']." and visto='1'";
+        $conn->sql= "SELECT count(id_agenda) as total  FROM ".clConstantesModelo::correspondencia_table . "tblagenda where id_usuario=".$_SESSION['id_contacto']." and visto='0'";
         $data= $conn->ejecutarSentencia(2);
         return $data[0][total];        
     }        

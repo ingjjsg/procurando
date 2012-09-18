@@ -95,6 +95,7 @@ class clConstantesModelo {
   public static function ModulosAgenda() {return array('13226','13228');}    
   public static function ModulosSeguridad() {return array('295');}      
   public static function ModulosDocumentos() {return array('13267','13287');}        
+  public static function ModulosDictamenes() {return array('13770','13774');}     
   public static function ModulosLitigio() {return array('13229');}        
   const bancos='12194';
   const tipo_solicitantes ='12201';
@@ -125,6 +126,7 @@ class clConstantesModelo {
   const estatusordenrecibidabanco='12303';
   const estatusingresadosaris = '12306';
   const regimen_cerrado=13103;  
+  const documento_entrada=13212;   
   const buscar_expediente='13221';    
   const buscar_persona='13260';    
   const buscar_refiere='13225';      
@@ -248,8 +250,7 @@ class clConstantesModelo {
             'juzgados_litigio' => '13240',
             'asociaciones_litigio' => '13250',
             'demandantes_litigio' => '13234',
-            'abodados_procuraduria_litigio' => '13243'//
-
+            'abodados_procuraduria_litigio' => '13243'
 
                 );
         }
@@ -353,12 +354,15 @@ class clConstantesModelo {
             'tipo_refiere_agenda'  => '13222',
 
             'tipos_documento'  => '13198',               
-            'tipo_evento_documento'  => '13201',
+            'tipo_evento_documento'  => '13697',
             'tipo_prioridad_documento'  => '13204',
             'tipo_recordatorio_documento'  => '13207',                
             'tipo_estado_documento'  => '13210',
             'tipo_departamento_documento'  => '12875',
-            'tipo_refiere_documento'  => '13222'              
+            'tipo_refiere_documento'  => '13222',              
+            'tipo_materia_dictamenes'  => '13708',
+            'tipo_estado_dictamenes'  => '13767' ,
+            'ramo_asociaciones' => '13779'               
         );
         }
         

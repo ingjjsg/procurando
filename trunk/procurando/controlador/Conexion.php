@@ -3,12 +3,12 @@
 
     class Conexion{
        public $conex;
-       private $host= "localhost"; //ambiente de desarrollo
+       private $host= "172.16.1.4"; //ambiente de desarrollo
        private $port= "5432";
-       private $dbname= "procurando";
+       private $dbname= "procurando_ultima";
        private $user= "postgres";
 //       private $password= 'dbadmin$yara$2010';
-       private $password= 'postgres';
+       private $password= '123456';
 
         public $sql;
 

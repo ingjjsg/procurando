@@ -119,7 +119,7 @@ function selectAllActuaciones(){
         $maestro= new clMaestroModelo();
         $data= "";
         $html= "";
-        $data= $maestro->selectAllMaestroHijos($id_maestro, 2);
+        $data= $maestro->selectAllMaestroHijos($id_maestro, 'stritema', 2);
         $html= "<select id='id_actuacion' name='id_actuacion' style='width:50%'>";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
@@ -142,7 +142,7 @@ function selectAllActuaciones(){
         $data= "";
         $html= "";
         $estados= clConstantesModelo::combos();
-        $data= $maestro->selectAllMaestroHijos($estados['actuaciones'], 2);
+        $data= $maestro->selectAllMaestroHijos($estados['actuaciones'], 'stritema', 2);
         $html= "<select id='id_tipo_actuacion' name='id_tipo_actuacion' style='width:50%' onchange=\"xajax_llenarSelectComboItemTipoActuacion(document.frmMaestroActuacion.id_tipo_actuacion.value);\">";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
