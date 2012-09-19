@@ -69,7 +69,7 @@
                 var id_evento= document.frmAgenda.id_evento.value;
                 var id_unidad= document.frmAgenda.id_unidad.value;
                 var id_prioridad= document.frmAgenda.id_prioridad.value;                
-                xajax_selectAllAgendaAnexadasid_tipo, id_evento, id_unidad, id_prioridad);                        
+                xajax_selectAllAgendaAnexadas(id_tipo, id_evento, id_unidad, id_prioridad);                        
                 ver('formulario');
             }
         </script>
