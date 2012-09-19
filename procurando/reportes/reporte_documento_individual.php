@@ -77,7 +77,7 @@ $html='
         
         $html.='</table>';
     }
-$pdf->SetY(40);
+$pdf->SetY(50);
 $pdf->writeHTML($html);
 $pdf->Output("reporte_documento_individual".date("d-M-Y-H:i:s").".pdf", "I");
 
