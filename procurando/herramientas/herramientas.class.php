@@ -38,7 +38,7 @@ public static function encrypt($string) {
 }    
     
   public static function VerificarFechaActual($dateTime) {
-    if ($dateTime >= date("d/m/Y"))
+    if ($dateTime > date("d-m-Y"))
         return true;
     else
         return false;
