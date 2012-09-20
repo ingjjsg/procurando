@@ -1,7 +1,13 @@
 <?php
 require_once 'plantilla_reporte.php';
+require_once '../modelo/ctblagendaModelo.php';
 
-$data=  unserialize(stripslashes($_GET['data']));
+$proagenda= new clTblagenda();
+$data= "";
+$request=  $_GET['data'];
+$data= $proagenda->selectAgendaReporte($request['id_tipo'], $request['id_evento'], $request['id_prioridad'],$request['id_estado'],$request['id_recordatorio'],$request['id_unidad'],$request['id_refiere'],$request['id_tipo_organismo'],$request['id_organismo']);
+        
+
 $pdf=new Plantilla("L");
 $pdf->setTitulo("Agendas");
 $pdf->AddPage();
@@ -45,6 +51,8 @@ $html='
             <th>Días</th>
          </tr>';
 $count=0;
+
+if($data){
 foreach ($data as $key => $value) {
     
         $html.='<tr>';
@@ -59,6 +67,8 @@ foreach ($data as $key => $value) {
         $html.="</tr>";
     
 }
+}
+
 $html.='</table>';
 $pdf->SetY(40);
 $pdf->writeHTML($html);
