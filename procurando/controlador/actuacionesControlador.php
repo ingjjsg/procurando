@@ -67,7 +67,7 @@ function selectAllActuaciones(){
                                     <td align='center' >".$datos[$i][fecactuacion]."</td>
                                     <td align='center'>
                                         <a>
-                                            <img src='../comunes/images/script_go.png' onmouseover=\"Tip('Ver Texto de la Actuación')\" onmouseout='UnTip()' onclick=\"location.href='./reporteAsociacionVista.php?id=".$datos[$i][id_proactuaciones]."'\">
+                                            <img src='../comunes/images/script_go.png' onmouseover=\"Tip('Ver Texto de la Actuación')\" onmouseout='UnTip()' onclick=\"location.href='../reportes/reporte_actuacion_individual.php?id=".$datos[$i][id_proactuaciones]."'\">
                                         </a>";
                             if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario('actuaciones'),'editar', clConstantesModelo::acciones_actuaciones())){
                                 $html.="<a>

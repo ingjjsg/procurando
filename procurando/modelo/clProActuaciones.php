@@ -224,6 +224,27 @@ public function llenar($request)
                $conn->cerrarConexion ();
                return $data;
      }
+     
+     public function selectDetalleActuacionReporte($id_proactuaciones) {
+               $conn = new Conexion ();
+               $conn->abrirConexion ();
+               $sql = "";
+               $sql = "SELECT id_proactuaciones, 
+                       tipo_actuacion.stritema tipo_actuacion, 
+                       actuacion.stritema as actuacion, 
+                       strdescripcionactuacion, 
+                       to_char(fecactuacion,'DD/MM/YYYY') as fecactuacion, 
+                       strnombreactuacion
+                    from
+                    " . clConstantesModelo::scsd_table . "tblproactuaciones 
+                        inner join " . clConstantesModelo::scsd_table ."tblmaestros tipo_actuacion on tipo_actuacion.id_maestro=id_proactuaciones 
+                        inner join " . clConstantesModelo::scsd_table ."tblmaestros actuacion on actuacion.id_maestro=id_actuacion"; 
+                   $sql.=" where id_proactuaciones=".$id_proactuaciones;
+               $conn->sql = $sql;
+               $data = $conn->ejecutarSentencia (2);
+               $conn->cerrarConexion ();
+               return $data;
+     }
 
      public function selectAllActuaciones() {
          $conn= new Conexion();
