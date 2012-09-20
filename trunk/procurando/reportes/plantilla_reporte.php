@@ -39,7 +39,7 @@ class Plantilla extends TCPDF{
         $this->Ln(3);
         $this->Cell(0, 10, $this->getTitulo(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
         $this->Ln(10);
-        $this->SetY(50);
+        //$this->SetY(100);
     }
 
     public function  Footer() {
