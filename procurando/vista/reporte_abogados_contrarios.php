@@ -2,7 +2,7 @@
 
     session_start();
     require_once ('../comunes/php/fpdf/html2fpdf.php');
-    require_once '../modelo/clProAbogados.php';
+    require_once '../modelo/clProAbogadosContrarios.php';
     require_once '../comunes/php/utilidades.php';
     require_once '../modelo/clFunciones.php';
 
@@ -107,7 +107,7 @@
         }
     }
 
-    $abogado= new clProAbogados();
+    $abogado= new clProAbogadosContrarios();
     $data= $abogado->SelectAll($_REQUEST["id"]);
     $pdf= new PDF_MC_Table('P', 'mm', "letter", "", "", "");
     $pdf->SetMargins(10, 30, 10, 10);
