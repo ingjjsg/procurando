@@ -156,7 +156,7 @@
     }
 
     $cliente= new clProExpediente();
-    $data= $cliente->SelectAll($_REQUEST["id"]);
+    $data= $cliente->SelectExpediente($_REQUEST["id"]);
  
     $pdf= new PDF_MC_Table('P', 'mm', "letter", "", "", "");
     $pdf->SetMargins(10, 30, 10, 10);
