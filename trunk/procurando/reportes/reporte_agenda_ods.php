@@ -7,8 +7,13 @@
     header("Cache-Control: post-check=0, pre-check=0", false);
     header("Content-type: application/vnd.oasis.opendocument.spreadsheet");
     header("Content-disposition: attachment; filename=reporte_agenda.ods");
-    
-    $data=  unserialize(stripslashes($_GET['data']));
+
+    require_once '../modelo/ctblagendaModelo.php';
+    $proagenda= new clTblagenda();
+    $data= "";
+    $request=  $_GET['data'];
+    $data= $proagenda->selectAgendaReporte($request['id_tipo'], $request['id_evento'], $request['id_prioridad'],$request['id_estado'],$request['id_recordatorio'],$request['id_unidad'],$request['id_refiere'],$request['id_tipo_organismo'],$request['id_organismo']);
+        
     $html='
         <html>
         <head>
@@ -43,7 +48,8 @@
             <th align="center" bgcolor="#D8D8D8">Días</th>
          </tr>';
 $count=0;
-foreach ($data as $key => $value) {
+if($data){
+ foreach ($data as $key => $value) {
     
         $html.='<tr>';
             $html.='<td align="center" >'.++$count.'</td>';
@@ -56,7 +62,9 @@ foreach ($data as $key => $value) {
             $html.='<td align="center" >0</td>';
         $html.="</tr>";
     
+}   
 }
+
 $html.='</table></body></html>';
 echo $html;
 
