@@ -70,7 +70,7 @@ foreach ($data as $key => $value) {
 }
 
 $html.='</table>';
-$pdf->SetY(40);
+//$pdf->SetY(50);
 $pdf->writeHTML($html);
 $pdf->Output("reporte_agenda.pdf", "I");
 
