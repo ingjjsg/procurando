@@ -6,7 +6,7 @@ require_once '../herramientas/herramientas.class.php';
 
 //$data=  unserialize(stripslashes($_GET['data']));
 $pdf=new Plantilla("P");
-$pdf->setTitulo("ASOCIASIÓN");
+$pdf->setTitulo("Actuación");
 $pdf->AddPage();
 
 $html='
