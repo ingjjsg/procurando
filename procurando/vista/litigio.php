@@ -56,7 +56,7 @@
       </div>
   </div>
   <div class="desarrollo" id="largo">
-    <div class="desarrollo_contenido"><iframe  id="contenido" name="contenido" src="../vista/vista_tblactuaciones.php" scrolling="auto" frameborder="0" width="100%" height="600"></iframe></div>
+    <div class="desarrollo_contenido"><iframe  id="contenido" name="contenido" src="../vista/vista_litigio.php" scrolling="auto" frameborder="0" width="100%" height="600"></iframe></div>
   </div>
   <!-- derecha -->
 </div>
