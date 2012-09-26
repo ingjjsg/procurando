@@ -6,6 +6,7 @@
     require_once '../modelo/ctblagendaModelo.php';
     require_once '../modelo/ctbldocumentoModelo.php';    
     require_once '../modelo/ctblproexpedienteModelo.php';    
+    require_once '../modelo/clActuacionesModelo.php'; 
     require_once '../comunes/php/utilidades.php';
     require_once '../modelo/clConstantesModelo.php';
     require_once '../modelo/clFunciones.php';    
@@ -1362,6 +1363,75 @@
         $respuesta->assign("contenedorAgenda","innerHTML",$html);
         return $respuesta;
     }    
+    
+    
+    
+   // AGENDA EXPEDIENTE LITIGIO
+    
+    function buscarExpedienteLitigio($id){
+        $respuesta=new xajaxResponse();
+        $expediente = new clActuaciones();  
+       // exit("voy");
+        $data=$expediente->getExpedienteClienteAgenda($id);
+        
+        if(is_array($data)){
+            $respuesta->assign("strnroexpediente", "value", $data[0][strnroexpediente]);
+            $respuesta->assign("id_proexpediente", "value", $data[0][id_proactuacion]);  
+            $respuesta->script("FCKeditorAPI.__Instances['descripcion'].SetHTML('Refiere a Expediente Nro:".$data[0][strnroexpediente]."<br /><br />".$data[0][strdescripcion]."<br type=\"_moz\" />')");            
+            $respuesta->script("$('contenedorExpediente').hide();");                     
+        }
+        else  $respuesta->alert("El Expediente no Existe");   
+        return $respuesta;
+    }
+    
+     function validar_Agenda_Expediente_Litigio($request){
+        $respuesta = new xajaxResponse();
+            $campos_validar= array(
+            'Tipo de Agenda'    => 'id_tipo',
+            'Tipo de Prioridad'    => 'id_prioridad',
+            'Tipo de Evento'    => 'id_evento',                
+            'Tipo de Estado'    => 'id_estado',
+            'Tipo de Recordatorio'    => 'id_recordatorio',                
+            'Titulo del Evento'  => 'strtitulo',
+            'Fecha de la Agenda'    => 'fecagenda',
+            'Descripcion de la Agenda' => 'strdescripcion',
+            );
+            $validacion=  functions::validarFormulario('frmAgenda',$request,$campos_validar);
+            if($validacion){
+                $respuesta->alert($validacion['msg']);
+                $respuesta->script($validacion['focus']);
+            }else{
+                $respuesta->script("xajax_guardarAgendaExpedienteLitigio(xajax.getFormValues('frmAgenda'))");
+            }
+        return $respuesta;
+    }
+    
+    function guardarAgendaExpedienteLitigio($request){
+        $respuesta= new xajaxResponse();
+        $agenda= new clTblagenda();
+        $agenda->llenar($request);
+        if (functions::VerificarFechaActual(str_replace('/', '-', $request['fecagenda'])))
+        {        
+            if( $request['id_agenda'] =="") 
+            {
+                $data= $agenda->insertAgendaLitigio();
+                $respuesta->alert("La Agenda se creo Exitosamente");                
+                $respuesta->script("location.href='vista_tblagenda_Litigio.php?id=".$request['id_agenda_expediente']."';");            
+            }
+            else 
+            {
+                $data= $agenda->updateAgendaLitigio();
+                $respuesta->alert("La Agenda se Actualizo Exitosamente");                    
+                $respuesta->script("location.href='vista_tblagenda_Litigio.php?id=".$request['id_agenda_expediente']."';"); 
+            }
+            if(!$data){
+                $respuesta->alert("La Agenda no se ha guardado");
+            }
+        }
+        else
+            $respuesta->alert("La fecha del Item de Agenda no puede vencer el mismo día, o ser menor a la fecha de Registro");
+        return $respuesta;
+    }
     
     
     

@@ -1003,8 +1003,8 @@ public function llenar($request)
     public static function getExpedienteClienteAgenda($id_cliente){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $sql="SELECT id_proactuacion,strnroexpediente,strdescripcion FROM ".clConstantesModelo::correspondencia_table.self::TABLA." WHERE id_proexpediente=".$id_cliente;        
-//        exit($sql);
+        $sql="SELECT id_proactuacion,strnroexpediente,strdescripcion FROM ".clConstantesModelo::correspondencia_table.self::TABLA." WHERE id_proactuacion=".$id_cliente;        
+       // exit($sql);
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
         $conn->cerrarConexion();

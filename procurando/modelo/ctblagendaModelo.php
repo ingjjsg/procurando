@@ -862,6 +862,88 @@ public function llenar($request)
         $conn->cerrarConexion();        
         return $data;
     }
+    
+    
+    
+    
+    // AGENDA LITIGIO
+     public function insertAgendaLitigio(){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $tipo=clConstantesModelo::buscar_expediente;
+        $expediente=0;
+        if (($this->getId_tipo()==$tipo) and ($this->getId_expediente()!=''))
+            $expediente=$this->getId_expediente();
+        //crea su propio item 
+        $sql= "INSERT INTO ".clConstantesModelo::correspondencia_table."tblagenda (id_usuario, id_tipo, id_evento, id_prioridad, id_estado,id_recordatorio, id_unidad, fecagenda, strdescripcion, strtitulo,id_expediente, id_tipo_organismo, id_organismo, strpersona, id_refiere, id_contacto, date, origen) values ";
+        $sql.= "(".$this->getId_usuario().",".$this->getId_tipo().",".$this->getId_evento().",".$this->getId_prioridad().",".$this->getId_estado().",".$this->getId_recordatorio().",".$this->getId_unidad().",TO_DATE('".$this->getFecagenda()."', 'DD/MM/YYYY'),'".$this->getStrdescripcion()."','".$this->getStrtitulo()."',".$expediente.",".$this->getId_tipo_organismo().",".$this->getId_organismo().",'".$this->getStrpersona()."',".$this->getId_refiere().",".$this->getId_contacto().",'".$this->getDate()."','E')";
+        $conn->sql=$sql;
+        $conn->ejecutarSentencia();
+        $sql="SELECT last_value as maximo FROM " . clConstantesModelo::correspondencia_table . "tblagenda_id_agenda_seq";
+        $conn->sql = $sql;
+        $data = $conn->ejecutarSentencia (2);
+        if ($data) $id_seguimiento=$data[0]['maximo'];
+        //refiere todo el departamento        
+        if ($this->getId_refiere()==clConstantesModelo::buscar_refiere)  
+        {
+            $sql_contacto= "SELECT  *  from ".clConstantesModelo::correspondencia_table."tblcontacto  where id_coord_maestro=".$this->getId_unidad();
+            $conn->sql= $sql_contacto;
+            $datos= $conn->ejecutarSentencia(2);   
+            for ($i= 0; $i < count($datos); $i++){
+                $sql_dos= "INSERT INTO ".clConstantesModelo::correspondencia_table."tblagenda (id_usuario, id_tipo, id_evento, id_prioridad, id_estado,id_recordatorio, id_unidad, fecagenda, strdescripcion, strtitulo,id_expediente, id_tipo_organismo, id_organismo, strpersona, id_refiere, date, id_seguimiento, origen) values ";
+                $sql_dos.= "(".$datos[$i][id_contacto].",".$this->getId_tipo().",".$this->getId_evento().",".$this->getId_prioridad().",".$this->getId_estado().",".$this->getId_recordatorio().",".$_SESSION['id_coord_maestro'].",TO_DATE('".$this->getFecagenda()."', 'DD/MM/YYYY'),'".$this->getStrdescripcion()."','".$this->getStrtitulo()."',".$expediente.",".$this->getId_tipo_organismo().",".$this->getId_organismo().",'".$this->getStrpersona()."',".$this->getId_refiere().",'".$this->getDate()."',".$id_seguimiento.",'R')";
+                $conn->sql=$sql_dos;
+                $conn->ejecutarSentencia();                
+            }            
+        }
+        //refiere solo personas
+        if ($this->getId_refiere()==clConstantesModelo::buscar_persona)  
+        {
+            $sql='';
+            $sql= "INSERT INTO ".clConstantesModelo::correspondencia_table."tblagenda (id_usuario, id_tipo, id_evento, id_prioridad, id_estado,id_recordatorio, id_unidad, fecagenda, strdescripcion, strtitulo,id_expediente, id_tipo_organismo, id_organismo, strpersona, id_refiere, id_contacto, date, id_seguimiento, origen) values ";
+            $sql.= "(".$this->getId_contacto().",".$this->getId_tipo().",".$this->getId_evento().",".$this->getId_prioridad().",".$this->getId_estado().",".$this->getId_recordatorio().",".$_SESSION['id_coord_maestro'].",TO_DATE('".$this->getFecagenda()."', 'DD/MM/YYYY'),'".$this->getStrdescripcion()."','".$this->getStrtitulo()."',".$expediente.",".$this->getId_tipo_organismo().",".$this->getId_organismo().",'".$this->getStrpersona()."',".$this->getId_refiere().",".$this->getId_usuario().",'".$this->getDate()."',".$id_seguimiento.",'R')";
+            $conn->sql=$sql;             
+            $conn->ejecutarSentencia();        
+                $sql="SELECT last_value as maximo FROM " . clConstantesModelo::correspondencia_table . "tblagenda_id_agenda_seq";
+                $conn->sql = $sql;
+                $data = $conn->ejecutarSentencia (2);          
+                if ($data)
+                {
+                    $id_seguimiento_registrado=$data[0]['maximo'];        
+                    $sql_update= "UPDATE ".clConstantesModelo::correspondencia_table."tblagenda SET  id_seguimiento=".$id_seguimiento_registrado." WHERE id_agenda= ".$id_seguimiento;
+                    $conn->sql=$sql_update;            
+                    $conn->ejecutarSentencia();                    
+                }
+        }        
+        $retorno= $this->verIdAgenda();
+        $conn->cerrarConexion();
+        return $retorno;
+    }
+
+    public function updateAgendaLitigio(){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $sql= "UPDATE ".clConstantesModelo::correspondencia_table."tblagenda SET ";
+        $sql.= "id_tipo= ".$this->getId_tipo().", ";
+        $sql.= "id_evento= ".$this->getId_evento().", ";        
+        $sql.= "id_prioridad= ".$this->getId_prioridad().", ";   
+        $sql.= "id_estado= ".$this->getId_estado().", ";           
+        $sql.= "id_recordatorio= ".$this->getId_recordatorio().", ";
+        $sql.= "id_unidad= ".$this->getId_unidad().", "; 
+        $sql.= "fecagenda=TO_DATE('".$this->getFecagenda()."','DD/MM/YYYY'),";                  
+        $sql.= "strdescripcion= '".$this->getStrdescripcion()."', ";
+        $sql.= "strtitulo= '".$this->getStrtitulo()."', ";
+        $sql.= "id_expediente= ".$this->getId_expediente().", ";        
+        $sql.= "id_tipo_organismo= ".$this->getId_tipo_organismo().", ";   
+        $sql.= "id_organismo= ".$this->getId_organismo().", ";
+        $sql.= "strpersona= '".$this->getStrpersona()."' ";        
+        $sql.= "WHERE id_agenda= ".$this->getId_agenda();
+//      exit($sql);
+        $conn->sql=$sql;        
+        $retorno= $conn->ejecutarSentencia();
+        $conn->cerrarConexion();
+        return $retorno;
+    }
         
     
     
