@@ -1,5 +1,5 @@
 <?php
-//echo $_GET['id'];
+//exit($_GET['id']);
     session_start();
     require_once "../controlador/tblagendaControlador.php";
 //    require_once "../controlador/tblproexpedienteControlador.php";    
@@ -75,12 +75,12 @@
             }
         </script>
     </head>
-    <body onload="xajax_selectAllAgendaExpediente('<?php echo $_GET['id']; ?>');">
+    <body onload="xajax_selectAllAgendaExpediente('<?php echo $_GET['id']; ?>','<?php echo clConstantesModelo::$TIPO_EXPEDIENTE['litigio']?>');">
         <form name="frmAgenda" id="frmAgenda" method="post" style="">
             <script src="../comunes/js/wz_tooltip/wz_tooltip.js" type="text/javascript"></script>
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
-                    <td width="65%" class="menu_izq_titulo">Agenda  Expediente<div id='capaMaestro'></div></td>
+                    <td width="65%" class="menu_izq_titulo">Agenda  Expediente Litigio<div id='capaMaestro'></div></td>
                     <td width="10%" align="center" class="menu_izq_titulo">
                         <img src="../comunes/images/page_add.png" onmouseover="Tip('Nuevo Item Agenda')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_insertTblAgendaLitigio.php?id_expediente=<?php echo $_GET['id']; ?>'"/>                        
                     </td>

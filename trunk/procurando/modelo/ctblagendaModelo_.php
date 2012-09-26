@@ -453,11 +453,13 @@ public function llenar($request)
     
     
     public function selectAgenda($id){
+        exit($id);
         $conn= new Conexion();
         $conn->abrirConexion();
         $sql.= "SELECT  id_agenda, id_usuario, id_tipo, id_evento, id_prioridad, id_estado,date, 
          id_recordatorio, id_unidad, to_char(fecagenda,'DD/MM/YYYY') as fecagenda, strdescripcion, strtitulo, strpersona, id_refiere, id_contacto, 
          id_expediente, bolborrado, id_tipo_organismo, id_organismo  from ".clConstantesModelo::correspondencia_table."tblagenda  where id_agenda=".$id;
+        
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
         $conn->cerrarConexion();        

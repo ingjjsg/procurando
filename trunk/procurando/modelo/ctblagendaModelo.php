@@ -397,18 +397,18 @@ public function llenar($request)
         return $this->date=$date;
     }    
     
-    public function selectAllAgendaExpediente($id){
+    public function selectAllAgendaExpediente($id,$tipo_expediente){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $sql.= "SELECT id_agenda, id_usuario, id_tipo, id_evento, id_prioridad, id_estado, id_recordatorio, id_unidad, fecagenda, strdescripcion, strtitulo, id_expediente, bolborrado, strpersona, id_refiere, visto, id_seguimiento, origen  ";
+        $sql.= "SELECT tipo_expediente,id_agenda, id_usuario, id_tipo, id_evento, id_prioridad, id_estado, id_recordatorio, id_unidad, fecagenda, strdescripcion, strtitulo, id_expediente, bolborrado, strpersona, id_refiere, visto, id_seguimiento, origen  ";
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_tipo) AS id_tipo_agenda ";
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_evento) AS id_evento_agenda ";
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_prioridad) AS id_prioridad_agenda ";
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_estado) AS id_estado_agenda ";
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_recordatorio) AS id_recordatorio_agenda ";
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_unidad) AS id_unidad_agenda ";        
-        $sql.=" from ".clConstantesModelo::correspondencia_table."tblagenda where  bolborrado=0 and id_expediente=".$id." and id_usuario=".$_SESSION['id_contacto']." order by id_agenda desc";
-//        exit($sql);
+        $sql.=" from ".clConstantesModelo::correspondencia_table."tblagenda where  bolborrado=0 and id_expediente=".$id." and id_usuario=".$_SESSION['id_contacto']." and tipo_expediente=$tipo_expediente order by id_agenda desc";
+       // exit($sql);
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
         $conn->cerrarConexion();        
@@ -488,7 +488,7 @@ public function llenar($request)
     public function selectAgenda($id){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $sql.= "SELECT  id_agenda, id_usuario, id_tipo, id_evento, id_prioridad, id_estado,date, 
+        $sql.= "SELECT  tipo_expediente,id_agenda, id_usuario, id_tipo, id_evento, id_prioridad, id_estado,date, 
          id_recordatorio, id_unidad, to_char(fecagenda,'DD/MM/YYYY') as fecagenda, strdescripcion, strtitulo, strpersona, id_refiere, id_contacto, 
          id_expediente, bolborrado, id_tipo_organismo, id_organismo  from ".clConstantesModelo::correspondencia_table."tblagenda  where id_agenda=".$id;
         $conn->sql= $sql;
@@ -875,8 +875,8 @@ public function llenar($request)
         if (($this->getId_tipo()==$tipo) and ($this->getId_expediente()!=''))
             $expediente=$this->getId_expediente();
         //crea su propio item 
-        $sql= "INSERT INTO ".clConstantesModelo::correspondencia_table."tblagenda (id_usuario, id_tipo, id_evento, id_prioridad, id_estado,id_recordatorio, id_unidad, fecagenda, strdescripcion, strtitulo,id_expediente, id_tipo_organismo, id_organismo, strpersona, id_refiere, id_contacto, date, origen) values ";
-        $sql.= "(".$this->getId_usuario().",".$this->getId_tipo().",".$this->getId_evento().",".$this->getId_prioridad().",".$this->getId_estado().",".$this->getId_recordatorio().",".$this->getId_unidad().",TO_DATE('".$this->getFecagenda()."', 'DD/MM/YYYY'),'".$this->getStrdescripcion()."','".$this->getStrtitulo()."',".$expediente.",".$this->getId_tipo_organismo().",".$this->getId_organismo().",'".$this->getStrpersona()."',".$this->getId_refiere().",".$this->getId_contacto().",'".$this->getDate()."','E')";
+        $sql= "INSERT INTO ".clConstantesModelo::correspondencia_table."tblagenda (id_usuario, id_tipo, id_evento, id_prioridad, id_estado,id_recordatorio, id_unidad, fecagenda, strdescripcion, strtitulo,id_expediente, id_tipo_organismo, id_organismo, strpersona, id_refiere, id_contacto, date, origen,tipo_expediente) values ";
+        $sql.= "(".$this->getId_usuario().",".$this->getId_tipo().",".$this->getId_evento().",".$this->getId_prioridad().",".$this->getId_estado().",".$this->getId_recordatorio().",".$this->getId_unidad().",TO_DATE('".$this->getFecagenda()."', 'DD/MM/YYYY'),'".$this->getStrdescripcion()."','".$this->getStrtitulo()."',".$expediente.",".$this->getId_tipo_organismo().",".$this->getId_organismo().",'".$this->getStrpersona()."',".$this->getId_refiere().",".$this->getId_contacto().",'".$this->getDate()."','E',".clConstantesModelo::$TIPO_EXPEDIENTE['litigio'].")";
         $conn->sql=$sql;
         $conn->ejecutarSentencia();
         $sql="SELECT last_value as maximo FROM " . clConstantesModelo::correspondencia_table . "tblagenda_id_agenda_seq";
@@ -890,8 +890,8 @@ public function llenar($request)
             $conn->sql= $sql_contacto;
             $datos= $conn->ejecutarSentencia(2);   
             for ($i= 0; $i < count($datos); $i++){
-                $sql_dos= "INSERT INTO ".clConstantesModelo::correspondencia_table."tblagenda (id_usuario, id_tipo, id_evento, id_prioridad, id_estado,id_recordatorio, id_unidad, fecagenda, strdescripcion, strtitulo,id_expediente, id_tipo_organismo, id_organismo, strpersona, id_refiere, date, id_seguimiento, origen) values ";
-                $sql_dos.= "(".$datos[$i][id_contacto].",".$this->getId_tipo().",".$this->getId_evento().",".$this->getId_prioridad().",".$this->getId_estado().",".$this->getId_recordatorio().",".$_SESSION['id_coord_maestro'].",TO_DATE('".$this->getFecagenda()."', 'DD/MM/YYYY'),'".$this->getStrdescripcion()."','".$this->getStrtitulo()."',".$expediente.",".$this->getId_tipo_organismo().",".$this->getId_organismo().",'".$this->getStrpersona()."',".$this->getId_refiere().",'".$this->getDate()."',".$id_seguimiento.",'R')";
+                $sql_dos= "INSERT INTO ".clConstantesModelo::correspondencia_table."tblagenda (id_usuario, id_tipo, id_evento, id_prioridad, id_estado,id_recordatorio, id_unidad, fecagenda, strdescripcion, strtitulo,id_expediente, id_tipo_organismo, id_organismo, strpersona, id_refiere, date, id_seguimiento, origen,tipo_expediente) values ";
+                $sql_dos.= "(".$datos[$i][id_contacto].",".$this->getId_tipo().",".$this->getId_evento().",".$this->getId_prioridad().",".$this->getId_estado().",".$this->getId_recordatorio().",".$_SESSION['id_coord_maestro'].",TO_DATE('".$this->getFecagenda()."', 'DD/MM/YYYY'),'".$this->getStrdescripcion()."','".$this->getStrtitulo()."',".$expediente.",".$this->getId_tipo_organismo().",".$this->getId_organismo().",'".$this->getStrpersona()."',".$this->getId_refiere().",'".$this->getDate()."',".$id_seguimiento.",'R',".clConstantesModelo::$TIPO_EXPEDIENTE['litigio'].")";
                 $conn->sql=$sql_dos;
                 $conn->ejecutarSentencia();                
             }            
@@ -900,8 +900,8 @@ public function llenar($request)
         if ($this->getId_refiere()==clConstantesModelo::buscar_persona)  
         {
             $sql='';
-            $sql= "INSERT INTO ".clConstantesModelo::correspondencia_table."tblagenda (id_usuario, id_tipo, id_evento, id_prioridad, id_estado,id_recordatorio, id_unidad, fecagenda, strdescripcion, strtitulo,id_expediente, id_tipo_organismo, id_organismo, strpersona, id_refiere, id_contacto, date, id_seguimiento, origen) values ";
-            $sql.= "(".$this->getId_contacto().",".$this->getId_tipo().",".$this->getId_evento().",".$this->getId_prioridad().",".$this->getId_estado().",".$this->getId_recordatorio().",".$_SESSION['id_coord_maestro'].",TO_DATE('".$this->getFecagenda()."', 'DD/MM/YYYY'),'".$this->getStrdescripcion()."','".$this->getStrtitulo()."',".$expediente.",".$this->getId_tipo_organismo().",".$this->getId_organismo().",'".$this->getStrpersona()."',".$this->getId_refiere().",".$this->getId_usuario().",'".$this->getDate()."',".$id_seguimiento.",'R')";
+            $sql= "INSERT INTO ".clConstantesModelo::correspondencia_table."tblagenda (id_usuario, id_tipo, id_evento, id_prioridad, id_estado,id_recordatorio, id_unidad, fecagenda, strdescripcion, strtitulo,id_expediente, id_tipo_organismo, id_organismo, strpersona, id_refiere, id_contacto, date, id_seguimiento, origen,tipo_expediente) values ";
+            $sql.= "(".$this->getId_contacto().",".$this->getId_tipo().",".$this->getId_evento().",".$this->getId_prioridad().",".$this->getId_estado().",".$this->getId_recordatorio().",".$_SESSION['id_coord_maestro'].",TO_DATE('".$this->getFecagenda()."', 'DD/MM/YYYY'),'".$this->getStrdescripcion()."','".$this->getStrtitulo()."',".$expediente.",".$this->getId_tipo_organismo().",".$this->getId_organismo().",'".$this->getStrpersona()."',".$this->getId_refiere().",".$this->getId_usuario().",'".$this->getDate()."',".$id_seguimiento.",'R',".clConstantesModelo::$TIPO_EXPEDIENTE['litigio'].")";
             $conn->sql=$sql;             
             $conn->ejecutarSentencia();        
                 $sql="SELECT last_value as maximo FROM " . clConstantesModelo::correspondencia_table . "tblagenda_id_agenda_seq";
@@ -933,7 +933,7 @@ public function llenar($request)
         $sql.= "fecagenda=TO_DATE('".$this->getFecagenda()."','DD/MM/YYYY'),";                  
         $sql.= "strdescripcion= '".$this->getStrdescripcion()."', ";
         $sql.= "strtitulo= '".$this->getStrtitulo()."', ";
-        $sql.= "id_expediente= ".$this->getId_expediente().", ";        
+        //$sql.= "id_expediente= ".$this->getId_expediente().", ";        
         $sql.= "id_tipo_organismo= ".$this->getId_tipo_organismo().", ";   
         $sql.= "id_organismo= ".$this->getId_organismo().", ";
         $sql.= "strpersona= '".$this->getStrpersona()."' ";        

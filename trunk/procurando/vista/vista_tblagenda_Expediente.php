@@ -75,7 +75,7 @@
             }
         </script>
     </head>
-    <body onload="xajax_selectAllAgendaExpediente('<?php echo $_GET['id']; ?>');">
+    <body onload="xajax_selectAllAgendaExpediente('<?php echo $_GET['id']; ?>','<?php echo clConstantesModelo::$TIPO_EXPEDIENTE['oas']; ?>');">
         <form name="frmAgenda" id="frmAgenda" method="post" style="">
             <script src="../comunes/js/wz_tooltip/wz_tooltip.js" type="text/javascript"></script>
             <table width="100%" border="0" cellspacing="0" cellpadding="0">

@@ -64,14 +64,15 @@
         return $respuesta;
     }        
     
-    function selectAllAgendaExpediente($id){
+    function selectAllAgendaExpediente($id,$tipo_expediente){
+        //exit("id: ".$id." tipo_expediente: ".$tipo_expediente);
         $respuesta= new xajaxResponse();
         $proagenda= new clTblagenda();
         $data= "";
         $html= "";
 	if ($id)
         {
-            $data= $proagenda->selectAllAgendaExpediente($id);
+            $data= $proagenda->selectAllAgendaExpediente($id,$tipo_expediente);
         }
         if($data){
             $html= "<div style='border:solid 1px #CCCCCC;background:#f8f8f8'>
@@ -177,9 +178,12 @@
                     $html.="<a>
                                     <img src='../comunes/images/verde.gif' height='17px'  onmouseover=\"Tip('Agenda Pendiente')\" onmouseout='UnTip()' onclick=\"javascript:location.href='vista_insertTblAgendaExpediente.php?id=".$data[$i]['id_agenda']."'\";\">
                                 </a>";                   
-                }                            
+                }
+                
+                $src= ($data[$i]['tipo_expediente'] == clConstantesModelo::$TIPO_EXPEDIENTE['oas']) ? "vista_insertTblAgendaExpediente.php?id=\'$data[$i]['id_agenda']'" : "vista_insertTblAgendaLitigio.php?id=".$data[$i]['id_agenda'] ;
+                //exit($src);
                 $html.="        <a>
-                                    <img src='../comunes/images/page_edit.png' onmouseover='Tip(\"Editar Item Agenda ".$data[$i]['id_agenda']."\")' onmouseout='UnTip()' onclick=\"javascript:location.href='vista_insertTblAgendaExpediente.php?id=".$data[$i]['id_agenda']."'\";\">
+                                    <img src='../comunes/images/page_edit.png' onmouseover='Tip(\"Editar Item Agenda ".$data[$i]['id_agenda']."\")' onmouseout='UnTip()' onclick=\"javascript:location.href='$src'\">
                                 </a>";  
                 $html.="<a>
                                     <img src='../comunes/images/ver.gif' onmouseover=\"Tip('Detalle de la Agenda')\" onmouseout='UnTip()' onclick=\"location.href='../reportes/reporte_agenda_individual.php?id=".$data[$i]['id_agenda']."'\">
@@ -706,13 +710,21 @@
     $respuesta = new xajaxResponse();
     $agenda= new clTblagenda();
     $data = "";
-    $agenda->updateAgendaItem($id,0,'visto');    
+    //
+    $agenda->updateAgendaItem($id,0,'visto');
+    
     $data = $agenda->selectAgenda($id);
     if ($data) {
+        
         $respuesta->script('xajax_llenarSelectTipoAgenda(' . $data[0][id_tipo] . ')');
         if ($data[0][id_expediente]>0)
         {
-             $respuesta->script('xajax_buscarExpediente(' . $data[0][id_expediente] . ')');
+             if($data[0]['tipo_expediente'] == clConstantesModelo::$TIPO_EXPEDIENTE['litigio']){
+                 $respuesta->script('xajax_buscarExpedienteLitigio(' . $data[0][id_expediente] . ')');
+             }else{
+                 $respuesta->script('xajax_buscarExpediente(' . $data[0][id_expediente] . ')');
+             }
+             
              $respuesta->script("$('CapaExpediente').show();");             
         }
         if ($data[0][id_contacto]>0)
@@ -1376,7 +1388,7 @@
         
         if(is_array($data)){
             $respuesta->assign("strnroexpediente", "value", $data[0][strnroexpediente]);
-            $respuesta->assign("id_proexpediente", "value", $data[0][id_proactuacion]);  
+            $respuesta->assign("id_agenda_expediente", "value", $data[0][id_proactuacion]);  
             $respuesta->script("FCKeditorAPI.__Instances['descripcion'].SetHTML('Refiere a Expediente Nro:".$data[0][strnroexpediente]."<br /><br />".$data[0][strdescripcion]."<br type=\"_moz\" />')");            
             $respuesta->script("$('contenedorExpediente').hide();");                     
         }
@@ -1420,6 +1432,7 @@
             }
             else 
             {
+                //exit($request['id_agenda_expediente']);
                 $data= $agenda->updateAgendaLitigio();
                 $respuesta->alert("La Agenda se Actualizo Exitosamente");                    
                 $respuesta->script("location.href='vista_tblagenda_Litigio.php?id=".$request['id_agenda_expediente']."';"); 
