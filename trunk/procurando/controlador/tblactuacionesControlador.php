@@ -21,11 +21,12 @@
     function llenarSelectFormularioTipoEstadoMinuta($select="") {
         $respuesta= new xajaxResponse();
         $maestro= new clMaestroModelo();
+        
         $data= "";
         $html= "";
         $estados= clConstantesModelo::combos();
-        $data= $maestro->selectAllMaestroHijos($estados['estados_minuta'], 2);
-        $html= "<select id='id_estado_minuta' name='id_estado_minuta' style='width:50%' onchange=\"xajax_llenarSelectComboItemTipoActuacion(document.frminscribir.id_tipo_actuacion.value);\">";
+        $data= $maestro->selectAllMaestroHijos($estados['estados_minuta'],'stritema', 2);
+        $html= "<select id='id_estado_minuta' name='id_estado_minuta' style='width:50%' >";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
             for ($i= 0; $i < count($data); $i++){
@@ -37,6 +38,7 @@
             }
             $html.= "</select>";
         }
+        
         $respuesta->assign("capaIdEstadoMinuta","innerHTML",$html);
         return $respuesta;
     }     
@@ -1302,7 +1304,7 @@ function selectAllActuaciones($id_expediente){
                                 </a>";
                                 if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario('expedientes'),'editar', clConstantesModelo::acciones_expedientes())){
                                 $html.="<a>
-                                    <img src='../comunes/images/Open.png' onmouseover='Tip(\"Editar\")' onmouseout='UnTip()' onclick=\"location.href='vista_Ingresotblactuaciones.php?id=".$data[$i]['id_proactuacion']."'\">
+                                    <img src='../comunes/images/Open.png' onmouseover='Tip(\"Editar\")' onmouseout='UnTip()' onclick=\"location.href='vista_Ingresolitigio.php?id=".$data[$i]['id_proactuacion']."'\">
                                 </a>";
                                 }
                                 if ($data[$i][feccierre]!='')
@@ -2015,7 +2017,6 @@ function editar_expediente($request){
     
     function validar_situacion($request){
         $respuesta = new xajaxResponse();
-        
         if( $request['id_proactuacion_situacion'] !=""){
             $respuesta->script("xajax_editar_situacion(xajax.getFormValues('frminscribir'),'".$request['id_proactuacion_situacion']."')");
         }else{
@@ -2073,7 +2074,7 @@ function editar_expediente($request){
         $data= $cliente->Update($id_expediente_situacion);
         if($data){
             $respuesta->alert("El Expediente se actualizo exitosamente");
-            $respuesta->script("xajax_buscarDatosSituaciones('".$request['id_proactuacion']."')");
+            $respuesta->script("xajax_buscarDatosSituaciones('".$request['id_proexpediente']."')");
             $respuesta->assign("id_proexpediente_situacion", "value", "");
             $respuesta->script('xajax_llenarSelectTipoMinuta("frminscribir")');
             $respuesta->assign("id_minuta", "value", "0");
@@ -2095,7 +2096,7 @@ function editar_expediente($request){
            $respuesta->script('xajax_llenarSelectMinuta('.$data[0][id_tipo_minuta].',' . $data[0][id_minuta] . ')');
            $respuesta->assign("strobservacion", "value", $data[0][strobservacion]);
            $respuesta->assign("fecminuta", "value", $data[0][fecminuta]);           
-           $respuesta->assign("id_proexpediente_situacion", "value", $data[0][id_proactuacion_situacion]);
+           $respuesta->assign("id_proactuacion_situacion", "value", $data[0][id_proactuacion_situacion]);
            
         }
         return $respuesta;
