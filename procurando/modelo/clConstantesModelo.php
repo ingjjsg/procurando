@@ -510,7 +510,10 @@ class clConstantesModelo {
         return $permiso;
     }
         
-
+public static $TIPO_EXPEDIENTE = array (
+   'litigio' => '1',
+   'oas'     => '0'
+);
 
 }
 ?>

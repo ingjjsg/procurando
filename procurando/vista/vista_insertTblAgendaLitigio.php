@@ -1,5 +1,4 @@
 <?php
-echo $_GET['id'];
     session_start();
     include("../comunes/fckeditor/fckeditor.php") ;        
     require_once "../controlador/tblagendaControlador.php";
