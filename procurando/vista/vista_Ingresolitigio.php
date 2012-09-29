@@ -231,7 +231,7 @@
                             <img id="clock" name="back" src="../comunes/images/b_print.png" onmouseover="Tip('Imprimir')" onmouseout="UnTip()" border="0" onclick="javascript:alert('Por Definir Desarrollo del Modulo');"/>                            
                             <img id="save" name="save" src="../comunes/images/disk.png" onmouseover="Tip('Guardar Expediente')" onmouseout="UnTip()" border="0" onclick="<?php echo $funcion ?>('');"/>
                             <img id="cerrar" style="display:none;" name="cerrar" src="../comunes/images/Privileges.png" onmouseover="Tip('Cerrar Expediente')" onmouseout="UnTip()" border="0" onclick="javascript:$('id_cerrar').toggle();$('id_observacion_cerrar').toggle();$('id_observacion_cerrar_button').toggle();"/>                            
-                            <img id="back" name="back" src="../comunes/images/arrow_undo.png" onmouseover="Tip('Volver')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_tblproexpediente.php'"/>
+                            <img id="back" name="back" src="../comunes/images/arrow_undo.png" onmouseover="Tip('Volver')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_litigio.php'"/>
                         </td>
                     </tr>
                     <tr>

@@ -119,6 +119,11 @@ public function llenar($request)
      }
      else $this->id_expediente=0;
 
+     if($request['id_agenda_expediente'] != ""){
+        $this->id_expediente= $request['id_agenda_expediente'];
+     }
+     else $this->id_expediente=0;
+
 
      if($request['bolborrado'] != ""){
         $this->bolborrado= $request['bolborrado'];
@@ -408,7 +413,6 @@ public function llenar($request)
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_recordatorio) AS id_recordatorio_agenda ";
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_unidad) AS id_unidad_agenda ";        
         $sql.=" from ".clConstantesModelo::correspondencia_table."tblagenda where  bolborrado=0 and id_expediente=".$id." and id_usuario=".$_SESSION['id_contacto']." and tipo_expediente=$tipo_expediente order by id_agenda desc";
-       // exit($sql);
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
         $conn->cerrarConexion();        
@@ -613,7 +617,8 @@ public function llenar($request)
                     $conn->sql=$sql_update;            
                     $conn->ejecutarSentencia();                    
                 }
-        }        
+        }
+        exit($sql)   ;     
         $retorno= $this->verIdAgenda();
         $conn->cerrarConexion();
         return $retorno;

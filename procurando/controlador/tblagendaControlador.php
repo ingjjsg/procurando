@@ -65,6 +65,7 @@
     }        
     
     function selectAllAgendaExpediente($id,$tipo_expediente){
+
         //exit("id: ".$id." tipo_expediente: ".$tipo_expediente);
         $respuesta= new xajaxResponse();
         $proagenda= new clTblagenda();
@@ -1388,7 +1389,7 @@
         
         if(is_array($data)){
             $respuesta->assign("strnroexpediente", "value", $data[0][strnroexpediente]);
-            $respuesta->assign("id_agenda_expediente", "value", $data[0][id_proactuacion]);  
+            $respuesta->assign("id_pro_expediente", "value", $data[0][id_proactuacion]);  
             $respuesta->script("FCKeditorAPI.__Instances['descripcion'].SetHTML('Refiere a Expediente Nro:".$data[0][strnroexpediente]."<br /><br />".$data[0][strdescripcion]."<br type=\"_moz\" />')");            
             $respuesta->script("$('contenedorExpediente').hide();");                     
         }
@@ -1422,6 +1423,7 @@
         $respuesta= new xajaxResponse();
         $agenda= new clTblagenda();
         $agenda->llenar($request);
+       // exit(print_r($request));
         if (functions::VerificarFechaActual(str_replace('/', '-', $request['fecagenda'])))
         {        
             if( $request['id_agenda'] =="") 

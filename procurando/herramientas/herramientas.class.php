@@ -38,8 +38,8 @@ public static function encrypt($string) {
 }    
     
   public static function VerificarFechaActual($dateTime) {
-    if ($dateTime > date("d-m-Y"))
-        return true;
+    if (strtotime($dateTime) > strtotime(date("d-m-Y")))
+       return true;
     else
         return false;
   }
