@@ -1374,12 +1374,12 @@ public function llenar($request)
          intcuotames2=".$this->get_intcuotames2().",    
          cedula_conyugue='".$this->get_cedula_conyugue()."',    
          strnroexpedienteauxiliar='".$this->get_strnroexpedienteauxiliar()."',
-         strrepresentante='".$this->get_strrepresentante()."',";
-         /*id_estado_fisico_expediente=".$this->getId_estado_fisico_expediente().",
+         strrepresentante='".$this->get_strrepresentante()."',
+         id_estado_fisico_expediente=".$this->getId_estado_fisico_expediente().",
          id_tipo_espacio=".$this->getId_tipo_espacio().",    
          id_tipo_archivador=".$this->getId_tipo_archivador().",    
          id_tipo_piso_archivador=".$this->getId_tipo_piso_archivador().",
-         id_tipo_archivador_gaveta=".$this->getId_tipo_archivador_gaveta().",  */
+         id_tipo_archivador_gaveta=".$this->getId_tipo_archivador_gaveta().",";
          $sql.="id_abogado_resp=".$this->getId_abogado_resp().",
          id_abogado_ejecutor=".$this->getId_abogado_ejecutor().",    
          id_solicitante=".$this->getId_solicitante().",";

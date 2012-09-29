@@ -325,7 +325,7 @@
         $data= "";
         $html= "";
         $estados= clConstantesModelo::combos();
-        $data= $maestro->selectAllMaestroHijos($estados['gaveta_archivador'], 2);
+        $data= $maestro->selectAllMaestroHijos($estados['gaveta_archivador'],'stritema', 2);
         $html= "<select id='id_tipo_archivador_gaveta' name='id_tipo_archivador_gaveta' style='width:50%'>";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
@@ -348,7 +348,7 @@
         $data= "";
         $html= "";
         $estados= clConstantesModelo::combos();
-        $data= $maestro->selectAllMaestroHijos($estados['piso_archivador'], 2);
+        $data= $maestro->selectAllMaestroHijos($estados['piso_archivador'],'stritema', 2);
         $html= "<select id='id_tipo_piso_archivador' name='id_tipo_piso_archivador' style='width:50%'>";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
@@ -371,7 +371,7 @@
         $data= "";
         $html= "";
         $estados= clConstantesModelo::combos();
-        $data= $maestro->selectAllMaestroHijos($estados['tipo_archivador'], 2);
+        $data= $maestro->selectAllMaestroHijos($estados['tipo_archivador'],'stritema', 2);
         $html= "<select id='id_tipo_archivador' name='id_tipo_archivador' style='width:50%'>";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
@@ -394,9 +394,10 @@
         $data= "";
         $html= "";
         $estados= clConstantesModelo::combos();
-        $data= $maestro->selectAllMaestroHijos($estados['estado_fisico_expediente'], 2);
+        $data= $maestro->selectAllMaestroHijos($estados['estado_fisico_expediente'],'stritema', 2);
         $html= "<select id='id_estado_fisico_expediente' name='id_estado_fisico_expediente' style='width:50%'>";
         $html.= "<option value='0'>Seleccione</option>";
+        //exit(print_r($data));
         if($data){
             for ($i= 0; $i < count($data); $i++){
                $seleccionar= "";
@@ -418,7 +419,7 @@
         $data= "";
         $html= "";
         $estados= clConstantesModelo::combos();
-        $data= $maestro->selectAllMaestroHijos($estados['espacios'], 2);
+        $data= $maestro->selectAllMaestroHijos($estados['espacios'],'stritema', 2);
         $html= "<select id='id_tipo_espacio' name='id_tipo_espacio' style='width:50%'>";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
