@@ -1153,7 +1153,7 @@ public function llenar($request)
     
     
      public function insertar($nexval){
-         $expediente='LIT-' . date('dmY') . '-'.$nexval;
+         $expediente='LTG-' . date('dmY') . '-'.$nexval;
          $conn= new Conexion();
          $conn->abrirConexion();
          $sql="Insert into ".clConstantesModelo::correspondencia_table.self::TABLA."(

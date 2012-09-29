@@ -1625,7 +1625,7 @@ function selectAllActuaciones($id_expediente){
     
     function llenarNroExpediente(){
         $respuesta= new xajaxResponse();
-         $respuesta->assign('strnroexpediente', 'value', 'OAS-' . date('dmY') . '-##');
+         $respuesta->assign('strnroexpediente', 'value', 'LTG-' . date('dmY') . '-##');
          return $respuesta;
     }
     
