@@ -198,7 +198,7 @@
 			}
                         
              function eliminar_situacion(id_expediente,id_situacion){
-                if(confirm("Desea eliminar este expediente")){
+                if(confirm("Desea eliminar esta situacion")){
                     xajax_eliminar_situacion(id_expediente,id_situacion);
                 }
             }
