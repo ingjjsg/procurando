@@ -132,7 +132,7 @@
                 //exit($straccion[0]." = ". $data[0]['id_maestro']);
                 for ($i= 0; $i < count($data); $i++){
                     $html.= "<tr>";
-                    $html.= "<td width='85%'>".$data[$i]['stritema']."</td>";
+                    $html.= "<td width='85%'>".utf8_decode($data[$i]['stritema'])."</td>";
                     $check= "";
                     $html.="";
                     for ($x= 0; $x < (count($straccion)-1); $x++){
@@ -177,25 +177,25 @@
                 $html.="<td width='18%' style='font-size:30px;'>Expediente:</td>";
                 $html.="<td>".$data[0]['strnroexpediente']."</td>";
                 $html.="<td width='18%'>Referencia:</td>";
-                $html.="<td>".$data[0]['strrefer']."</td>";
+                $html.="<td>".utf8_decode($data[0]['strrefer'])."</td>";
                 $html.="<td width='18%'>Fecha Expediente:</td>";
                 $html.="<td>".$data[0]['fecexpediente']."</td>";
             $html.="</tr>";
             
             $html.="<tr>";
                 $html.="<td width='18%'>Tipo Tramite:</td>";
-                $html.="<td>". clFunciones::mostrarStritema($data[0]['id_tipo_tramite'])."</td>";
+                $html.="<td>". utf8_decode(clFunciones::mostrarStritema($data[0]['id_tipo_tramite']))."</td>";
                 $html.="<td width='18%'>Actuacion:</td>";
-                $html.="<td>".  clFunciones::mostrarStritema($data[0]['id_actuacion'])."</td>";
+                $html.="<td>".  utf8_decode(clFunciones::mostrarStritema($data[0]['id_actuacion']))."</td>";
                 $html.="<td width='18%'>Fecha Apertura:</td>";
                 $html.="<td>". $data[0]['fecapertura']."</td>";
             $html.="</tr>";
             
             $html.="<tr>";
                 $html.="<td width='18%'>Tipo Organismo:</td>";
-                $html.="<td>".  clFunciones::mostrarStritema($data[0]['id_tipo_organismo'])."</td>";
+                $html.="<td>".  utf8_decode(clFunciones::mostrarStritema($data[0]['id_tipo_organismo']))."</td>";
                 $html.="<td width='18%'>Organismo:</td>";
-                $html.="<td colspan='3'>".  clFunciones::mostrarStritema($data[0]['id_organismo'])."</td>";
+                $html.="<td colspan='3'>".  utf8_decode(clFunciones::mostrarStritema($data[0]['id_organismo']))."</td>";
             $html.="</tr>";
             
             
@@ -211,15 +211,15 @@
             $html2= "<table  border='1' width='100%'>";
             $html2.= "<tr>";
                 $html2.="<td width='18%' style='font-size:30px;'>Tipo Minuta:</td>";
-                $html2.="<td>".  clFunciones::mostrarStritema($data[0]['id_tipo_minuta'])."</td>";
+                $html2.="<td>".  utf8_decode(clFunciones::mostrarStritema($data[0]['id_tipo_minuta']))."</td>";
                 $html2.="<td width='18%'>Minuta:</td>";
-                $html2.="<td colspan='3'>".  clFunciones::mostrarStritema($data[0]['id_minuta'])."</td>";
+                $html2.="<td colspan='3'>".  utf8_decode(clFunciones::mostrarStritema($data[0]['id_minuta']))."</td>";
                 
             $html2.="</tr>";
             
             $html2.= "<tr>";
                 $html2.="<td width='18%' style='font-size:30px;'>Observaciones:</td>";
-                $html2.="<td colspan='5'>". $data[0]['strobservacion']."</td>";
+                $html2.="<td colspan='5'>". utf8_decode($data[0]['strobservacion'])."</td>";
            
             $html2.="</tr>";
             
