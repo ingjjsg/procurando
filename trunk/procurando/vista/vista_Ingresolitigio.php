@@ -69,6 +69,7 @@
     $xajax->registerFunction('selectActuacionHijo');
     $xajax->registerFunction('validar_actuacion');
     $xajax->registerFunction('guardar_actuacion');
+    $xajax->registerFunction('editar_actuacion');
     $xajax->registerFunction('selectAllActuaciones');
     $xajax->registerFunction('llenarSelectFormularioTipoEspacio');
     $xajax->registerFunction('llenarSelectFormularioTipoEstadoFisicoExp');     
