@@ -1759,6 +1759,73 @@ public function llenar($request)
         
 //         $data = $conn->ejecutarSentencia(2);
 //         return $data;
+    }
+
+    public function SelectAllExpedienteReporte($pagina){
+         $conn= new Conexion();
+         $conn->abrirConexion();
+         $sql="SELECT id_proexpediente,
+         id_proclientecasos,
+         id_proabogadoscasos,
+         id_documentoscasos,
+         id_usuario,
+         id_ano,
+         id_materia,
+         id_estatus,
+         strnroexpediente,
+         strtitulo,
+         strdescripcion,
+         id_refer,
+         to_char(fecapertura,'DD/MM/YYYY') as fecapertura,
+         to_char(feccierre,'DD/MM/YYYY') as feccierre,
+         cedula_abogado_responsable,
+         cedula_abogado_ejecutor,
+         cedula_cliente,
+         id_actuacion,
+         id_honorario,
+         id_tipo_tramite,
+         id_tipo_atencion,
+         id_tipo_organismo,
+         id_organismo,
+         id_tipo_minuta,
+         id_minuta,
+         strobservacion,
+         to_char(fecexpediente,'DD/MM/YYYY') as fecexpediente,
+         strdireccion_asistido,
+         strdireccion_conyugue,
+         strdireccion_ultimo_domicilio,
+         to_char(fecseparacion,'DD/MM/YYYY') as fecseparacion,
+         intmonto_manutencion,
+         id_regimen,
+         id_citacion,
+         strdias,
+         strhoras,
+         intcuotames1,
+         intcuotames2,
+         strdocumentos,
+         cedula_conyugue,
+         strobservacion_cerrar,
+         strnroexpedienteauxiliar,
+         strrepresentante,
+         id_estado_fisico_expediente, 
+         id_tipo_espacio, 
+         id_tipo_archivador, 
+         id_tipo_piso_archivador, 
+         id_tipo_archivador_gaveta,
+         id_abogado_resp, 
+         id_abogado_ejecutor, 
+         id_solicitante, 
+         id_contrarios
+         FROM public.tblproexpediente WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
+         
+//         if($id_expediente !=""){
+//             $sql .=" AND id_proexpediente=".$id_expediente;
+//         }
+//         exit($sql);
+         $sql.=" order by id_proexpediente asc";
+         $conn->sql=$sql;   
+         $data = $conn->ejecutarSentencia(2);
+         return $data;
     }    
     
     
