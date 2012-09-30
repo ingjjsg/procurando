@@ -1146,6 +1146,7 @@ public function llenar($request)
              $sql .=" AND id_proactuacion=".$id_expediente;
          }
          $sql.=" order by id_proactuacion asc";
+        // exit($sql);
          $conn->sql=$sql;
          $data = $conn->ejecutarSentencia(2);
          return $data;
