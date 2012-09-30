@@ -1301,7 +1301,7 @@ function selectAllActuaciones($id_expediente){
                             <td align='center' >".$nombre_abogado_ejecutor."</td>
                             <td align='right'>
                                 <a>
-                                    <img src='../comunes/images/b_pdfdoc.png' onmouseover=\"Tip('Detalles Expediente')\" onmouseout='UnTip()' onclick=\"location.href='reporte_expediente_1.php?id=".$data[$i]['id_proactuacion']."'\">
+                                    <img src='../comunes/images/b_pdfdoc.png' onmouseover=\"Tip('Detalles Expediente')\" onmouseout='UnTip()' onclick=\"location.href='reporte_litigio.php?id=".$data[$i]['id_proactuacion']."'\">
                                 </a>";
                                 if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario('expedientes'),'editar', clConstantesModelo::acciones_expedientes())){
                                 $html.="<a>
