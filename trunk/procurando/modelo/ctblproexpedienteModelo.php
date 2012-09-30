@@ -1761,7 +1761,7 @@ public function llenar($request)
 //         return $data;
     }
 
-    public function SelectAllExpedienteReporte($pagina){
+    public function SelectAllExpedienteReporte($id_tipo_tramite,$id_tipo_atencion,$id_actuacion_persona,$id_tipo_organismo,$id_organismo,$id_tipo_fase,$id_fase,$strnroexpediente,$strnroexpedienteauxiliar){
          $conn= new Conexion();
          $conn->abrirConexion();
          $sql="SELECT id_proexpediente,
@@ -1817,11 +1817,37 @@ public function llenar($request)
          id_solicitante, 
          id_contrarios
          FROM public.tblproexpediente WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
-         
-//         if($id_expediente !=""){
-//             $sql .=" AND id_proexpediente=".$id_expediente;
-//         }
-//         exit($sql);
+       
+         if($id_tipo_tramite > 0){
+             $sql .=" AND id_tipo_tramite=".$id_tipo_tramite;
+         }
+         if($id_tipo_atencion > 0){
+             $sql .=" AND id_tipo_atencion=".$id_tipo_atencion;
+         }
+         if($id_tipo_atencion > 0){
+             $sql .=" AND id_tipo_atencion=".$id_tipo_atencion;
+         }
+         if($id_actuacion > 0){
+             $sql .=" AND id_actuacion=".$id_actuacion;
+         }
+         if($id_tipo_organismo > 0){
+             $sql .=" AND id_tipo_organismo=".$id_tipo_organismo;
+         }
+         if($id_organismo > 0){
+             $sql .=" AND id_organismo=".$id_organismo;
+         }
+         if($id_tipo_fase > 0){
+             $sql .=" AND id_tipo_fase=".$id_tipo_fase;
+         }
+         if($id_fase > 0){
+             $sql .=" AND id_fase=".$id_fase;
+         }
+         if($strnroexpediente !=""){
+             $sql .=" AND strnroexpediente=".$strnroexpediente;
+         }
+         if($strnroexpedienteauxiliar !=""){
+             $sql .=" AND strnroexpedienteauxiliar=".$strnroexpedienteauxiliar;
+         }
          $sql.=" order by id_proexpediente asc";
          $conn->sql=$sql;   
          $data = $conn->ejecutarSentencia(2);
