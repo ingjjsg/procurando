@@ -208,11 +208,11 @@
                             <tbody><tr>
                                 <td width="15%">&nbsp;</td>
                                 <td align="center" width="35%">
-                                    <img onclick="xajax_selectAgendaReporte(xajax.getFormValues('frmAgenda'),'pdf');" onmouseout="UnTip()" onmouseover="Tip('Exportar a PDF')" src="../comunes/images/botonpdf.png">
+                                    <img onclick="xajax_selectOasReporte(xajax.getFormValues('frmOas'),'pdf');" onmouseout="UnTip()" onmouseover="Tip('Exportar a PDF')" src="../comunes/images/botonpdf.png">
                                     <!--<img onclick="xajax_selectAgendaReporte(xajax.getFormValues('frmReporteAgenda'),'pdf');" onmouseout="UnTip()" onmouseover="Tip('Exportar a PDF')" src="../comunes/images/botonpdf.png">-->
                                 </td>
                                 <td align="center" width="35%">
-                                    <img onclick="xajax_selectAgendaReporte(xajax.getFormValues('frmAgenda'),'ods');" onmouseout="UnTip()" onmouseover="Tip('Exportar a OpenOffice')" src="../comunes/images/botonoo.png">
+                                    <img onclick="xajax_selectOasReporte(xajax.getFormValues('frmOas'),'ods');" onmouseout="UnTip()" onmouseover="Tip('Exportar a OpenOffice')" src="../comunes/images/botonoo.png">
                                 </td>
                                 <td width="15%">&nbsp;</td>
                             </tr>
