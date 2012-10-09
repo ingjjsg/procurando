@@ -330,7 +330,7 @@
                                     
                                     <tr>
                                         <td width="20%">
-                                            Pin:
+                                            IPSA:
                                         </td>
                                         <td width="30%">
                                             <input type="text" class='inputbox' id="strpin" name="strpin" size="30" />
