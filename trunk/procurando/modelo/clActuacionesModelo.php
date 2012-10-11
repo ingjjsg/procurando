@@ -120,7 +120,28 @@
 
   private   $id_solicitante;
 
-  private   $id_contrarios;    
+  private   $id_contrarios;   
+  
+  
+  private   $fecadmdem;  
+  
+  private   $fecnotdem;
+
+  private   $fecultnotordtri;
+
+  private   $fecinsaudpre;
+
+  private   $fecculfaspre;
+
+  private   $feccondem;  
+  
+  private   $fecadmpru;
+
+  private   $fecjuiorapub;
+
+  private   $fecpubsen;
+
+  private   $fecapelacion; 
 
 //=========================== FUNCION LLENAR ===================
 
@@ -397,7 +418,48 @@ public function llenar($request)
 
      if($request['id_contrarios'] != ""){
         $this->id_contrarios= $request['id_contrarios'];
-     }    
+     }
+     
+     //fechas
+     if($request['fecadmdem'] != ""){
+        $this->fecadmdem= $request['fecadmdem'];
+     }
+     
+     if($request['fecnotdem'] != ""){
+        $this->fecnotdem= $request['fecnotdem'];
+     }
+     
+     if($request['fecultnotordtri'] != ""){
+        $this->fecultnotordtri= $request['fecultnotordtri'];
+     }
+     
+     if($request['fecinsaudpre'] != ""){
+        $this->fecinsaudpre= $request['fecinsaudpre'];
+     }
+     
+     if($request['fecculfaspre'] != ""){
+        $this->fecculfaspre= $request['fecculfaspre'];
+     }
+     
+     if($request['feccondem'] != ""){
+        $this->feccondem= $request['feccondem'];
+     }
+     
+     if($request['fecadmpru'] != ""){
+        $this->fecadmpru= $request['fecadmpru'];
+     }
+     
+     if($request['fecjuiorapub'] != ""){
+        $this->fecjuiorapub= $request['fecjuiorapub'];
+     }
+     
+     if($request['fecpubsen'] != ""){
+        $this->fecpubsen= $request['fecpubsen'];
+     }
+     
+     if($request['fecapelacion'] != ""){
+        $this->fecapelacion= $request['fecapelacion'];
+     }
      
 
 }//=========================== GET ===================
@@ -704,6 +766,46 @@ public function llenar($request)
     public function getId_contrarios(){
         return $this->id_contrarios;
     }
+    
+    public function getFecadmdem(){
+        return $this->fecadmdem;
+    }
+    
+    public function getFecnotdem(){
+        return $this->fecnotdem;
+    }
+    
+    public function getFecultnotordtri(){
+        return $this->fecultnotordtri;
+    }
+    
+    public function getFecinsaudpre(){
+        return $this->fecinsaudpre;
+    }
+    
+    public function getFecculfaspre(){
+        return $this->fecculfaspre;
+    }
+    
+    public function getFeccondem(){
+        return $this->feccondem;
+    }
+    
+    public function getFecadmpru(){
+        return $this->fecadmpru;
+    }
+    
+    public function getFecjuiorapub(){
+        return $this->fecjuiorapub;
+    }
+    
+    public function getFecpubsen(){
+        return $this->fecpubsen;
+    }
+    
+    public function getFecapelacion(){
+        return $this->fecapelacion;
+    }
       
   
   
@@ -993,7 +1095,48 @@ public function llenar($request)
 
     public function setId_contrarios($id_contrarios){
         return $this->id_contrarios=$id_contrarios;
-    }     
+    }
+    
+    
+    public function setFecadmdem($fecadmdem){
+        $this->fecadmdem=$fecadmdem;
+    }
+    
+    public function setFecnotdem($fecnotdem){
+        $this->fecnotdem=$fecnotdem;
+    }
+    
+    public function setFecultnotordtri($fecultnotordtri){
+        $this->fecultnotordtri=$fecultnotordtri;
+    }
+    
+    public function setFecinsaudpre($fecinsaudpre){
+        $this->fecinsaudpre=$fecinsaudpre;
+    }
+    
+    public function setFecculfaspre($fecculfaspre){
+        $this->fecculfaspre=$fecculfaspre;
+    }
+    
+    public function setFeccondem($feccondem){
+        $this->feccondem=$feccondem;
+    }
+    
+    public function setFecadmpru($fecadmpru){
+        $this->fecadmpru=$fecadmpru;
+    }
+    
+    public function setFecjuiorapub($fecjuiorapub){
+        $this->fecjuiorapub=$fecjuiorapub;
+    }
+    
+    public function setFecpubsen($fecpubsen){
+        $this->fecpubsen=$fecpubsen;
+    }
+    
+    public function setFecapelacion($fecapelacion){
+        $this->fecapelacion=$fecapelacion;
+    }
     
 
 
@@ -1196,7 +1339,17 @@ public function llenar($request)
          cedula_conyugue,
          id_abogado_resp, 
          id_abogado_ejecutor, 
-         id_solicitante";/*,
+         id_solicitante,
+         fecadmdem,
+         fecnotdem,
+         fecultnotordtri,
+         fecinsaudpre,
+         fecculfaspre,
+         feccondem,
+         fecadmpru,
+         fecjuiorapub,
+         fecpubsen,
+         fecapelacion";/*,
          id_contrarios*/
          $sql.="
          ) VALUES (
@@ -1240,8 +1393,27 @@ public function llenar($request)
          .$this->getId_abogado_resp().","
          .$this->getId_abogado_ejecutor().","  
          .$this->getId_solicitante()/*","
-         .$this->getId_contrarios ()*/.")";
-        //exit($sql);
+         .$this->getId_contrarios ()*/.",TO_DATE('"
+         .$this->getFecadmdem()."', 'DD/MM/YYYY')
+          ,TO_DATE('"
+         .$this->getFecnotdem()."', 'DD/MM/YYYY')
+          ,TO_DATE('"
+         .$this->getFecultnotordtri()."', 'DD/MM/YYYY')
+          ,TO_DATE('"
+         .$this->getFecinsaudpre()."', 'DD/MM/YYYY')
+          ,TO_DATE('"
+         .$this->getFecculfaspre()."', 'DD/MM/YYYY')
+          ,TO_DATE('"
+         .$this->getFeccondem()."', 'DD/MM/YYYY')
+          ,TO_DATE('"
+         .$this->getFecadmpru()."', 'DD/MM/YYYY')
+          ,TO_DATE('"
+         .$this->getFecjuiorapub()."', 'DD/MM/YYYY')
+          ,TO_DATE('"
+         .$this->getFecpubsen()."', 'DD/MM/YYYY')
+           ,TO_DATE('"
+         .$this->getFecapelacion()."', 'DD/MM/YYYY'))";
+        exit($sql);
          $conn->sql=$sql;
 
         if($conn->ejecutarSentencia()){
