@@ -363,7 +363,8 @@ class clConstantesModelo {
             'tipo_materia_dictamenes'  => '13708',
             'tipo_estado_dictamenes'  => '13767' ,
             'ramo_asociaciones' => '13779',
-            'tipo_tramite_litigio' => '13774'               
+            'tipo_tramite_litigio' => '13774',
+            'tipo_atencion_litigio' => '13781'
         );
         }
         
