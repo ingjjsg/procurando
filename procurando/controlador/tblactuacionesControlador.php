@@ -1815,7 +1815,7 @@ function selectAllActuaciones($id_expediente){
         $respuesta->script('xajax_llenarSelectFormularioTipoEstadoMinuta()');        
         $respuesta->script('xajax_llenarSelectFormularioTipoActuacion()');
         $respuesta->script('xajax_llenarSelectTipoFase("frminscribir")');        
-        $respuesta->script('xajax_buscarAbogado(' . $data[0][id_abogado_resp] . ',"responsable")');        
+       // $respuesta->script('xajax_buscarAbogado(' . $data[0][id_abogado_resp] . ',"responsable")');
         $respuesta->script('xajax_verCountExpediente(' . $data[0][cedula_cliente] . ')');     
         $respuesta->script('xajax_buscarAsistido(' . $data[0][id_solicitante] . ')');
         $respuesta->script('xajax_buscarConyugue(' . $data[0][id_contrarios] . ')');    
@@ -1840,7 +1840,17 @@ function selectAllActuaciones($id_expediente){
         $respuesta->assign('strdias', 'value', $data[0][strdias]);
         $respuesta->assign('strhoras', 'value', $data[0][strhoras]);        
         $respuesta->assign('strobservacion_cerrar', 'value', $data[0][strobservacion_cerrar]);      
-        $respuesta->assign('strnroexpedienteauxiliar', 'value', $data[0][strnroexpedienteauxiliar]);     
+        $respuesta->assign('strnroexpedienteauxiliar', 'value', $data[0][strnroexpedienteauxiliar]);
+        $respuesta->assign('fecadmdem', 'value', $data[0][fecadmdem]);
+        $respuesta->assign('fecnotdem', 'value', $data[0][fecnotdem]);
+        $respuesta->assign('fecultnotordtri', 'value', $data[0][fecultnotordtri]);
+        $respuesta->assign('fecinsaudpre', 'value', $data[0][fecinsaudpre]);
+        $respuesta->assign('fecculfaspre', 'value', $data[0][fecculfaspre]);
+        $respuesta->assign('feccondem', 'value', $data[0][feccondem]);
+        $respuesta->assign('fecadmpru', 'value', $data[0][fecadmpru]);
+        $respuesta->assign('fecjuiorapub', 'value', $data[0][fecjuiorapub]);
+        $respuesta->assign('fecpubsen', 'value', $data[0][fecpubsen]);
+        $respuesta->assign('fecapelacion', 'value', $data[0][fecapelacion]);
         if($data[0][strrepresentante] == 1){
             $respuesta->assign('strrepresentante', 'checked',true);
         }        

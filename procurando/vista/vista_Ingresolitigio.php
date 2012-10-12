@@ -123,6 +123,15 @@ $xajax->printJavascript('../comunes/xajax/');
                         $("#fecpubsen").mask("99/99/9999");
                         $("#fecapelacion").mask("99/99/9999");
                         $("#fecjuiorapub").mask("99/99/9999");
+                        $("#fecingreso_demandante").mask("99/99/9999");
+                        $("#fecegreso_demandante").mask("99/99/9999");
+
+                        $("#cancelo_prestaciones_demandante").live("click",function(){
+                            $("#campos_prestaciones_demandante").animate({opacity: 'toggle'},function(){
+                                $("#concepto_prestaciones_demandante").val("");
+                                $("#monto_prestaciones_demandante").val("");
+                            });
+                        });
                     });            
             
             
@@ -544,6 +553,107 @@ $xajax->printJavascript('../comunes/xajax/');
                                                             </div>                        
                                                             <div id="country2"  class="tabcontent" style="height:100%; overflow-y:auto">
                                                                 <table width="100%" border="0" class="tablaTitulo" >
+                                                                    <tr>
+                                                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                                                            <div align="center" style="background-image: url('../comunes/images/barra.png')">
+                                                                                <strong>Descripción del Demandante</strong>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width="20%">
+                                                                            C.I. Demandante:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input type="text" class='inputbox82' id="cedula_demandante" name="cedula_demandante" size="20" />
+                                                                        </td>
+                                                                        <td width="20%">
+                                                                            Nombre Demandante:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input type="text" class='inputbox82' id="strnombre_demandante" name="strnombre_demandante" size="30" onKeyDown="xajax_buscarAsistidoPopup(document.frminscribir.strnombre_cliente.value,'','');"/>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width="20%">
+                                                                            Teléfono:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input type="text" class='inputbox82' id="telefono_demandante" name="telefono_demandante" size="20" />
+                                                                        </td>
+                                                                        <td width="20%">
+                                                                            Dirección:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <textarea id="direccion_demandante" name="direccion_demandante" rows="4" cols="25" style="resize:none"></textarea>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width="20%">
+                                                                            Tiempo de Servicio:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input type="text" class='inputbox82' id="tiempo_servicio_demandante" name="tiempo_servicio_demandante" size="20" />
+                                                                        </td>
+                                                                        <td width="20%">
+                                                                            Fecha Ingreso:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input id="fecingreso_demandante" name="fecingreso_demandante" type="text"  class='inputbox82' maxlength='20' size='15' value="">
+                                                                                <img name="button"  id="lanzador_fecingreso_demandante"  src="../comunes/images/calendar.png" align="middle"/>
+                                                                                <script type="text/javascript">
+                                                                                    Calendar.setup({
+                                                                                        inputField     :    "fecingreso_demandante",      // id del campo de texto
+                                                                                        ifFormat       :    "%d/%m/%Y",       // formato de la fecha, cuando se escriba en el campo de texto
+                                                                                        button         :    "lanzador_fecingreso_demandante"   // el id del botn que lanzar el calendario
+                                                                                    });
+                                                                                </script>
+                                                                        </td>
+                                                                        
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width="20%">
+                                                                            Fecha Egreso:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input id="fecegreso_demandante" name="fecegreso_demandante" type="text"  class='inputbox82' maxlength='20' size='15' value="">
+                                                                                <img name="button"  id="lanzador_fecegreso_demandante"  src="../comunes/images/calendar.png" align="middle"/>
+                                                                                <script type="text/javascript">
+                                                                                    Calendar.setup({
+                                                                                        inputField     :    "fecegreso_demandante",      // id del campo de texto
+                                                                                        ifFormat       :    "%d/%m/%Y",       // formato de la fecha, cuando se escriba en el campo de texto
+                                                                                        button         :    "lanzador_fecegreso_demandante"   // el id del botn que lanzar el calendario
+                                                                                    });
+                                                                                </script>
+                                                                        </td>
+                                                                        <td width="20%">
+                                                                            Motivo de la Culminacion de la Relacion Laboral:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <textarea id="motivo_culminacion_demandante" name="motivo_culminacion_demandante" rows="4" cols="25" style="resize:none"></textarea>
+                                                                        </td>
+                                                                        
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width="20%">
+                                                                            Se le canceló algún adelanto de prestaciones:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input type="checkbox" value="0" id="cancelo_prestaciones_demandante" name="cancelo_prestaciones_demandante">
+                                                                        </td>
+                                                                    </tr>
+                                                                    
+                                                                        <tr id="campos_prestaciones_demandante" style="display:none">
+                                                                            <td width="20%">Concepto:</td>
+                                                                            <td width="30%">
+                                                                                <input type="text" class='inputbox82' id="concepto_prestaciones_demandante" name="concepto_prestaciones_demandante" />
+                                                                            </td>
+                                                                            <td width="20%">Monto:</td>
+                                                                            <td width="30%">
+                                                                                <input id="monto_prestaciones_demandante" name="monto_prestaciones_demandante" />
+                                                                            </td>
+                                                                        </tr>
+                                                                    
                                                                     <tr>
                                                                         <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                                                             <div align="center" style="background-image: url('../comunes/images/barra.png')">
