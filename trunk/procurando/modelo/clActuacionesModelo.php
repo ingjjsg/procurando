@@ -143,8 +143,29 @@
 
   private   $fecapelacion; 
 
-//=========================== FUNCION LLENAR ===================
+  private   $cedula_demandante;
 
+  private   $strnombre_demandante;
+  
+  private   $telefono_demandante;
+
+  private   $direccion_demandante;
+
+  private   $tiempo_servicio_demandante;
+
+  private   $fecingreso_demandante;
+
+  private   $fecegreso_demandante;
+
+  private   $motivo_culminacion_demandante;
+
+  private   $cancelo_prestaciones_demandante;
+
+  private   $concepto_prestaciones_demandante;
+
+  private   $monto_prestaciones_demandante;
+
+//=========================== FUNCION LLENAR ===================
 
 
 
@@ -460,11 +481,100 @@ public function llenar($request)
      if($request['fecapelacion'] != ""){
         $this->fecapelacion= $request['fecapelacion'];
      }
+
+     if($request['cedula_demandante'] != ""){
+        $this->cedula_demandante= $request['cedula_demandante'];
+     }
+
+     if($request['strnombre_demandante'] != ""){
+        $this->strnombre_demandante= $request['strnombre_demandante'];
+     }
+
+     if($request['telefono_demandante'] != ""){
+        $this->telefono_demandante= $request['telefono_demandante'];
+     }
+
+     if($request['direccion_demandante'] != ""){
+        $this->direccion_demandante= $request['direccion_demandante'];
+     }
+
+     if($request['tiempo_servicio_demandante'] != ""){
+        $this->tiempo_servicio_demandante= $request['tiempo_servicio_demandante'];
+     }
+
+     if($request['fecingreso_demandante'] != ""){
+        $this->fecingreso_demandante= $request['fecingreso_demandante'];
+     }
+
+     if($request['fecegreso_demandante'] != ""){
+        $this->fecegreso_demandante= $request['fecegreso_demandante'];
+     }
+
+     if($request['motivo_culminacion_demandante'] != ""){
+        $this->motivo_culminacion_demandante= $request['motivo_culminacion_demandante'];
+     }
+
+     if($request['cancelo_prestaciones_demandante'] != ""){
+        $this->cancelo_prestaciones_demandante= $request['cancelo_prestaciones_demandante'];
+     }
+
+     if($request['concepto_prestaciones_demandante'] != ""){
+        $this->concepto_prestaciones_demandante= $request['concepto_prestaciones_demandante'];
+     }
+
+     if($request['monto_prestaciones_demandante'] != ""){
+        $this->monto_prestaciones_demandante= $request['monto_prestaciones_demandante'];
+     }
      
 
 }//=========================== GET ===================
 
 
+
+    public function get_cedula_demandante($cedula_demandante){
+        return $this->cedula_demandante;
+    }   
+
+    public function get_strnombre_demandante($strnombre_demandante){
+        return $this->strnombre_demandante; 
+
+    }   
+
+    public function get_telefono_demandante($telefono_demandante){
+        return $this->telefono_demandante;
+    }   
+
+    public function get_direccion_demandante($direccion_demandante){
+        return $this->direccion_demandante;
+    }   
+
+    public function get_tiempo_servicio_demandante($tiempo_servicio_demandante){
+        return $this->tiempo_servicio_demandante;
+    }
+
+    public function get_fecingreso_demandante($fecingreso_demandante){
+        return $this->fecingreso_demandante;
+    }   
+
+    public function get_fecegreso_demandante($fecegreso_demandante){
+        return $this->fecegreso_demandante;
+    }
+
+    public function get_motivo_culminacion_demandante($motivo_culminacion_demandante){
+        return $this->motivo_culminacion_demandante;
+    }
+
+    public function get_cancelo_prestaciones_demandante($cancelo_prestaciones_demandante){
+        return $this->cancelo_prestaciones_demandante;
+    }
+
+    public function get_concepto_prestaciones_demandante($concepto_prestaciones_demandante){
+        return $this->concepto_prestaciones_demandante;
+    }
+
+    public function get_monto_prestaciones_demandante($monto_prestaciones_demandante){
+        return $this->monto_prestaciones_demandante;
+    }
 
 
     public function get_id_proactuacion(){
@@ -811,8 +921,49 @@ public function llenar($request)
   
 //=========================== SET ===================
 
+    public function set_cedula_demandante($cedula_demandante){
+        $this->cedula_demandante=$cedula_demandante;
+    }
 
+    public function set_strnombre_demandante($strnombre_demandante){
+        $this->strnombre_demandante=$strnombre_demandante;
+    }
 
+    public function set_telefono_demandante($telefono_demandante){
+        $this->telefono_demandante=$telefono_demandante;
+    }
+
+    public function set_direccion_demandante($direccion_demandante){
+        $this->direccion_demandante=$direccion_demandante;
+    }
+
+    public function set_tiempo_servicio_demandante($tiempo_servicio_demandante){
+        $this->tiempo_servicio_demandante=$tiempo_servicio_demandante;
+    }
+
+    public function set_fecingreso_demandante($fecingreso_demandante){
+        $this->fecingreso_demandante=$fecingreso_demandante;
+    }
+
+    public function set_fecegreso_demandante($fecegreso_demandante){
+        $this->fecegreso_demandante=$fecegreso_demandante;
+    }
+
+    public function set_motivo_culminacion_demandante($motivo_culminacion_demandante){
+        $this->motivo_culminacion_demandante=$motivo_culminacion_demandante;
+    }
+
+    public function set_cancelo_prestaciones_demandante($cancelo_prestaciones_demandante){
+        $this->cancelo_prestaciones_demandante=$cancelo_prestaciones_demandante;
+    }
+
+    public function set_concepto_prestaciones_demandante($concepto_prestaciones_demandante){
+        $this->concepto_prestaciones_demandante=$concepto_prestaciones_demandante;
+    }
+
+    public function set_monto_prestaciones_demandante($monto_prestaciones_demandante){
+        $this->monto_prestaciones_demandante=$monto_prestaciones_demandante;
+    }
 
     public function set_id_proactuacion($id_proexpediente){
         return $this->id_proactuacion=$id_proexpediente;
@@ -1282,7 +1433,17 @@ public function llenar($request)
          id_abogado_resp, 
          id_abogado_ejecutor, 
          id_solicitante, 
-         id_contrarios
+         id_contrarios,
+         to_char(fecadmdem,'DD/MM/YYYY') as fecadmdem,
+         to_char(fecnotdem,'DD/MM/YYYY') as fecnotdem,
+         to_char(fecultnotordtri,'DD/MM/YYYY') as fecultnotordtri,
+         to_char(fecinsaudpre,'DD/MM/YYYY') as fecinsaudpre,
+         to_char(fecculfaspre,'DD/MM/YYYY') as fecculfaspre,
+         to_char(feccondem,'DD/MM/YYYY') as feccondem,
+         to_char(fecadmpru,'DD/MM/YYYY') as fecadmpru,
+         to_char(fecjuiorapub,'DD/MM/YYYY') as fecjuiorapub,
+         to_char(fecpubsen,'DD/MM/YYYY') as fecpubsen,
+         to_char(fecapelacion,'DD/MM/YYYY') as fecapelacion
          FROM ".clConstantesModelo::correspondencia_table.self::TABLA." WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
          
          if($id_expediente !=""){
@@ -1413,7 +1574,7 @@ public function llenar($request)
          .$this->getFecpubsen()."', 'DD/MM/YYYY')
            ,TO_DATE('"
          .$this->getFecapelacion()."', 'DD/MM/YYYY'))";
-        exit($sql);
+        //exit($sql);
          $conn->sql=$sql;
 
         if($conn->ejecutarSentencia()){
