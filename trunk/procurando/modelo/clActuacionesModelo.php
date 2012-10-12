@@ -159,11 +159,13 @@
 
   private   $motivo_culminacion_demandante;
 
-  private   $cancelo_prestaciones_demandante;
+  private   $cancelo_prestaciones_demandante=0;
 
   private   $concepto_prestaciones_demandante;
 
   private   $monto_prestaciones_demandante;
+
+  private   $id_demandante;
 
 //=========================== FUNCION LLENAR ===================
 
@@ -503,6 +505,7 @@ public function llenar($request)
      }
 
      if($request['fecingreso_demandante'] != ""){
+        //exit($request['fecingreso_demandante']);
         $this->fecingreso_demandante= $request['fecingreso_demandante'];
      }
 
@@ -515,6 +518,7 @@ public function llenar($request)
      }
 
      if($request['cancelo_prestaciones_demandante'] != ""){
+        //exit($request['cancelo_prestaciones_demandante']);
         $this->cancelo_prestaciones_demandante= $request['cancelo_prestaciones_demandante'];
      }
 
@@ -525,54 +529,61 @@ public function llenar($request)
      if($request['monto_prestaciones_demandante'] != ""){
         $this->monto_prestaciones_demandante= $request['monto_prestaciones_demandante'];
      }
+
+     if($request['id_demandante'] != ""){
+        $this->id_demandante= $request['id_demandante'];
+     }
      
 
 }//=========================== GET ===================
 
 
+    public function get_id_demandante(){
+        return $this->id_demandante;
+    }
 
-    public function get_cedula_demandante($cedula_demandante){
+    public function get_cedula_demandante(){
         return $this->cedula_demandante;
     }   
 
-    public function get_strnombre_demandante($strnombre_demandante){
+    public function get_strnombre_demandante(){
         return $this->strnombre_demandante; 
 
     }   
 
-    public function get_telefono_demandante($telefono_demandante){
+    public function get_telefono_demandante(){
         return $this->telefono_demandante;
     }   
 
-    public function get_direccion_demandante($direccion_demandante){
+    public function get_direccion_demandante(){
         return $this->direccion_demandante;
     }   
 
-    public function get_tiempo_servicio_demandante($tiempo_servicio_demandante){
+    public function get_tiempo_servicio_demandante(){
         return $this->tiempo_servicio_demandante;
     }
 
-    public function get_fecingreso_demandante($fecingreso_demandante){
+    public function get_fecingreso_demandante(){
         return $this->fecingreso_demandante;
     }   
 
-    public function get_fecegreso_demandante($fecegreso_demandante){
+    public function get_fecegreso_demandante(){
         return $this->fecegreso_demandante;
     }
 
-    public function get_motivo_culminacion_demandante($motivo_culminacion_demandante){
+    public function get_motivo_culminacion_demandante(){
         return $this->motivo_culminacion_demandante;
     }
 
-    public function get_cancelo_prestaciones_demandante($cancelo_prestaciones_demandante){
+    public function get_cancelo_prestaciones_demandante(){
         return $this->cancelo_prestaciones_demandante;
     }
 
-    public function get_concepto_prestaciones_demandante($concepto_prestaciones_demandante){
+    public function get_concepto_prestaciones_demandante(){
         return $this->concepto_prestaciones_demandante;
     }
 
-    public function get_monto_prestaciones_demandante($monto_prestaciones_demandante){
+    public function get_monto_prestaciones_demandante(){
         return $this->monto_prestaciones_demandante;
     }
 
@@ -920,6 +931,10 @@ public function llenar($request)
   
   
 //=========================== SET ===================
+
+    public function set_id_demandante($id_demandante){
+        $this->id_demandante=$id_demandante;
+    }
 
     public function set_cedula_demandante($cedula_demandante){
         $this->cedula_demandante=$cedula_demandante;
@@ -1458,6 +1473,8 @@ public function llenar($request)
     
     
      public function insertar($nexval){
+         $id_demandante=$this->insertarDemandante();
+
          $expediente='LTG-' . date('dmY') . '-'.$nexval;
          $conn= new Conexion();
          $conn->abrirConexion();
@@ -1510,7 +1527,8 @@ public function llenar($request)
          fecadmpru,
          fecjuiorapub,
          fecpubsen,
-         fecapelacion";/*,
+         fecapelacion,
+         id_demandante";/*,
          id_contrarios*/
          $sql.="
          ) VALUES (
@@ -1573,8 +1591,8 @@ public function llenar($request)
           ,TO_DATE('"
          .$this->getFecpubsen()."', 'DD/MM/YYYY')
            ,TO_DATE('"
-         .$this->getFecapelacion()."', 'DD/MM/YYYY'))";
-        //exit($sql);
+         .$this->getFecapelacion()."', 'DD/MM/YYYY')
+         ,".$id_demandante.")";
          $conn->sql=$sql;
 
         if($conn->ejecutarSentencia()){
@@ -1671,7 +1689,7 @@ public function llenar($request)
 
 
      public function Update(){
-         
+         $this->actualizarDemandante($this->get_id_demandante());
          $conn= new Conexion();
          $conn->abrirConexion();
          $sql="UPDATE ".clConstantesModelo::correspondencia_table.self::TABLA." SET
@@ -2097,7 +2115,93 @@ public function llenar($request)
         
 //         $data = $conn->ejecutarSentencia(2);
 //         return $data;
-    }    
+    }
+
+    public function insertarDemandante(){
+        $conn = new Conexion();
+        $conn->abrirConexion();
+        $sql="INSERT INTO ".clConstantesModelo::correspondencia_table."tbl_demandantes(
+         cedula, 
+         nombres, 
+         telefono, 
+         direccion, 
+         tiempo_servicio, 
+         fecingreso, 
+         fecegreso, 
+         motivo_culminacion_laboral, 
+         cancelo_adelanto_prestaciones, 
+         concepto, 
+         monto)
+    VALUES (
+        '".$this->get_cedula_demandante()."',
+        '".$this->get_strnombre_demandante()."',
+        '".$this->get_telefono_demandante()."',
+        '".$this->get_direccion_demandante()."',
+        '".$this->get_tiempo_servicio_demandante()."',
+        TO_DATE('".$this->get_fecingreso_demandante()."','DD/MM/YYYY'), 
+        TO_DATE('".$this->get_fecegreso_demandante()."','DD/MM/YYYY'),
+        '".$this->get_motivo_culminacion_demandante()."','".$this->get_cancelo_prestaciones_demandante()."',
+        '".$this->get_concepto_prestaciones_demandante()."', 
+        ".$this->get_monto_prestaciones_demandante().");";
+        $conn->sql=$sql;
+        if($conn->ejecutarSentencia()){
+
+             $conn->sql="SELECT CURRVAL(pg_get_serial_sequence('tbl_demandantes','lngcodigo')) as ultimo";
+             $data=$conn->ejecutarSentencia(2);
+             if($data){
+                $retorno=$data[0]['ultimo'];
+             }else{
+                $retorno=0;
+             }
+         }
+         $conn->cerrarConexion();
+         return $retorno;
+
+    }
+
+    public function actualizarDemandante($id_demandante){
+        $conn = new Conexion();
+        $conn->abrirConexion();
+        $sql="update ".clConstantesModelo::correspondencia_table."tbl_demandantes
+         set
+         cedula='".$this->get_cedula_demandante()."', 
+         nombres='".$this->get_strnombre_demandante()."', 
+         telefono='".$this->get_telefono_demandante()."', 
+         direccion='".$this->get_direccion_demandante()."', 
+         tiempo_servicio='".$this->get_tiempo_servicio_demandante()."', 
+         fecingreso=TO_DATE('".$this->get_fecingreso_demandante()."','DD/MM/YYYY'), 
+         fecegreso=TO_DATE('".$this->get_fecegreso_demandante()."','DD/MM/YYYY'), 
+         motivo_culminacion_laboral='".$this->get_motivo_culminacion_demandante()."',, 
+         cancelo_adelanto_prestaciones='".$this->get_cancelo_prestaciones_demandante()."', 
+         concepto='".$this->get_concepto_prestaciones_demandante()."', 
+         monto=".$this->get_monto_prestaciones_demandante()."
+         WHERE lngcodigo=".$id_demandante;
+
+        $conn->sql=$sql;
+        if($conn->ejecutarSentencia()){
+             $retorno=true;
+         }else{
+             $retorno=false;
+         }
+         
+         $conn->cerrarConexion();
+         return $retorno;
+    }
+
+    public function selectDemandante($id_demandante){
+        $conn = new Conexion();
+        $conn->abrirConexion();
+        $sql="select * from ".clConstantesModelo::correspondencia_table."tbl_demandantes";
+        if($id_demandante > 0){
+            $sql.=" where lngcodigo=".$id_demandante;
+        }
+
+        $conn->sql=$sql;
+        $data=$conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();
+        return $data;
+        
+    }
     
     
  }

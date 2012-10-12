@@ -566,6 +566,7 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                         </td>
                                                                         <td width="30%">
                                                                             <input type="text" class='inputbox82' id="cedula_demandante" name="cedula_demandante" size="20" />
+                                                                            <input type="hidden" name="id_demantante" id="id_demandante" />
                                                                         </td>
                                                                         <td width="20%">
                                                                             Nombre Demandante:
@@ -639,7 +640,7 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                             Se le canceló algún adelanto de prestaciones:
                                                                         </td>
                                                                         <td width="30%">
-                                                                            <input type="checkbox" value="0" id="cancelo_prestaciones_demandante" name="cancelo_prestaciones_demandante">
+                                                                            <input type="checkbox" value="1" id="cancelo_prestaciones_demandante" name="cancelo_prestaciones_demandante">
                                                                         </td>
                                                                     </tr>
                                                                     
