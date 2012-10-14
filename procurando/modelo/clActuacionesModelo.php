@@ -1518,18 +1518,38 @@ public function llenar($request)
          cedula_conyugue,
          id_abogado_resp, 
          id_abogado_ejecutor, 
-         id_solicitante,
-         fecadmdem,
-         fecnotdem,
-         fecultnotordtri,
-         fecinsaudpre,
-         fecculfaspre,
-         feccondem,
-         fecadmpru,
-         fecjuiorapub,
-         fecpubsen,
-         fecapelacion,
-         id_demandante";/*,
+         id_solicitante";
+         if($this->getFecadmdem() !=""){
+            $sql.=",fecadmdem";
+         }
+         if($this->getFecnotdem() !=""){
+            $sql.=",fecnotdem";
+         }
+         if($this->getFecultnotordtri() !=""){
+            $sql.=",fecultnotordtri";
+         }
+         if($this->getFecinsaudpre() !=""){
+            $sql.=",fecinsaudpre";
+         }
+         if($this->getFecculfaspre() !=""){
+            $sql.=",fecculfaspre";
+         }
+         if($this->getFeccondem() !=""){
+            $sql.=",feccondem";
+         }
+         if($this->getFecadmpru() !=""){
+            $sql.=",fecadmpru";
+         }
+         if($this->getFecjuiorapub() !=""){
+            $sql.=",fecjuiorapub";
+         }
+         if($this->getFecpubsen() !=""){
+            $sql.=",fecpubsen";
+         }
+         if($this->getFecapelacion() !=""){
+            $sql.=",fecapelacion";
+         }
+         $sql.=",id_demandante";/*,
          id_contrarios*/
          $sql.="
          ) VALUES (
@@ -1572,28 +1592,39 @@ public function llenar($request)
          .$this->get_cedula_conyugue()."',"
          .$this->getId_abogado_resp().","
          .$this->getId_abogado_ejecutor().","  
-         .$this->getId_solicitante()/*","
-         .$this->getId_contrarios ()*/.",TO_DATE('"
-         .$this->getFecadmdem()."', 'DD/MM/YYYY')
-          ,TO_DATE('"
-         .$this->getFecnotdem()."', 'DD/MM/YYYY')
-          ,TO_DATE('"
-         .$this->getFecultnotordtri()."', 'DD/MM/YYYY')
-          ,TO_DATE('"
-         .$this->getFecinsaudpre()."', 'DD/MM/YYYY')
-          ,TO_DATE('"
-         .$this->getFecculfaspre()."', 'DD/MM/YYYY')
-          ,TO_DATE('"
-         .$this->getFeccondem()."', 'DD/MM/YYYY')
-          ,TO_DATE('"
-         .$this->getFecadmpru()."', 'DD/MM/YYYY')
-          ,TO_DATE('"
-         .$this->getFecjuiorapub()."', 'DD/MM/YYYY')
-          ,TO_DATE('"
-         .$this->getFecpubsen()."', 'DD/MM/YYYY')
-           ,TO_DATE('"
-         .$this->getFecapelacion()."', 'DD/MM/YYYY')
-         ,".$id_demandante.")";
+         .$this->getId_solicitante();
+         if($this->getFecadmdem() !=""){
+            $sql.=",TO_DATE('".$this->getFecadmdem()."', 'DD/MM/YYYY')";
+         }
+         if($this->getFecnotdem() !=""){
+            $sql.=",TO_DATE('".$this->getFecnotdem()."', 'DD/MM/YYYY')";
+         }
+         if($this->getFecultnotordtri() !=""){
+            $sql.=",TO_DATE('".$this->getFecultnotordtri()."', 'DD/MM/YYYY')";
+         }
+         if($this->getFecinsaudpre() !=""){
+            $sql.=",TO_DATE('".$this->getFecinsaudpre()."', 'DD/MM/YYYY')";
+         }
+         if($this->getFecculfaspre() !=""){
+            $sql.=",TO_DATE('".$this->getFecculfaspre()."', 'DD/MM/YYYY')";
+         }
+         if($this->getFeccondem() !=""){
+            $sql.=",TO_DATE('".$this->getFeccondem()."', 'DD/MM/YYYY')";
+         }
+         if($this->getFecadmpru() !=""){
+            $sql.=",TO_DATE('".$this->getFecadmpru()."', 'DD/MM/YYYY')";
+         }
+         if($this->getFecjuiorapub() !=""){
+            $sql.=",TO_DATE('".$this->getFecjuiorapub()."', 'DD/MM/YYYY')";
+         }
+         if($this->getFecpubsen() !=""){
+            $sql.=",TO_DATE('".$this->getFecpubsen()."', 'DD/MM/YYYY')";
+         }
+         if($this->getFecapelacion() !=""){
+            $sql.=",TO_DATE('".$this->getFecapelacion()."', 'DD/MM/YYYY')";
+         }
+                   
+         $sql.=",".$id_demandante.")";
          $conn->sql=$sql;
 
         if($conn->ejecutarSentencia()){
@@ -2160,7 +2191,7 @@ public function llenar($request)
 
     }
 
-    public function actualizarDemandante($id_demandante){
+    public function actualizarDemandante(){
         $conn = new Conexion();
         $conn->abrirConexion();
         $sql="update ".clConstantesModelo::correspondencia_table."tbl_demandantes
@@ -2172,12 +2203,11 @@ public function llenar($request)
          tiempo_servicio='".$this->get_tiempo_servicio_demandante()."', 
          fecingreso=TO_DATE('".$this->get_fecingreso_demandante()."','DD/MM/YYYY'), 
          fecegreso=TO_DATE('".$this->get_fecegreso_demandante()."','DD/MM/YYYY'), 
-         motivo_culminacion_laboral='".$this->get_motivo_culminacion_demandante()."',, 
+         motivo_culminacion_laboral='".$this->get_motivo_culminacion_demandante()."', 
          cancelo_adelanto_prestaciones='".$this->get_cancelo_prestaciones_demandante()."', 
          concepto='".$this->get_concepto_prestaciones_demandante()."', 
          monto=".$this->get_monto_prestaciones_demandante()."
-         WHERE lngcodigo=".$id_demandante;
-
+         WHERE lngcodigo=".$this->get_id_demandante();
         $conn->sql=$sql;
         if($conn->ejecutarSentencia()){
              $retorno=true;
@@ -2192,7 +2222,8 @@ public function llenar($request)
     public function selectDemandante($id_demandante){
         $conn = new Conexion();
         $conn->abrirConexion();
-        $sql="select 
+        $sql="select
+              lngcodigo, 
               cedula,
               nombres,
               telefono,

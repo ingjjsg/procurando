@@ -1777,6 +1777,8 @@ function selectAllActuaciones($id_expediente){
     if ($data) {
         if($data[0]['id_demandante'] != ''){
             $data_demandante=$expediente->selectDemandante($data[0]['id_demandante']);
+            //exit(print_r($data_demandante));
+            $respuesta->assign('id_demandante','value',$data_demandante[0]['lngcodigo']);
             $respuesta->assign('cedula_demandante','value',$data_demandante[0]['cedula']);
             $respuesta->assign('strnombre_demandante','value',$data_demandante[0]['nombres']);
             $respuesta->assign('telefono_demandante','value',$data_demandante[0]['telefono']);
@@ -1914,6 +1916,7 @@ function editar_expediente($request){
         else
         {
             $data= $cliente->Update();
+            $data_demandante= $cliente->actualizarDemandante();
             if($data){
                 $respuesta->script('xajax_selectExpediente(' . $request[id_proactuacion] . ')');
                 $respuesta->alert("El Expediente se actualizo exitosamente");
