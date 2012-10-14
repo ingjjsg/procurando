@@ -1458,7 +1458,8 @@ public function llenar($request)
          to_char(fecadmpru,'DD/MM/YYYY') as fecadmpru,
          to_char(fecjuiorapub,'DD/MM/YYYY') as fecjuiorapub,
          to_char(fecpubsen,'DD/MM/YYYY') as fecpubsen,
-         to_char(fecapelacion,'DD/MM/YYYY') as fecapelacion
+         to_char(fecapelacion,'DD/MM/YYYY') as fecapelacion,
+         id_demandante
          FROM ".clConstantesModelo::correspondencia_table.self::TABLA." WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
          
          if($id_expediente !=""){
@@ -2191,7 +2192,19 @@ public function llenar($request)
     public function selectDemandante($id_demandante){
         $conn = new Conexion();
         $conn->abrirConexion();
-        $sql="select * from ".clConstantesModelo::correspondencia_table."tbl_demandantes";
+        $sql="select 
+              cedula,
+              nombres,
+              telefono,
+              direccion,
+              tiempo_servicio, 
+              to_char(fecingreso,'DD/MM/YYYY') AS fecingreso,
+              to_char(fecegreso,'DD/MM/YYYY') AS fecegreso,
+              motivo_culminacion_laboral,
+              cancelo_adelanto_prestaciones, 
+              concepto, 
+              monto 
+              from ".clConstantesModelo::correspondencia_table."tbl_demandantes";
         if($id_demandante > 0){
             $sql.=" where lngcodigo=".$id_demandante;
         }
