@@ -651,7 +651,7 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                             </td>
                                                                             <td width="20%">Monto:</td>
                                                                             <td width="30%">
-                                                                                <input id="monto_prestaciones_demandante" name="monto_prestaciones_demandante" />
+                                                                                <input id="monto_prestaciones_demandante" class='inputbox82' name="monto_prestaciones_demandante" />
                                                                             </td>
                                                                         </tr>
                                                                     

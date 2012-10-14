@@ -1775,6 +1775,24 @@ function selectAllActuaciones($id_expediente){
     $data = "";
     $data = $expediente->SelectExpediente($lngcodigo);
     if ($data) {
+        if($data[0]['id_demandante'] != ''){
+            $data_demandante=$expediente->selectDemandante($data[0]['id_demandante']);
+            $respuesta->assign('cedula_demandante','value',$data_demandante[0]['cedula']);
+            $respuesta->assign('strnombre_demandante','value',$data_demandante[0]['nombres']);
+            $respuesta->assign('telefono_demandante','value',$data_demandante[0]['telefono']);
+            $respuesta->assign('direccion_demandante','value',$data_demandante[0]['direccion']);
+            $respuesta->assign('tiempo_servicio_demandante','value',$data_demandante[0]['tiempo_servicio']);
+            $respuesta->assign('fecingreso_demandante','value',$data_demandante[0]['fecingreso']);
+            $respuesta->assign('fecegreso_demandante','value',$data_demandante[0]['fecegreso']);
+            $respuesta->assign('motivo_culminacion_demandante','value',$data_demandante[0]['motivo_culminacion_laboral']);
+            if($data_demandante[0]['cancelo_adelanto_prestaciones']){
+                $respuesta->assign('cancelo_prestaciones_demandante','checked',TRUE);
+                $respuesta->script('jQuery("#campos_prestaciones_demandante").animate({opacity: "toggle"})');
+                $respuesta->assign('concepto_prestaciones_demandante','value',$data_demandante[0]['concepto']);
+                $respuesta->assign('monto_prestaciones_demandante','value',$data_demandante[0]['monto']);
+            }
+            
+        }
         $respuesta->assign('id_proexpediente', 'value', $data[0]['id_proactuacion']);
         $respuesta->assign('strnroexpediente', 'value', $data[0]['strnroexpediente']);
         $respuesta->assign('id_abogado_resp', 'value', $data[0]['id_abogado_resp']);
