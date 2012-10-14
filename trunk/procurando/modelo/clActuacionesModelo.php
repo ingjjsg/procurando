@@ -1549,8 +1549,10 @@ public function llenar($request)
          if($this->getFecapelacion() !=""){
             $sql.=",fecapelacion";
          }
-         $sql.=",id_demandante";/*,
-         id_contrarios*/
+         if($id_demandante !=""){
+             $sql.=",id_demandante";
+         }
+        
          $sql.="
          ) VALUES (
          '";
@@ -1622,9 +1624,12 @@ public function llenar($request)
          }
          if($this->getFecapelacion() !=""){
             $sql.=",TO_DATE('".$this->getFecapelacion()."', 'DD/MM/YYYY')";
-         }
-                   
-         $sql.=",".$id_demandante.")";
+         }       
+         
+        if ($id_demandante !="") {
+            $sql.=",".$id_demandante;
+        }
+        $sql.=")";
          $conn->sql=$sql;
 
         if($conn->ejecutarSentencia()){
@@ -1769,6 +1774,37 @@ public function llenar($request)
          id_solicitante=".$this->getId_solicitante().",";
          /*id_contrarios=".$this->getId_contrarios().",  */
          $sql.="strdocumentos='".$this->get_strdocumentos()."' WHERE id_proactuacion=".$this->get_id_proactuacion();
+
+         if($this->getFecadmdem() !=""){
+            $sql.="fecadmdem=TO_DATE('".$this->getFecadmdem()."', 'DD/MM/YYYY')";
+         }
+         if($this->getFecnotdem() !=""){
+            $sql.="fecnotdem=TO_DATE('".$this->getFecnotdem()."', 'DD/MM/YYYY')";
+         }
+         if($this->getFecultnotordtri() !=""){
+            $sql.="fecultnotordtri=TO_DATE('".$this->getFecultnotordtri()."', 'DD/MM/YYYY')";
+         }
+         if($this->getFecinsaudpre() !=""){
+            $sql.="fecinsaudpre=TO_DATE('".$this->getFecinsaudpre()."', 'DD/MM/YYYY')";
+         }
+         if($this->getFecculfaspre() !=""){
+            $sql.="fecculfaspre=TO_DATE('".$this->getFecculfaspre()."', 'DD/MM/YYYY')";
+         }
+         if($this->getFeccondem() !=""){
+            $sql.="feccondem=TO_DATE('".$this->getFeccondem()."', 'DD/MM/YYYY')";
+         }
+         if($this->getFecadmpru() !=""){
+            $sql.="fecadmpru=TO_DATE('".$this->getFecadmpru()."', 'DD/MM/YYYY')";
+         }
+         if($this->getFecjuiorapub() !=""){
+            $sql.="fecjuiorapub=TO_DATE('".$this->getFecjuiorapub()."', 'DD/MM/YYYY')";
+         }
+         if($this->getFecpubsen() !=""){
+            $sql.="fecpubsen=TO_DATE('".$this->getFecpubsen()."', 'DD/MM/YYYY')";
+         }
+         if($this->getFecapelacion() !=""){
+            $sql.="fecapelacion=TO_DATE('".$this->getFecapelacion()."', 'DD/MM/YYYY')";
+         }
        // exit($sql);
          $conn->sql=$sql;
          $data = $conn->ejecutarSentencia();
