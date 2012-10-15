@@ -2111,7 +2111,6 @@ function editar_expediente($request){
     }
     
     function buscarDatosSituaciones($id_expediente=""){
-        exit("-----aaaa");
         $respuesta= new xajaxResponse();
         if ($id_expediente!='')
         {
