@@ -34,6 +34,8 @@ $xajax->registerFunction('guardar_expediente');
 $xajax->registerFunction('validar_expediente');
 //$xajax->registerFunction('buscarAsistido');
 $xajax->registerFunction('buscarDemandante');
+$xajax->registerFunction('buscarAbogadoDemandante');
+$xajax->registerFunction('buscarAbogadoDemandantePopup');
 $xajax->registerFunction('buscarAbogado');
 $xajax->registerFunction('selectExpediente');
 $xajax->registerFunction('editar_expediente');
@@ -156,7 +158,7 @@ $xajax->printJavascript('../comunes/xajax/');
                         } 
                         if (num==4)
                         {
-                              $('contenedorConyugue').toggle();
+                              $('contenedorAbogadosDemandantes').toggle();
                             xajax_buscarAbogadoDemandantePopup('','','');  
                         }
                     }                
@@ -245,6 +247,7 @@ $xajax->printJavascript('../comunes/xajax/');
                             <input type="hidden" id="id_proexpediente_fase" name="id_proexpediente_fase" value="" />                
                             <input type="hidden" id="id_abogado_resp" name="id_abogado_resp" value="<?php echo $_SESSION['id_contacto']; ?>" />
                             <input type="hidden" id="id_abogado_ejecutor" name="id_abogado_ejecutor" value="" />
+                             <input type="hidden" id="id_abogado_demandante" name="id_abogado_demandante" value="" />
                             <input type="hidden" id="id_solicitante" name="id_solicitante" value="" />                    
                             <input type="hidden" id="id_contrarios" name="id_contrarios" value="" />                   
                             <input type="hidden" id="strdocumentos" name="strdocumentos" value="" />
@@ -504,6 +507,13 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                         </td>
                                                                     </tr>
                                                                     <tr>
+                                                                        <td colspan="6">
+                                                                            <div id="contenedorAbogados" style="width:100%;display: none;" align="left">
+                                                                                <div align="center"></div>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>  
+                                                                    <tr>
                                                                         <td width="20%">
                                                                             C.I. Abogado Demandante:
                                                                         </td>
@@ -520,7 +530,7 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                     </tr>  
                                                                     <tr>
                                                                         <td colspan="6">
-                                                                            <div id="contenedorAbogados" style="width:100%;display: none;" align="left">
+                                                                            <div id="contenedorAbogadosDemandantes" style="width:100%;display: none;" align="left">
                                                                                 <div align="center"></div>
                                                                             </div>
                                                                         </td>
