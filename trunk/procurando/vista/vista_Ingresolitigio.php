@@ -385,7 +385,7 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                     </tr>          
                                                                     <tr>
                                                                         <td width="20%">
-                                                                            Solicitante actua Como:
+                                                                            Demandante actua Como:
                                                                         </td>
                                                                         <td width="30%">
                                                                             <div id="capaIdActuacion">
@@ -430,7 +430,7 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                     <tr>
                                                                         <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                                                             <div align="left" style="background-image: url('../comunes/images/barra.png')">
-                                                                                <strong>REPRESENTANTE DE LA ASOCIACIÓN</strong>
+                                                                                <strong>REPRESENTANTE DE LA ASOCIACIÓN REPRESENTADA POR EL DEMANDANTE</strong>
                                                                             </div>
                                                                         </td>
                                                                     </tr>          
@@ -506,7 +506,7 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                     <tr>
                                                                         <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                                                             <div align="left" style="background-image: url('../comunes/images/barra.png')">
-                                                                                <strong>ORGANISMO DIRECCIONADO</strong>
+                                                                                <strong>ORGANISMO DEMANDADO</strong>
                                                                             </div>
                                                                         </td>
                                                                     </tr>                            
@@ -533,7 +533,7 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                     <tr>
                                                                         <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                                                             <div align="left" style="background-image: url('../comunes/images/barra.png')">
-                                                                                <strong>HISTORIAL DEL ASISTIDO</strong>
+                                                                                <strong>HISTORIAL DEL DEMANDADO</strong>
                                                                             </div>
                                                                         </td>
                                                                     </tr>  
@@ -556,7 +556,7 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                     <tr>
                                                                         <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                                                             <div align="center" style="background-image: url('../comunes/images/barra.png')">
-                                                                                <strong>Descripción del Demandante</strong>
+                                                                                <strong>Descripción del Caso</strong>
                                                                             </div>
                                                                         </td>
                                                                     </tr>
@@ -628,13 +628,26 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                                 </script>
                                                                         </td>
                                                                         <td width="20%">
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            
+                                                                        </td>
+                                                                        
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width="20%">
                                                                             Motivo de la Culminacion de la Relacion Laboral:
+
                                                                         </td>
                                                                         <td width="30%">
                                                                             <textarea id="motivo_culminacion_demandante" name="motivo_culminacion_demandante" rows="4" cols="25" style="resize:none"></textarea>
                                                                         </td>
+                                                                        <td width="20%">
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                        </td>
                                                                         
-                                                                    </tr>
+                                                                    </tr>                                                                    
                                                                     <tr>
                                                                         <td width="20%">
                                                                             Se le canceló algún adelanto de prestaciones:
