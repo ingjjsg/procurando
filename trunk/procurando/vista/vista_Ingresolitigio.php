@@ -568,8 +568,8 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                         </td>
                                                                         <td width="30%">
                                                                             <input type="text" class='inputbox82' id="cedula_demandante" name="cedula_demandante" size="20" />
-                                                                            <input type="hidden" name="id_demandante" id="id_demandante" />
-                                                                        </td>
+                                                                            ---><input type="hidden" name="id_demandante" id="id_demandante" />
+                                                                        <!--</td>
                                                                         <td width="20%">
                                                                             Nombre Demandante:
                                                                         </td>
