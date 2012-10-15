@@ -401,13 +401,13 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                     <tr>
                                                                         <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                                                             <div align="left" style="background-image: url('../comunes/images/barra.png')">
-                                                                                <strong>SOLICITANTE</strong>
+                                                                                <strong>DEMANDANTE</strong>
                                                                             </div>
                                                                         </td>
                                                                     </tr>          
                                                                     <tr>
                                                                         <td width="20%">
-                                                                            C.I. Asistido:
+                                                                            C.I. Demandante:
                                                                         </td>
                                                                         <td width="30%">
                                                                             <input type="text" class='inputbox82' id="cedula_cliente" name="cedula_cliente" size="20" onKeyDown="xajax_buscarAsistidoPopup('','',document.frminscribir.cedula_cliente.value);"/>                             
