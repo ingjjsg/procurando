@@ -166,6 +166,8 @@
   private   $monto_prestaciones_demandante;
 
   private   $id_demandante;
+  
+  private   $id_abogado_demandante;
 
 //=========================== FUNCION LLENAR ===================
 
@@ -534,9 +536,17 @@ public function llenar($request)
         $this->id_demandante= $request['id_demandante'];
      }
      
+     if($request['id_abogado_demandante'] != ""){
+         //exit($request['id_abogado_demandante']);
+        $this->id_abogado_demandante= $request['id_abogado_demandante'];
+     }
+     
 
 }//=========================== GET ===================
 
+    public function getId_abogado_demandante(){
+        return $this->id_abogado_demandante;
+    }
 
     public function get_id_demandante(){
         return $this->id_demandante;
@@ -932,6 +942,10 @@ public function llenar($request)
   
 //=========================== SET ===================
 
+    public function setId_abogado_demandante($id_demandante){
+        $this->id_abogado_demandante=$id_demandante;
+    }
+    
     public function set_id_demandante($id_demandante){
         $this->id_demandante=$id_demandante;
     }
@@ -1518,7 +1532,8 @@ public function llenar($request)
          cedula_conyugue,
          id_abogado_resp, 
          id_abogado_ejecutor, 
-         id_solicitante";
+         id_solicitante,
+         id_abogado_demandante";
          if($this->getFecadmdem() !=""){
             $sql.=",fecadmdem";
          }
@@ -1594,7 +1609,8 @@ public function llenar($request)
          .$this->get_cedula_conyugue()."',"
          .$this->getId_abogado_resp().","
          .$this->getId_abogado_ejecutor().","  
-         .$this->getId_solicitante();
+         .$this->getId_solicitante().","
+         .$this->getId_abogado_demandante();
          if($this->getFecadmdem() !=""){
             $sql.=",TO_DATE('".$this->getFecadmdem()."', 'DD/MM/YYYY')";
          }
@@ -1630,6 +1646,7 @@ public function llenar($request)
             $sql.=",".$id_demandante;
         }
         $sql.=")";
+        exit($sql);
          $conn->sql=$sql;
 
         if($conn->ejecutarSentencia()){

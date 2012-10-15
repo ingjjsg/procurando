@@ -1168,7 +1168,7 @@ function selectAllActuaciones($id_expediente){
         return $respuesta;
     }
     
-    function buscarAbogadosDemandantePopup($nombre,$apellido,$cedula){
+    function buscarAbogadoDemandantePopup($nombre,$apellido,$cedula){
         $respuesta= new xajaxResponse();
         $clientes=new clProAbogadosContrarios();
         $data= "";
@@ -1210,7 +1210,7 @@ function selectAllActuaciones($id_expediente){
                                 <td align='center'>".$data[$i]['strapellido']."</td>                                    
                                 <td align='center'>
                                         <a>
-                                            <img src='../comunes/images/s_success.png' onmouseover='Tip(\"Elegir Abogado\")' onmouseout='UnTip()' onclick=\"xajax_buscarDemandante('".$data[$i]['id_abogadoscon']."','ejecutor')\">
+                                            <img src='../comunes/images/s_success.png' onmouseover='Tip(\"Elegir Abogado\")' onmouseout='UnTip()' onclick=\"xajax_buscarAbogadoDemandante('".$data[$i]['id_abogadoscon']."','ejecutor')\">
                                         </a>                                   
                                 </td>
                             </tr>";
@@ -1220,7 +1220,7 @@ function selectAllActuaciones($id_expediente){
                 $html="";
             }
 //        $respuesta->script("$('contenedorAsistidos').show();");            
-        $respuesta->assign("contenedorAbogados","innerHTML",$html);
+        $respuesta->assign("contenedorAbogadosDemandantes","innerHTML",$html);
         return $respuesta;
     }
     
@@ -1847,6 +1847,24 @@ function selectAllActuaciones($id_expediente){
             $respuesta->script("$('contenedorAsistidos').hide();");            
         }
         else  $respuesta->alert("El Asistido no Existe");   
+        return $respuesta;
+    }
+    
+    function buscarAbogadoDemandante($id){
+        $respuesta=new xajaxResponse();
+        $asistido=new clProAbogadosContrarios();
+        $data=$asistido->SelectAll($id);
+        if(is_array($data)){
+            $respuesta->assign("strnombre_abogado_demandante", "value", $data[0]['strnombre']. " " . $data[0]['strapellido']);
+            $respuesta->assign("id_abogado_demandante", "value", $data[0]['id_abogadoscon']);            
+            $respuesta->assign("cedula_abogado_demandante", "value", $data[0]['strcedula']);                    
+//            $raz_social=clTblasociaciones::getNombreAsociacion_vista_cliente($data[0]['id_contrarios']);
+//            if ($raz_social!='')   $respuesta->assign('raz_social', 'value', $raz_social);
+//            $respuesta->script("$('contenedorAsistidos').hide();");            
+        }
+        
+        else  $respuesta->alert("El Abogado no Existe");   
+        $respuesta->script("$('contenedorAbogadosDemandantes').hide();");
         return $respuesta;
     }
     
