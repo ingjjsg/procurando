@@ -32,7 +32,8 @@ $xajax->registerFunction('selectHonorario');
 $xajax->registerFunction('eliminarHonorario');
 $xajax->registerFunction('guardar_expediente');
 $xajax->registerFunction('validar_expediente');
-$xajax->registerFunction('buscarAsistido');
+//$xajax->registerFunction('buscarAsistido');
+$xajax->registerFunction('buscarDemandante');
 $xajax->registerFunction('buscarAbogado');
 $xajax->registerFunction('selectExpediente');
 $xajax->registerFunction('editar_expediente');
@@ -48,7 +49,8 @@ $xajax->registerFunction('selectSituacion');
 $xajax->registerFunction('verCosto');
 $xajax->registerFunction('verCountExpediente');
 $xajax->registerFunction('buscarAbogadosPopup');
-$xajax->registerFunction('buscarAsistidoPopup');
+//$xajax->registerFunction('buscarAsistidoPopup');
+$xajax->registerFunction('buscarDemandantePopup');
 $xajax->registerFunction('llenarSelectTipoDivorcio');
 $xajax->registerFunction('llenarSelectTipoRegimen');
 $xajax->registerFunction('verRegimenCerrado');
@@ -145,7 +147,7 @@ $xajax->printJavascript('../comunes/xajax/');
                         if (num==2)
                         {
                             $('contenedorAsistidos').toggle();
-                            xajax_buscarAsistidoPopup('','','');                  
+                            xajax_buscarDemandantePopup('','','');                  
                         }   
                         if (num==3)
                         {
