@@ -1851,10 +1851,10 @@ function selectAllActuaciones($id_expediente){
             $data_demandante=$expediente->selectDemandante($data[0]['id_demandante']);
             //exit(print_r($data_demandante));
             $respuesta->assign('id_demandante','value',$data_demandante[0]['lngcodigo']);
-            $respuesta->assign('cedula_demandante','value',$data_demandante[0]['cedula']);
-            $respuesta->assign('strnombre_demandante','value',$data_demandante[0]['nombres']);
-            $respuesta->assign('telefono_demandante','value',$data_demandante[0]['telefono']);
-            $respuesta->assign('direccion_demandante','value',$data_demandante[0]['direccion']);
+//            $respuesta->assign('cedula_demandante','value',$data_demandante[0]['cedula']);
+//            $respuesta->assign('strnombre_demandante','value',$data_demandante[0]['nombres']);
+//            $respuesta->assign('telefono_demandante','value',$data_demandante[0]['telefono']);
+//            $respuesta->assign('direccion_demandante','value',$data_demandante[0]['direccion']);
             $respuesta->assign('tiempo_servicio_demandante','value',$data_demandante[0]['tiempo_servicio']);
             $respuesta->assign('fecingreso_demandante','value',$data_demandante[0]['fecingreso']);
             $respuesta->assign('fecegreso_demandante','value',$data_demandante[0]['fecegreso']);
@@ -1911,7 +1911,8 @@ function selectAllActuaciones($id_expediente){
         $respuesta->script('xajax_verCountExpediente(' . $data[0][cedula_cliente] . ')');     
         $respuesta->script('xajax_buscarAsistido(' . $data[0][id_solicitante] . ')');
         $respuesta->script('xajax_buscarConyugue(' . $data[0][id_contrarios] . ')');    
-        $respuesta->script('xajax_buscarAbogado(' . $data[0][id_abogado_ejecutor] . ',"ejecutor")');        
+        $respuesta->script('xajax_buscarAbogado(' . $data[0][id_abogado_ejecutor] . ',"ejecutor")');
+        exit($data[0][id_proactuacion]);
         $respuesta->script('xajax_buscarDatosSituaciones(' . $data[0][id_proactuacion] . ')');
         $respuesta->script("xajax_mostrarPestanaDivorcio(".$data[0][id_tipo_tramite].")");
         $respuesta->script("xajax_verDocumentos('".$data[0][id_tipo_tramite]."','".$data[0][strdocumentos]."')");
@@ -2186,7 +2187,7 @@ function editar_expediente($request){
         else {
                 $html="<div class='celda_etiqueta'>No Hay Situaciones Registradas</div>";     
         }
-        exit($html);
+        //exit($html);
         $respuesta->assign("contenedorSituaciones","innerHTML",$html);
         return $respuesta;
     }
