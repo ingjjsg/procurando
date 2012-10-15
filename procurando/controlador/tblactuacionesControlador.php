@@ -1109,22 +1109,21 @@ function selectAllActuaciones($id_expediente){
         }
         $respuesta->assign("capaIdReferencia","innerHTML",$html);
         return $respuesta;
-    }    
+    }
     
-    
-    function buscarAsistidoPopup($nombre,$apellido,$cedula){
+    function buscarDemandantePopup($nombre,$apellido,$cedula){
         $respuesta= new xajaxResponse();
-        $clientes=new clProClientes();
+        $clientes=new clProContrarios();
         $data= "";
         $html= "";         
-        $data=$clientes->SelectAllClientesFiltro($nombre,$apellido,$cedula);
+        $data=$clientes->SelectAllContrariosFiltro($nombre,$apellido,$cedula);
         if($data){
                 $html= "<div style='border:solid 1px #CCCCCC;background:#f8f8f8'>
                             <table style='text-align:center' border='0' class='tablaTitulo' width='100%'>
                             <tr>
                                 <td colspan=\"5\" align=\"right\" style=\"color:white; border:#CCCCCC solid 0px;\" bgcolor=\"#273785\" >
                                     <div align=\"center\" style=\"background-image: url('../comunes/images/barra.png')\">
-                                        <strong>LISTADO DE ASISTIDOS</strong>
+                                        <strong>LISTADO DE DEMANDANTES</strong>
                                     </div>                                
                                 </td>
                             </tr>                               
@@ -1154,7 +1153,7 @@ function selectAllActuaciones($id_expediente){
                                 <td align='center'>".$data[$i]['strapellido']."</td>                                    
                                 <td align='center'>
                                         <a>
-                                            <img src='../comunes/images/s_success.png' onmouseover='Tip(\"Elegir Abogado\")' onmouseout='UnTip()' onclick=\"xajax_buscarAsistido('".$data[$i]['id_cliente']."','ejecutor')\">
+                                            <img src='../comunes/images/s_success.png' onmouseover='Tip(\"Elegir Abogado\")' onmouseout='UnTip()' onclick=\"xajax_buscarDemandante('".$data[$i]['id_contrarios']."','ejecutor')\">
                                         </a>                                   
                                 </td>
                             </tr>";
@@ -1167,6 +1166,63 @@ function selectAllActuaciones($id_expediente){
         $respuesta->assign("contenedorAsistidos","innerHTML",$html);
         return $respuesta;
     }
+    
+    
+//    function buscarAsistidoPopup($nombre,$apellido,$cedula){
+//        $respuesta= new xajaxResponse();
+//        $clientes=new clProClientes();
+//        $data= "";
+//        $html= "";         
+//        $data=$clientes->SelectAllClientesFiltro($nombre,$apellido,$cedula);
+//        if($data){
+//                $html= "<div style='border:solid 1px #CCCCCC;background:#f8f8f8'>
+//                            <table style='text-align:center' border='0' class='tablaTitulo' width='100%'>
+//                            <tr>
+//                                <td colspan=\"5\" align=\"right\" style=\"color:white; border:#CCCCCC solid 0px;\" bgcolor=\"#273785\" >
+//                                    <div align=\"center\" style=\"background-image: url('../comunes/images/barra.png')\">
+//                                        <strong>LISTADO DE ASISTIDOS</strong>
+//                                    </div>                                
+//                                </td>
+//                            </tr>                               
+//                                <tr>
+//                                    <th width='10%'>
+//                                        <a href='#' onclick=\"xajax_orden('id_maestro')\">Id</a>
+//                                    </th>                                
+//                                    <th width='21%'>
+//                                        <a href='#' onclick=\"xajax_orden('id_maestro')\">Cédula</a>
+//                                    </th>
+//                                    <th width='22%'>
+//                                        <a href='#' onclick=\"xajax_orden('id_origen')\">Nombre</a>
+//                                    </th>
+//                                    <th width='22%'>
+//                                        <a href='#' onclick=\"xajax_orden('id_origen')\">Apellido</a>
+//                                    </th>                                    
+//                                    <th width='5%'>
+//                                        <a href='#' onclick=\"xajax_orden('id_origen')\">Acción</a>
+//                                    </th>                                         
+//                                </tr>";
+//                for ($i= 0; $i < count($data); $i++){
+//
+//                    $html.= "<tr bgcolor='#f8f8f8'onmouseover=\"this.style.background='#f0f0f0';this.style.color='blue'\" onmouseout=\"this.style.background='#f8f8f8';this.style.color='black'\" >
+//                                <td align='center'>".$i."</td>
+//                                <td align='center'>".$data[$i]['strcedula']."</td>
+//                                <td align='center'>".$data[$i]['strnombre']."</td>
+//                                <td align='center'>".$data[$i]['strapellido']."</td>                                    
+//                                <td align='center'>
+//                                        <a>
+//                                            <img src='../comunes/images/s_success.png' onmouseover='Tip(\"Elegir Abogado\")' onmouseout='UnTip()' onclick=\"xajax_buscarAsistido('".$data[$i]['id_cliente']."','ejecutor')\">
+//                                        </a>                                   
+//                                </td>
+//                            </tr>";
+//                }
+//                $html.= "</table></div>";
+//            }else{
+//                $html="";
+//            }
+////        $respuesta->script("$('contenedorAsistidos').show();");            
+//        $respuesta->assign("contenedorAsistidos","innerHTML",$html);
+//        return $respuesta;
+//    }
         
     
     function buscarAbogadosPopup($nombre,$apellido,$cedula){
@@ -1721,21 +1777,37 @@ function selectAllActuaciones($id_expediente){
         return $respuesta;
     }
     
-    function buscarAsistido($id){
+    function buscarDemandante($id){
         $respuesta=new xajaxResponse();
-        $asistido=new clProClientes();
-        $data=$asistido->buscarAsistido($id);
+        $asistido=new clProContrarios();
+        $data=$asistido->buscarContrario($id);
         if(is_array($data)){
             $respuesta->assign("strnombre_cliente", "value", $data[0]['strnombre']. " " . $data[0]['strapellido']);
-            $respuesta->assign("id_solicitante", "value", $data[0]['id_cliente']);            
+            $respuesta->assign("id_solicitante", "value", $data[0]['id_contrarios']);            
             $respuesta->assign("cedula_cliente", "value", $data[0]['strcedula']);                    
-            $raz_social=clTblasociaciones::getNombreAsociacion_vista_cliente($data[0]['id_cliente']);
+            $raz_social=clTblasociaciones::getNombreAsociacion_vista_cliente($data[0]['id_contrarios']);
             if ($raz_social!='')   $respuesta->assign('raz_social', 'value', $raz_social);
             $respuesta->script("$('contenedorAsistidos').hide();");            
         }
         else  $respuesta->alert("El Asistido no Existe");   
         return $respuesta;
     }
+    
+//    function buscarAsistido($id){
+//        $respuesta=new xajaxResponse();
+//        $asistido=new clProClientes();
+//        $data=$asistido->buscarAsistido($id);
+//        if(is_array($data)){
+//            $respuesta->assign("strnombre_cliente", "value", $data[0]['strnombre']. " " . $data[0]['strapellido']);
+//            $respuesta->assign("id_solicitante", "value", $data[0]['id_cliente']);            
+//            $respuesta->assign("cedula_cliente", "value", $data[0]['strcedula']);                    
+//            $raz_social=clTblasociaciones::getNombreAsociacion_vista_cliente($data[0]['id_cliente']);
+//            if ($raz_social!='')   $respuesta->assign('raz_social', 'value', $raz_social);
+//            $respuesta->script("$('contenedorAsistidos').hide();");            
+//        }
+//        else  $respuesta->alert("El Asistido no Existe");   
+//        return $respuesta;
+//    }
     
     function buscarAbogado($id,$abogado){
         $respuesta=new xajaxResponse();
@@ -2039,6 +2111,7 @@ function editar_expediente($request){
     }
     
     function buscarDatosSituaciones($id_expediente=""){
+        exit("-----aaaa");
         $respuesta= new xajaxResponse();
         if ($id_expediente!='')
         {
