@@ -2,6 +2,7 @@
     session_start();
     require_once '../modelo/clProactuacionesLitigio.php';
     require_once '../modelo/clProActuaciones.php';
+    require_once '../modelo/clProAbogadosContrarios.php';
     require_once '../modelo/clProAsociaciones.php';    
     require_once '../modelo/clMaestroModelo.php';
     require_once '../modelo/clActuacionFases.php';    
@@ -1164,6 +1165,62 @@ function selectAllActuaciones($id_expediente){
             }
 //        $respuesta->script("$('contenedorAsistidos').show();");            
         $respuesta->assign("contenedorAsistidos","innerHTML",$html);
+        return $respuesta;
+    }
+    
+    function buscarAbogadosDemandantePopup($nombre,$apellido,$cedula){
+        $respuesta= new xajaxResponse();
+        $clientes=new clProAbogadosContrarios();
+        $data= "";
+        $html= "";         
+        $data=$clientes->SelectAllAbogadosContrariosFiltro($nombre,$apellido,$cedula);
+        if($data){
+                $html= "<div style='border:solid 1px #CCCCCC;background:#f8f8f8'>
+                            <table style='text-align:center' border='0' class='tablaTitulo' width='100%'>
+                            <tr>
+                                <td colspan=\"5\" align=\"right\" style=\"color:white; border:#CCCCCC solid 0px;\" bgcolor=\"#273785\" >
+                                    <div align=\"center\" style=\"background-image: url('../comunes/images/barra.png')\">
+                                        <strong>LISTADO DE ABOGADOS DEMANDANTES</strong>
+                                    </div>                                
+                                </td>
+                            </tr>                               
+                                <tr>
+                                    <th width='10%'>
+                                        <a href='#' onclick=\"xajax_orden('id_maestro')\">Id</a>
+                                    </th>                                
+                                    <th width='21%'>
+                                        <a href='#' onclick=\"xajax_orden('id_maestro')\">Cédula</a>
+                                    </th>
+                                    <th width='22%'>
+                                        <a href='#' onclick=\"xajax_orden('id_origen')\">Nombre</a>
+                                    </th>
+                                    <th width='22%'>
+                                        <a href='#' onclick=\"xajax_orden('id_origen')\">Apellido</a>
+                                    </th>                                    
+                                    <th width='5%'>
+                                        <a href='#' onclick=\"xajax_orden('id_origen')\">Acción</a>
+                                    </th>                                         
+                                </tr>";
+                for ($i= 0; $i < count($data); $i++){
+
+                    $html.= "<tr bgcolor='#f8f8f8'onmouseover=\"this.style.background='#f0f0f0';this.style.color='blue'\" onmouseout=\"this.style.background='#f8f8f8';this.style.color='black'\" >
+                                <td align='center'>".$i."</td>
+                                <td align='center'>".$data[$i]['strcedula']."</td>
+                                <td align='center'>".$data[$i]['strnombre']."</td>
+                                <td align='center'>".$data[$i]['strapellido']."</td>                                    
+                                <td align='center'>
+                                        <a>
+                                            <img src='../comunes/images/s_success.png' onmouseover='Tip(\"Elegir Abogado\")' onmouseout='UnTip()' onclick=\"xajax_buscarDemandante('".$data[$i]['id_abogadoscon']."','ejecutor')\">
+                                        </a>                                   
+                                </td>
+                            </tr>";
+                }
+                $html.= "</table></div>";
+            }else{
+                $html="";
+            }
+//        $respuesta->script("$('contenedorAsistidos').show();");            
+        $respuesta->assign("contenedorAbogados","innerHTML",$html);
         return $respuesta;
     }
     

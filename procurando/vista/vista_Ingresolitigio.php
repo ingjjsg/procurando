@@ -153,7 +153,12 @@ $xajax->printJavascript('../comunes/xajax/');
                         {
                             $('contenedorConyugue').toggle();
                             xajax_buscarConyuguePopup('','','');                  
-                        }   
+                        } 
+                        if (num==4)
+                        {
+                              $('contenedorConyugue').toggle();
+                            xajax_buscarAbogadoDemandantePopup('','','');  
+                        }
                     }                
                     function monto(caja,monto)
                     { var name=caja;
@@ -497,7 +502,22 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                         <td width="30%">
                                                                             <input type="text" class='inputbox82' id="strnombre_abogado_ejecutor" name="strnombre_abogado_ejecutor" size="30" onKeyDown="xajax_buscarAbogadosPopup(document.frminscribir.strnombre_abogado_ejecutor.value,'','');"/>                                  
                                                                         </td>
-                                                                    </tr>        
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width="20%">
+                                                                            C.I. Abogado Demandante:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input type="text" readonly="readonly" class='inputbox82' id="cedula_abogado_demandante" name="cedula_abogado_demandante" size="20" value=""/>                                  
+                                                                            <img src="../comunes/images/ico_18_127.gif" onmouseover="Tip('Buscar Abogado Responsable')" onmouseout="UnTip()" border="0" onclick="vercatalogo(4);"/>       
+                                                                        </td>
+                                                                        <td width="20%">
+                                                                            Nombre:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input type="text" readonly="readonly" class='inputbox82' id="strnombre_abogado_demandante" name="strnombre_abogado_demandante" size="30" value="" />
+                                                                        </td>
+                                                                    </tr>  
                                                                     <tr>
                                                                         <td colspan="6">
                                                                             <div id="contenedorAbogados" style="width:100%;display: none;" align="left">
