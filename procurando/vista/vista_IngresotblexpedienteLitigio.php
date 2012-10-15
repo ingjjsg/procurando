@@ -293,7 +293,7 @@
                                             <tr>
                                                 <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                                     <div align="left" style="background-image: url('../comunes/images/barra.png')">
-                                                        <strong>ORGANISMO DIRECCIONADO</strong>
+                                                        <strong>ORGANISMO DEMANDADO</strong>
                                                     </div>
                                                 </td>
                                             </tr>                            
