@@ -1912,7 +1912,7 @@ function selectAllActuaciones($id_expediente){
         $respuesta->script('xajax_buscarAsistido(' . $data[0][id_solicitante] . ')');
         $respuesta->script('xajax_buscarConyugue(' . $data[0][id_contrarios] . ')');    
         $respuesta->script('xajax_buscarAbogado(' . $data[0][id_abogado_ejecutor] . ',"ejecutor")');
-        exit($data[0][id_proactuacion]);
+        
         $respuesta->script('xajax_buscarDatosSituaciones(' . $data[0][id_proactuacion] . ')');
         $respuesta->script("xajax_mostrarPestanaDivorcio(".$data[0][id_tipo_tramite].")");
         $respuesta->script("xajax_verDocumentos('".$data[0][id_tipo_tramite]."','".$data[0][strdocumentos]."')");
@@ -2112,6 +2112,7 @@ function editar_expediente($request){
     }
     
     function buscarDatosSituaciones($id_expediente=""){
+        exit($id_expediente);
         $respuesta= new xajaxResponse();
         if ($id_expediente!='')
         {
