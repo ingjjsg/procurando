@@ -1646,7 +1646,7 @@ public function llenar($request)
             $sql.=",".$id_demandante;
         }
         $sql.=")";
-        exit($sql);
+        //exit($sql);
          $conn->sql=$sql;
 
         if($conn->ejecutarSentencia()){

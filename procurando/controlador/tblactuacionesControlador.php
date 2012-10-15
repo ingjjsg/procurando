@@ -1984,9 +1984,10 @@ function selectAllActuaciones($id_expediente){
         $respuesta->script('xajax_llenarSelectTipoFase("frminscribir")');        
        // $respuesta->script('xajax_buscarAbogado(' . $data[0][id_abogado_resp] . ',"responsable")');
         $respuesta->script('xajax_verCountExpediente(' . $data[0][cedula_cliente] . ')');     
-        $respuesta->script('xajax_buscarAsistido(' . $data[0][id_solicitante] . ')');
+        $respuesta->script('xajax_buscarDemandante(' . $data[0][id_solicitante] . ')');
         $respuesta->script('xajax_buscarConyugue(' . $data[0][id_contrarios] . ')');    
         $respuesta->script('xajax_buscarAbogado(' . $data[0][id_abogado_ejecutor] . ',"ejecutor")');
+         $respuesta->script('xajax_buscarAbogadoDemandante(' . $data[0][id_abogado_demandante] . ')');
         
         $respuesta->script('xajax_buscarDatosSituaciones(' . $data[0][id_proactuacion] . ')');
         //exit("ssssssssssss");
