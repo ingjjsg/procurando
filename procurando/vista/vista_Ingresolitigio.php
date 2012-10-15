@@ -560,7 +560,7 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                             </div>
                                                                         </td>
                                                                     </tr>
-                                                                    <tr>
+                                                                    <!--<tr>
                                                                         <td width="20%">
                                                                             C.I. Demandante:
                                                                         </td>
@@ -588,7 +588,7 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                         <td width="30%">
                                                                             <textarea id="direccion_demandante" name="direccion_demandante" rows="4" cols="25" style="resize:none"></textarea>
                                                                         </td>
-                                                                    </tr>
+                                                                    </tr>-->
                                                                     <tr>
                                                                         <td width="20%">
                                                                             Tiempo de Servicio:
