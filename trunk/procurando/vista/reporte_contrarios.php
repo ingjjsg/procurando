@@ -128,28 +128,28 @@
                 $html.="<td width='18%' style='font-size:30px;'>Cedula:</td>";
                 $html.="<td>".$data[0]['strcedula']."</td>";
                 $html.="<td width='18%'>Nombre:</td>";
-                $html.="<td>".$data[0]['strnombre']."</td>";
+                $html.="<td>".utf8_decode($data[0]['strnombre'])."</td>";
                 $html.="<td width='18%'>Apellido:</td>";
-                $html.="<td>".$data[0]['strapellido']."</td>";
+                $html.="<td>".utf8_decode($data[0]['strapellido'])."</td>";
             $html.="</tr>";
             
             $html.="<tr>";
                 $html.="<td width='18%'>Estado:</td>";
-                $html.="<td>". clFunciones::mostrarStritema($data[0]['id_estado'])."</td>";
+                $html.="<td>". utf8_decode(clFunciones::mostrarStritema($data[0]['id_estado']))."</td>";
                 $html.="<td width='18%'>Municipio:</td>";
-                $html.="<td colspan='3'>".  clFunciones::mostrarStritema($data[0]['id_municipio'])."</td>";
+                $html.="<td colspan='3'>".  utf8_decode(clFunciones::mostrarStritema($data[0]['id_municipio']))."</td>";
             $html.="</tr>";
             
             $html.="<tr>";
                 $html.="<td width='18%'>Direccion:</td>";
-                $html.="<td colspan='5'>".$data[0]['strdireccion']."</td>";
+                $html.="<td colspan='5'>".utf8_decode($data[0]['strdireccion'])."</td>";
             $html.="</tr>";
             
             $html.="<tr>";
                 $html.="<td width='18%'>Estado Civil:</td>";
-                $html.="<td>". clFunciones::mostrarStritema($data[0]['id_estado_civil'])."</td>";
+                $html.="<td>". utf8_decode(clFunciones::mostrarStritema($data[0]['id_estado_civil']))."</td>";
                 $html.="<td width='18%'>Sexo:</td>";
-                $html.="<td colspan='3'>".  clFunciones::mostrarStritema($data[0]['id_sexo'])."</td>";
+                $html.="<td colspan='3'>".  utf8_decode(clFunciones::mostrarStritema($data[0]['id_sexo']))."</td>";
             $html.="</tr>";
             
             $html.="<tr>";
