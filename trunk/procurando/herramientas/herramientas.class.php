@@ -1,6 +1,6 @@
 <?php
     require_once '../modelo/clConstantesModelo.php';
-
+    require_once 'dateDiff.php';
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -53,9 +53,9 @@ public static function encrypt($string) {
         return "R";
     }
     else {
-        $datetime1 = date_create($dateTime);
-        $datetime2 = date_create(date("Y-m-d"));
-        $intervalo = date_diff($datetime1, $datetime2);
+        //$datetime1 = date_create($dateTime);
+        //$datetime2 = date_create(date("Y-m-d"));
+        $intervalo = date_diff($dateTime, date("Y-m-d"));
         $dias = $intervalo->format('%d'); 
 //        exit($dias."<=".$numerodias);
         if ($dias<=$numerodias)
