@@ -2189,10 +2189,6 @@ public function llenar($request)
         $conn = new Conexion();
         $conn->abrirConexion();
         $sql="INSERT INTO ".clConstantesModelo::correspondencia_table."tbl_demandantes(
-         cedula, 
-         nombres, 
-         telefono, 
-         direccion, 
          tiempo_servicio, 
          fecingreso, 
          fecegreso, 
@@ -2201,10 +2197,7 @@ public function llenar($request)
          concepto, 
          monto)
     VALUES (
-        '".$this->get_cedula_demandante()."',
-        '".$this->get_strnombre_demandante()."',
-        '".$this->get_telefono_demandante()."',
-        '".$this->get_direccion_demandante()."',
+       
         '".$this->get_tiempo_servicio_demandante()."',
         TO_DATE('".$this->get_fecingreso_demandante()."','DD/MM/YYYY'), 
         TO_DATE('".$this->get_fecegreso_demandante()."','DD/MM/YYYY'),
