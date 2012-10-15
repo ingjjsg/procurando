@@ -181,7 +181,7 @@
                                             </tr>          
                                             <tr>
                                                 <td width="20%">
-                                                    Asistido actua Como:
+                                                   Demandante actua Como:
                                                 </td>
                                                     <td width="30%">
                                                         <div id="capaIdmunicipio">
@@ -219,13 +219,13 @@
                                             <tr>
                                                 <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                                     <div align="left" style="background-image: url('../comunes/images/barra.png')">
-                                                        <strong>ASISTIDO</strong>
+                                                        <strong>DEMANDANTE</strong>
                                                     </div>
                                                 </td>
                                             </tr>          
                                             <tr>
                                                 <td width="20%">
-                                                    C.I. Asistido:
+                                                    C.I. Demandante:
                                                 </td>
                                                 <td width="30%">
                                                     <input type="text" class='inputbox82' id="strtelefono" name="strtelefono" size="25" />
@@ -320,7 +320,7 @@
                                             <tr>
                                                 <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                                     <div align="left" style="background-image: url('../comunes/images/barra.png')">
-                                                        <strong>HISTORIAL DEL ASISTIDO</strong>
+                                                        <strong>HISTORIAL DEL DEMANDANTE</strong>
                                                     </div>
                                                 </td>
                                             </tr>          
