@@ -2186,7 +2186,7 @@ function editar_expediente($request){
         else {
                 $html="<div class='celda_etiqueta'>No Hay Situaciones Registradas</div>";     
         }
-//        exit($html);
+        exit($html);
         $respuesta->assign("contenedorSituaciones","innerHTML",$html);
         return $respuesta;
     }
