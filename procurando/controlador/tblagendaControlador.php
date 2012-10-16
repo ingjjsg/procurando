@@ -203,12 +203,13 @@
     
     function IntroAgenda(){
         $respuesta=new xajaxResponse(); 
-            $agenda= new clTblagenda();            
-            $respuesta->assign("numagendanoleidos", "value", $agenda->CountIntroNoLeidosAgenda());              
-            $respuesta->assign("numagendaleidos", "value", $agenda->CountIntroLeidosAgenda());       
-            $documento= new clTblDocumento();            
-            $respuesta->assign("numdocumentosnoleidos", "value", $documento->CountIntroNoLeidosDocumentos());              
-            $respuesta->assign("numdocumentosleidos", "value", $documento->CountIntroLeidosDocumentos());               
+            $agenda= new clTblagenda();   
+            $respuesta->assign("numagendanoleidos","innerHTML",$agenda->CountIntroNoLeidosAgenda()." No Leidos");
+            $respuesta->assign("numagendaleidos","innerHTML",$agenda->CountIntroLeidosAgenda()." Leidos");            
+            $documento= new clTblDocumento();           
+            $respuesta->assign("numdocumentosnoleidos","innerHTML",$documento->CountIntroNoLeidosDocumentos()." No Leidos");
+            $respuesta->assign("numdocumentosleidos","innerHTML",$documento->CountIntroLeidosDocumentos()." Leidos");                
+         
         return $respuesta;
     }     
     
