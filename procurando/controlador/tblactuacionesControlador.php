@@ -1982,7 +1982,7 @@ function selectAllActuaciones($id_expediente){
         $respuesta->script('xajax_llenarSelectFormularioTipoEstadoMinuta()');        
         $respuesta->script('xajax_llenarSelectFormularioTipoActuacion()');
         $respuesta->script('xajax_llenarSelectTipoFase("frminscribir")');        
-       // $respuesta->script('xajax_buscarAbogado(' . $data[0][id_abogado_resp] . ',"responsable")');
+        $respuesta->script('xajax_buscarAbogadoResponsable(' . $data[0][id_abogado_resp] . ')');
         $respuesta->script('xajax_verCountExpediente(' . $data[0][cedula_cliente] . ')');     
         $respuesta->script('xajax_buscarDemandante(' . $data[0][id_solicitante] . ')');
         $respuesta->script('xajax_buscarConyugue(' . $data[0][id_contrarios] . ')');    
@@ -2354,6 +2354,23 @@ function editar_expediente($request){
            $respuesta->assign("id_proactuacion_situacion", "value", $data[0][id_proactuacion_situacion]);
            
         }
+        return $respuesta;
+    }
+    
+    function buscarAbogadoResponsable($id){
+        $respuesta=new xajaxResponse();
+        $asistido=new clProAbogados();
+        $data=$asistido->buscarAbogResponsable($id);
+        if(is_array($data)){
+            $respuesta->assign("strnombre_abogado_responsable", "value", $data[0]['strnombre']. " " . $data[0]['strapellido']);
+            $respuesta->assign("id_abogado_resp", "value", $data[0]['id_contacto']);            
+            $respuesta->assign("cedula_abogado_responsable", "value", $data[0]['strcedula']);                    
+//            $raz_social=clTblasociaciones::getNombreAsociacion_vista_cliente($data[0]['id_contrarios']);
+//            if ($raz_social!='')   $respuesta->assign('raz_social', 'value', $raz_social);
+//            $respuesta->script("$('contenedorAsistidos').hide();");            
+        }
+        
+        else  $respuesta->alert("El Abogado no Existe");
         return $respuesta;
     }
     

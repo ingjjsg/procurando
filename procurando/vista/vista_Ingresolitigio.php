@@ -34,6 +34,7 @@ $xajax->registerFunction('guardar_expediente');
 $xajax->registerFunction('validar_expediente');
 //$xajax->registerFunction('buscarAsistido');
 $xajax->registerFunction('buscarDemandante');
+$xajax->registerFunction('buscarAbogadoResponsable');
 $xajax->registerFunction('buscarAbogadoDemandante');
 $xajax->registerFunction('buscarAbogadoDemandantePopup');
 $xajax->registerFunction('buscarAbogado');
