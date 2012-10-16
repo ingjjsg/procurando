@@ -1386,7 +1386,7 @@ function selectAllActuaciones($id_expediente){
         $dataC= $clientes->SelectAll($pagina);
         $data= $dataC[0];        
         if($data){
-            $asistido=new clProClientes();
+            $asistido=new clProContrarios();
             $abogado=new clProAbogados();
             $html= "<div style='border:solid 1px #CCCCCC;background:#f8f8f8'>
                         <table style='text-align:center' border='0' class='tablaTitulo' width='100%'>
@@ -1398,7 +1398,7 @@ function selectAllActuaciones($id_expediente){
                                     <a href='#' onclick=\"xajax_orden('id_origen')\">Cédula Asistido</a>
                                 </th>
                                 <th width='30%'>
-                                    <a href='#' onclick=\"xajax_orden('stritema')\">Nombre Asistido</a>
+                                    <a href='#' onclick=\"xajax_orden('stritema')\">Nombre Demandante   </a>
                                 </th>
                                 <th width='5%'>
                                     <a href='#' onclick=\"xajax_orden('id_origen')\">Cédula Abogado Responsable</a>
@@ -1418,11 +1418,11 @@ function selectAllActuaciones($id_expediente){
                                 </th>
                             </tr>";
             for ($i= 0; $i < count($data); $i++){
-                $data_asistido=$asistido->buscarAsistido($data[$i]['id_solicitante']);
+                $data_asistido=$asistido->buscarContrario($data[$i]['id_solicitante']);
                 if($data_asistido){
                     $nombre_asistido=$data_asistido[0]['strnombre']." ".$data_asistido[0]['strapellido'];
                 }
-                $data_abogado_responsable= $abogado->buscarAbogado($data[$i][id_abogado_resp],"responsabkle");
+                $data_abogado_responsable= $abogado->buscarAbogResponsable($data[$i][id_abogado_resp]);
                 if($data_abogado_responsable){
                     $nombre_abogado_responsable=$data_abogado_responsable[0]['strnombre']." ".$data_abogado_responsable[0]['strapellido'];
                 }

@@ -653,6 +653,23 @@ public function llenar($request)
          return $data;
     }
     
+    public function buscarAbogResponsable($id=""){
+         $conn= new Conexion();
+         $conn->abrirConexion();
+         $sql="SELECT id_contacto,
+         strnombre,
+         strapellido,
+         strdocumento as strcedula FROM public.tblcontacto WHERE bolborrado=0";
+         if($id != ""){
+             $sql.=" AND id_contacto=$id";
+         }
+         
+//         exit($sql);
+         $conn->sql=$sql;
+         $data = $conn->ejecutarSentencia(2);
+         return $data;
+    }
+    
        public function buscarAbogado($id=""){
          $conn= new Conexion();
          $conn->abrirConexion();
