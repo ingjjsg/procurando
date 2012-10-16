@@ -19,6 +19,7 @@
         <meta http-equiv="pragma" content="no-cache">
         <link rel="shortcut icon" href="imagenes/favicon.ico" type="image/x-icon" >
         <link href="../comunes/css/general.css" rel="stylesheet" type="text/css" />
+        <link href="../comunes/css/intro.css" rel="stylesheet" type="text/css" />        
         <link href="../comunes/css/enlaces.css" rel="stylesheet" type="text/css" />
         <link href="../comunes/css/pagination.css" rel="stylesheet" type="text/css" />
         <link href="../comunes/css/calendar-blue2.css" rel="stylesheet" type="text/css" media="all" title="win2k-cold-1" />
@@ -40,7 +41,7 @@
             }             
             function actualizar()
             {
-                    setTimeout("location.reload(true);",25000);
+                    setTimeout("location.reload(true);",30000);
             }                    
             function ocultar(id, msj) {
                 var log = $(id);
@@ -70,51 +71,55 @@
             }
         </script>
     </head>
-    <body onload="xajax_IntroAgenda();actualizar();">
+    <body onload="xajax_IntroAgenda();">
         <form name="frmAgenda" id="frmAgenda" method="post" style="">
             <script src="../comunes/js/wz_tooltip/wz_tooltip.js" type="text/javascript"></script>
             <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding-top:10px; padding-bottom:0px;">
             <tr>
-            <table width="100%" border="0" class="tablaTitulo" >
-                <tr>
-                    <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
-                        <div align="center" style="background-image: url('../comunes/images/barra.png')">
-                            <strong>MODULO AGENDA</strong>
+                <div id="sample-container">
+                    <div id="sample04">
+                        <div id="banner">
+                            <h1>Buzon de Correo</h1>
                         </div>
-                    </td>
-                </tr>         
-                <tr>
-                    <td width="20%">No leidos:                                </td>
-                    <td width="30%">
-                        <input name="numagendanoleidos" type="text" style="background:#CCCCCC !important;"  class="inputbox" id="numagendanoleidos" />
-                    </td>   
-                    <td width="20%">Leidos</td>
-                    <td width="30%">
-                        <input name="numagendaleidos" type="text" style="background:#CCCCCC !important;"  class="inputbox" id="numagendaleidos" />                         
-                    </td>      
-                </tr>                
-               
-            </table>
-            <table width="100%" border="0" class="tablaTitulo" >
-                <tr>
-                    <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
-                        <div align="center" style="background-image: url('../comunes/images/barra.png')">
-                            <strong>MODULO DOCUMENTOS</strong>
+                        <div id="nav">
+                            <p><img src="../comunes/images/intro/correo.jpg" onmouseover="Tip('Ir a Correo')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='bandejaVista.php'"/>                 </p>
                         </div>
-                    </td>
-                </tr>         
-                <tr>
-                    <td width="20%">No leidos:                                </td>
-                    <td width="30%">
-                        <input name="numdocumentosnoleidos" type="text" style="background:#CCCCCC !important;"  class="inputbox" id="numdocumentosnoleidos" />
-                    </td>   
-                    <td width="20%">Leidos</td>
-                    <td width="30%">
-                        <input name="numdocumentosleidos" type="text" style="background:#CCCCCC !important;" class="inputbox" id="numdocumentosleidos" />                         
-                    </td>      
-                </tr>                
-               
-            </table>                
+                        <div id="content">
+<!--                            <h2><div id="numagendaleidos"></div></h2>
+                            <h2><div id="numagendanoleidos"></div></h2>-->
+                        </div>
+                     </div>
+    	         </div>
+                
+                <div id="sample-container">
+                    <div id="sample04">
+                        <div id="banner">
+                            <h1>Buzon de Agenda</h1>
+                        </div>
+                        <div id="nav">
+                            <p><img src="../comunes/images/intro/agenda.jpg" onmouseover="Tip('Ir Agenda')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_tblagenda.php'"/>                 </p>
+                        </div>
+                        <div id="content">
+                            <h2><div id="numagendaleidos"></div></h2>
+                            <h2><div id="numagendanoleidos"></div></h2>
+                        </div>
+                     </div>
+    	         </div>
+
+                <div id="sample-container">
+                    <div id="sample04">
+                        <div id="banner">
+                            <h1>Buzon de Documentos</h1>
+                        </div>
+                        <div id="nav">
+                            <p><img src="../comunes/images/intro/documentos.jpg" onmouseover="Tip('Ir a Documento')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_tblDocumento.php'"/>                 </p>
+                        </div>
+                        <div id="content">
+                            <h2><div id="numdocumentosleidos"></div></h2>
+                            <h2><div id="numdocumentosnoleidos"></div></h2>
+                        </div>
+                  </div>
+    	         </div>
            </tr>
          <table>                
         </form>
