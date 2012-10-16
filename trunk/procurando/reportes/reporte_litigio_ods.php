@@ -6,13 +6,13 @@
     header("Cache-Control: no-store, no-cache, must-revalidate");
     header("Cache-Control: post-check=0, pre-check=0", false);
     header("Content-type: application/vnd.oasis.opendocument.spreadsheet");
-    header("Content-disposition: attachment; filename=reporte_oas.ods");
+    header("Content-disposition: attachment; filename=reporte_litigio.ods");
 
-    require_once 'plantilla_reporte.php';
-require_once '../modelo/ctblproexpedienteModelo.php';
+require_once 'plantilla_reporte.php';
+require_once '../modelo/clActuacionesModelo.php';
 require_once '../modelo/clFunciones.php';
 
-$proexpediente= new clProExpediente();
+$proexpediente= new clActuaciones();
 $data= "";
 $request= unserialize($_GET['data']);
 $data= $proexpediente->selectAllExpedienteReporte($request['id_tipo_tramite'], $request['id_tipo_atencion'], $request['id_actuacion_persona'],$request['id_tipo_organismo'],$request['id_organismo'],$request['id_tipo_fase'],$request['id_fase'],$request['strnroexpediente'],$request['strnroexpedienteauxiliar']);
@@ -29,7 +29,7 @@ $data= $proexpediente->selectAllExpedienteReporte($request['id_tipo_tramite'], $
                             <td>&nbsp;</td>
                         </tr>
                         <tr>
-                            <td colspan="8" align="center" bgcolor="#D8D8D8"><b>Reporte de Expedientes </b></td>
+                            <td colspan="8" align="center" bgcolor="#D8D8D8"><b>Reporte de Expedientes Litigio </b></td>
                         </tr>
                         <tr>
                             <td>&nbsp;</td>
