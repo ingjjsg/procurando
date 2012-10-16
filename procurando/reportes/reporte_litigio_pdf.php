@@ -1,16 +1,16 @@
 <?php
 require_once 'plantilla_reporte.php';
-require_once '../modelo/ctblproexpedienteModelo.php';
+require_once '../modelo/clActuacionesModelo.php';
 require_once '../modelo/clFunciones.php';
 
-$proexpediente= new clProExpediente();
+$proexpediente= new clActuaciones();
 $data= "";
 $request= unserialize($_GET['data']);
 $data= $proexpediente->selectAllExpedienteReporte($request['id_tipo_tramite'], $request['id_tipo_atencion'], $request['id_actuacion_persona'],$request['id_tipo_organismo'],$request['id_organismo'],$request['id_tipo_fase'],$request['id_fase'],$request['strnroexpediente'],$request['strnroexpedienteauxiliar']);
 
 
 $pdf=new Plantilla("L");
-$pdf->setTitulo("Expedientes");
+$pdf->setTitulo("Expedientes Litigio");
 $pdf->AddPage();
 
 $html='
@@ -69,6 +69,6 @@ foreach ($data as $key => $value) {
 $html.='</table>';
 //$pdf->SetY(50);
 $pdf->writeHTML($html);
-$pdf->Output("reporte_expediente.pdf", "I");
+$pdf->Output("reporte_litigio.pdf", "I");
 
 ?>

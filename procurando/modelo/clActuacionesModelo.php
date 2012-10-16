@@ -2294,5 +2294,102 @@ public function llenar($request)
     }
     
     
+     public function SelectAllExpedienteReporte($id_tipo_tramite,$id_tipo_atencion,$id_actuacion_persona,$id_tipo_organismo,$id_organismo,$id_tipo_fase,$id_fase,$strnroexpediente,$strnroexpedienteauxiliar){
+         $conn= new Conexion();
+         $conn->abrirConexion();
+         $sql="SELECT id_proactuacion,
+         id_proclientecasos,
+         id_proabogadoscasos,
+         id_documentoscasos,
+         id_usuario,
+         id_ano,
+         id_materia,
+         id_estatus,
+         strnroexpediente,
+         strtitulo,
+         strdescripcion,
+         id_refer,
+         to_char(fecapertura,'DD/MM/YYYY') as fecapertura,
+         to_char(feccierre,'DD/MM/YYYY') as feccierre,
+         cedula_abogado_responsable,
+         cedula_abogado_ejecutor,
+         cedula_cliente,
+         id_actuacion,
+         id_honorario,
+         id_tipo_tramite,
+         id_tipo_atencion,
+         id_tipo_organismo,
+         id_organismo,
+         id_tipo_minuta,
+         id_minuta,
+         actuacion.strobservacion,
+         to_char(fecexpediente,'DD/MM/YYYY') as fecexpediente,
+         strdireccion_asistido,
+         strdireccion_conyugue,
+         strdireccion_ultimo_domicilio,
+         to_char(fecseparacion,'DD/MM/YYYY') as fecseparacion,
+         intmonto_manutencion,
+         id_regimen,
+         id_citacion,
+         strdias,
+         strhoras,
+         intcuotames1,
+         intcuotames2,
+         strdocumentos,
+         cedula_conyugue,
+         strobservacion_cerrar,
+         strnroexpedienteauxiliar,
+         strrepresentante,
+         id_estado_fisico_expediente, 
+         id_tipo_espacio, 
+         id_tipo_archivador, 
+         id_tipo_piso_archivador, 
+         id_tipo_archivador_gaveta,
+         id_abogado_resp, 
+         id_abogado_ejecutor, 
+         id_solicitante, 
+         id_contrarios
+         FROM public.tblactuaciones actuacion 
+         left join public.tblactuacion_fases fases using(id_proactuacion) WHERE actuacion.bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
+       
+         if($id_tipo_tramite > 0){
+             $sql .=" AND id_tipo_tramite=".$id_tipo_tramite;
+         }
+         if($id_tipo_atencion > 0){
+             $sql .=" AND id_tipo_atencion=".$id_tipo_atencion;
+         }
+         if($id_tipo_atencion > 0){
+             $sql .=" AND id_tipo_atencion=".$id_tipo_atencion;
+         }
+         if($id_actuacion > 0){
+             $sql .=" AND id_actuacion=".$id_actuacion;
+         }
+         if($id_tipo_organismo > 0){
+             $sql .=" AND id_tipo_organismo=".$id_tipo_organismo;
+         }
+         if($id_organismo > 0){
+             $sql .=" AND id_organismo=".$id_organismo;
+         }
+         if($id_tipo_fase > 0){
+             $sql .=" AND id_tipo_fase=".$id_tipo_fase;
+         }
+         if($id_fase > 0){
+             $sql .=" AND id_fase=".$id_fase;
+         }
+         if($strnroexpediente !=""){
+             $sql .=" AND strnroexpediente=".$strnroexpediente;
+         }
+         if($strnroexpedienteauxiliar !=""){
+             $sql .=" AND strnroexpedienteauxiliar=".$strnroexpedienteauxiliar;
+         }
+         $sql.=" order by id_proactuacion asc";
+        // exit($sql);
+         $conn->sql=$sql;   
+         $data = $conn->ejecutarSentencia(2);
+         return $data;
+    
+    
+    
+ }
  }
 ?>

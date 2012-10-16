@@ -297,7 +297,7 @@ public function llenar($request)
                return true;
      }
 
-     public function selectAllActuacionesExpedienteLitigio($id_expediente) {
+     public function selectAllActuacionesExpedienteLitigio($id_expediente="") {
          $conn= new Conexion();
          $conn->abrirConexion();
          $sql = "";
@@ -307,7 +307,11 @@ public function llenar($request)
                 (SELECT stritema FROM " . clConstantesModelo::scsd_table . "tblmaestros a1 WHERE a1.id_maestro=b.id_tipo_actuacion) AS              tipo,
                 (SELECT stritema FROM " . clConstantesModelo::scsd_table . "tblmaestros a1 WHERE a1.id_maestro=b.id_actuacion) AS               actuacion
             from
-            " . clConstantesModelo::scsd_table . "tbllitigio_actuaciones b, tblproactuaciones c  where b.id_escrito=c.id_proactuaciones and b.id_proactuacion=".$id_expediente;
+            " . clConstantesModelo::scsd_table . "tbllitigio_actuaciones b, tblproactuaciones c  where b.id_escrito=c.id_proactuaciones";
+         if($id_expediente !=""){
+             $sql.=" and b.id_proactuacion=".$id_expediente;
+         }      
+
          //exit($sql);
          $conn->sql=$sql;
          $data = $conn->ejecutarSentencia(2);
