@@ -85,8 +85,8 @@
                             <p><img src="../comunes/images/intro/correo.jpg" onmouseover="Tip('Ir a Correo')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='bandejaVista.php'"/>                 </p>
                         </div>
                         <div id="content">
-<!--                            <h2><div id="numagendaleidos"></div></h2>
-                            <h2><div id="numagendanoleidos"></div></h2>-->
+                            <h2>1 Leido</h2>
+                            <h2>0 No Leidos</div></h2>
                         </div>
                      </div>
     	         </div>
