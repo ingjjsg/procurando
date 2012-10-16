@@ -96,7 +96,7 @@ class clConstantesModelo {
   public static function ModulosSeguridad() {return array('295');}      
   public static function ModulosDocumentos() {return array('13267','13287');}        
   public static function ModulosDictamenes() {return array('13770','13774');}     
-  public static function ModulosLitigio() {return array('13229');}        
+  public static function ModulosLitigio() {return array('13229','13791');}        
   const bancos='12194';
   const tipo_solicitantes ='12201';
   const prioridad = '12123';
