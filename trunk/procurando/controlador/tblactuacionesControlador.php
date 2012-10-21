@@ -1971,6 +1971,7 @@ function selectAllActuaciones($id_expediente){
                 $respuesta->script($js);
             }
         }
+        $respuesta->script('xajax_buscarDatosReferidos(' . $data[0][id_proactuacion] . ')');
         $respuesta->script('xajax_llenarSelectTipoRegimen("frminscribir",' . $data[0][id_regimen] . ')');
         $respuesta->script('xajax_llenarSelectTipoCita("frminscribir",' . $data[0][id_citacion] . ')');
         $respuesta->script('xajax_verRegimenCerrado(' . $data[0][id_proactuacion] . ')');
@@ -2343,6 +2344,71 @@ function editar_expediente($request){
         }else{
             $respuesta->alert("El Referido no se ha guardado");
         }
+        return $respuesta;
+    }
+
+    function buscarDatosReferidos($id_expediente=""){
+        //exit($id_expediente);
+        $respuesta= new xajaxResponse();
+            //$clientes= new clProActuacionSituaciones();
+            $expediente= new clActuaciones();
+            //$fecie=$expediente->getExpedFecie($id_expediente);
+            $data= "";
+            $html= ""; 
+            $data= $expediente->selectDemandanteReferido($id_expediente);
+            if($data){
+                $html= "<div style='border:solid 1px #CCCCCC;background:#f8f8f8'>
+                            <table style='text-align:center' border='0' class='tablaTitulo' width='100%'>
+                            <tr>
+                                <td colspan=\"6\" align=\"right\" style=\"color:white; border:#CCCCCC solid 0px;\" bgcolor=\"#273785\" >
+                                    <div align=\"center\" style=\"background-image: url('../comunes/images/barra.png')\">
+                                        <strong>LISTADO DE REFERIDOS DEL EXPEDIENTE</strong>
+                                    </div>                                
+                                </td>
+                            </tr>                                  
+                                <tr>
+                                    <th width='10%'>
+                                        <a href='#' onclick=\"xajax_orden('id_maestro')\">Id</a>
+                                    </th>
+                                    <th width='20%'>
+                                        <a href='#' onclick=\"xajax_orden('id_origen')\">Cedula</a>
+                                    </th>
+                                    <th width='35%'>
+                                        <a href='#' onclick=\"xajax_orden('stritema')\">Nombres</a>
+                                    </th>
+                                    <th width='15%'>
+                                        <a href='#' onclick=\"xajax_orden('stritema')\">Fecha Ingreso</a>
+                                    </th>                                    
+                                    <th width='10%'>
+                                        <a href='#' onclick=\"xajax_orden('stritema')\">Fecha Egreso</a>
+                                    </th>                                
+                                    <th width='10%'>
+                                        <a href='#' onclick=\"xajax_orden('stritemb')\">Accion</a>
+                                    </th>
+                                </tr>";
+                for ($i= 0; $i < count($data); $i++){
+
+                    $html.= "<tr bgcolor='#f8f8f8'onmouseover=\"this.style.background='#f0f0f0';this.style.color='blue'\" onmouseout=\"this.style.background='#f8f8f8';this.style.color='black'\" >
+                                <td align='center'>".  $data[$i]['lngcodigo']."</td>
+                                <td align='center'>".  $data[$i]['cedula']."</td>
+                                <td align='left' >".$data[$i]['nombres']."</td>
+                                <td align='left' >".  $data[$i]['fecingreso']."</td>                                    
+                                <td align='center' >".$data[$i]['fecegreso']."</td>                                
+                                <td>                                        <a><img src='../comunes/images/table_edit.png' onmouseover='Tip(\"Editar\")' onmouseout='UnTip()' onclick=\"xajax_selectSituacion('".$data[$i]['id_proactuacion']."','".$data[$i]['id_proactuacion_situacion']."')\"></a>
+                                        <a><img src='../comunes/images/table_delete.png' onmouseover='Tip(\"Eliminar\")' onmouseout='UnTip()' onclick=\"eliminar_situacion('".$data[$i]['id_proactuacion']."','".$data[$i]['id_proactuacion_situacion']."')\"></a>
+                                
+                                
+                                </td>
+                            </tr>";
+                }
+                $html.= "</table></div>";
+            }else{
+                $html="<div class='celda_etiqueta'>No Hay Referidos Registrados</div>";
+            }
+       
+        //exit($html);
+        $respuesta->assign("contenedorReferidos","innerHTML",$html);
+        $respuesta->script("$('#contenedorReferidos').fadeIn()");
         return $respuesta;
     }
 

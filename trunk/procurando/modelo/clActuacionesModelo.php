@@ -2465,27 +2465,30 @@ public function llenar($request)
          return $retorno;
     }
 
-    public function selectDemandanteReferido($id_demandante){
+    public function selectDemandanteReferido($id_expediente=0,$id_demandante=0){
         $conn = new Conexion();
         $conn->abrirConexion();
         $sql="select
               lngcodigo, 
               cedula,
               nombres,
-              telefono,
-              direccion,
               tiempo_servicio, 
               to_char(fecingreso,'DD/MM/YYYY') AS fecingreso,
               to_char(fecegreso,'DD/MM/YYYY') AS fecegreso,
               motivo_culminacion_laboral,
               cancelo_adelanto_prestaciones, 
               concepto, 
-              monto 
-              from ".clConstantesModelo::correspondencia_table."tbl_demandantes";
+              monto,
+              id_demandante 
+              from ".clConstantesModelo::correspondencia_table."tbl_expediente_referidos where true";
         if($id_demandante > 0){
-            $sql.=" where lngcodigo=".$id_demandante;
+            $sql.=" and lngcodigo=".$id_demandante;
         }
 
+        if($id_expediente > 0){
+            $sql.=" and id_expediente=".$id_expediente;
+        }
+//exit($sql);
         $conn->sql=$sql;
         $data=$conn->ejecutarSentencia(2);
         $conn->cerrarConexion();
