@@ -83,6 +83,7 @@ $xajax->registerFunction('llenarSelectFormularioPisoArchivadorExp');
 $xajax->registerFunction('llenarSelectFormularioGavetaArchivadorExp');
 $xajax->registerFunction('validar_referido');
 $xajax->registerFunction('guardar_referido');
+$xajax->registerFunction('buscarDatosReferidos');
 
 $xajax->processRequest();
 $xajax->printJavascript('../comunes/xajax/');
@@ -199,6 +200,7 @@ $xajax->printJavascript('../comunes/xajax/');
                             xajax_llenarSelectTipoFase('frminscribir');                         
                             xajax_llenarSelectFormularioTipoActuacion('');  
                             xajax_buscarDatosSituaciones('');
+                            xajax_buscarDatosReferidos('');
                             xajax_llenarSelectFormularioTipoEspacio('');
                             xajax_llenarSelectFormularioTipoEstadoFisicoExp('');                    
                             xajax_llenarSelectFormularioTipoArchivadorExp('');
@@ -1436,6 +1438,13 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                         <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                                                             <div align="left" style="background-image: url('../comunes/images/barra.png')">
                                                                                 <strong>Referidos del Expediente</strong>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="6">
+                                                                            <div id="contenedorReferidos" style="width:100%" align="left">
+                                                                                <div align="center"></div>
                                                                             </div>
                                                                         </td>
                                                                     </tr>     
