@@ -1112,7 +1112,7 @@ function selectAllActuaciones($id_expediente){
         return $respuesta;
     }
     
-    function buscarDemandantePopup($nombre,$apellido,$cedula){
+    function buscarDemandantePopup($nombre="",$apellido="",$cedula="",$div=""){
         $respuesta= new xajaxResponse();
         $clientes=new clProContrarios();
         $data= "";
@@ -1154,7 +1154,7 @@ function selectAllActuaciones($id_expediente){
                                 <td align='center'>".$data[$i]['strapellido']."</td>                                    
                                 <td align='center'>
                                         <a>
-                                            <img src='../comunes/images/s_success.png' onmouseover='Tip(\"Elegir Abogado\")' onmouseout='UnTip()' onclick=\"xajax_buscarDemandante('".$data[$i]['id_contrarios']."','ejecutor')\">
+                                            <img src='../comunes/images/s_success.png' onmouseover='Tip(\"Elegir Abogado\")' onmouseout='UnTip()' onclick=\"xajax_buscarDemandante('".$data[$i]['id_contrarios']."','','".$div."')\">
                                         </a>                                   
                                 </td>
                             </tr>";
@@ -1163,8 +1163,13 @@ function selectAllActuaciones($id_expediente){
             }else{
                 $html="";
             }
+            if($div != ""){
+                $respuesta->assign($div,"innerHTML",$html);
+            }else{
+               $respuesta->assign("contenedorAsistidos","innerHTML",$html); 
+            }
 //        $respuesta->script("$('contenedorAsistidos').show();");            
-        $respuesta->assign("contenedorAsistidos","innerHTML",$html);
+        
         return $respuesta;
     }
     
@@ -1834,19 +1839,28 @@ function selectAllActuaciones($id_expediente){
         return $respuesta;
     }
     
-    function buscarDemandante($id){
+    function buscarDemandante($id="",$tipo="",$div=""){
         $respuesta=new xajaxResponse();
         $asistido=new clProContrarios();
         $data=$asistido->buscarContrario($id);
         if(is_array($data)){
-            $respuesta->assign("strnombre_cliente", "value", $data[0]['strnombre']. " " . $data[0]['strapellido']);
-            $respuesta->assign("id_solicitante", "value", $data[0]['id_contrarios']);            
-            $respuesta->assign("cedula_cliente", "value", $data[0]['strcedula']);                    
-            $raz_social=clTblasociaciones::getNombreAsociacion_vista_cliente($data[0]['id_contrarios']);
-            if ($raz_social!='')   $respuesta->assign('raz_social', 'value', $raz_social);
-            $respuesta->script("$('contenedorAsistidos').hide();");            
+            if($div != ""){
+                $respuesta->assign("strnombre_cliente_refiere", "value", $data[0]['strnombre']. " " . $data[0]['strapellido']);         
+                $respuesta->assign("cedula_cliente_refiere", "value", $data[0]['strcedula']); 
+                $respuesta->assign("id_demandante_referido", "value", $data[0]['id_contrarios']);
+                $respuesta->script("$('contenedorAsistidosRefiere').hide();");       
+            }else{
+                $respuesta->assign("strnombre_cliente", "value", $data[0]['strnombre']. " " . $data[0]['strapellido']);
+                $respuesta->assign("id_solicitante", "value", $data[0]['id_contrarios']);            
+                $respuesta->assign("cedula_cliente", "value", $data[0]['strcedula']);                    
+                $raz_social=clTblasociaciones::getNombreAsociacion_vista_cliente($data[0]['id_contrarios']);
+                if ($raz_social!='')   $respuesta->assign('raz_social', 'value', $raz_social);
+                $respuesta->script("$('contenedorAsistidos').hide();");      
+
+            }
+                  
         }
-        else  $respuesta->alert("El Asistido no Existe");   
+        else  $respuesta->alert("El Demandante no Existe");   
         return $respuesta;
     }
     
@@ -2293,7 +2307,45 @@ function editar_expediente($request){
         }
         return $respuesta;
     }
+
+    function validar_referido($request){
+        $respuesta = new xajaxResponse();
+        if( $request['id_proactuacion_situacion'] !=""){
+            $respuesta->script("xajax_editar_situacion(xajax.getFormValues('frminscribir'),'".$request['id_proactuacion_situacion']."')");
+        }else{
+            $campos_validar= array(
+            'Cedula Demandante Refiere'    => 'cedula_cliente_refiere',
+            'Nombre Demandante Refiere'    => 'strnombre_cliente_refiere',
+            'Tiempo de Servicio Demandante Refiere'  => 'tiempo_servicio_demandante_refiere',
+            'Fecha de Ingreso Demandante Refiere'    => 'fecingreso_demandante_refiere',
+            'Fecha de Egreso Demandante Refiere' => 'fecegreso_demandante_refiere',
+            'Motivo de Culminacion Laboral' => 'motivo_culminacion_demandante_refiere',                
+            );
+            $validacion=  functions::validarFormulario('frminscribir',$request,$campos_validar);
+            if($validacion){
+                $respuesta->alert($validacion['msg']);
+                $respuesta->script($validacion['focus']);
+            }else{
+                $respuesta->script("xajax_guardar_referido(xajax.getFormValues('frminscribir'))");
+            }
+        }
+        return $respuesta;
+    }
     
+    function guardar_referido($request){
+        $respuesta= new xajaxResponse();
+        $expediente= new clActuaciones();
+        $expediente->llenar($request);
+        $data= $expediente->insertarDemandanteReferido();
+        if($data){
+            $respuesta->alert("El Referido se ha guardado");
+            //$respuesta->script("xajax_buscarDatosSituaciones('".$request['id_proexpediente']."')");
+        }else{
+            $respuesta->alert("El Referido no se ha guardado");
+        }
+        return $respuesta;
+    }
+
     function guardar_situacion($request){
         $respuesta= new xajaxResponse();
         $expediente= new clProActuacionSituaciones();

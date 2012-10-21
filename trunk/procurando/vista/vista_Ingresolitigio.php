@@ -81,6 +81,8 @@ $xajax->registerFunction('llenarSelectFormularioTipoEstadoFisicoExp');
 $xajax->registerFunction('llenarSelectFormularioTipoArchivadorExp');
 $xajax->registerFunction('llenarSelectFormularioPisoArchivadorExp');
 $xajax->registerFunction('llenarSelectFormularioGavetaArchivadorExp');
+$xajax->registerFunction('validar_referido');
+$xajax->registerFunction('guardar_referido');
 
 $xajax->processRequest();
 $xajax->printJavascript('../comunes/xajax/');
@@ -137,6 +139,13 @@ $xajax->printJavascript('../comunes/xajax/');
                                 $("#monto_prestaciones_demandante").val("");
                             });
                         });
+
+                        $("#cancelo_prestaciones_demandante_refiere").live("click",function(){
+                            $("#campos_prestaciones_demandante_refiere").animate({opacity: 'toggle'},function(){
+                                $("#concepto_prestaciones_demandante_refiere").val("");
+                                $("#monto_prestaciones_demandante_refiere").val("");
+                            });
+                        });
                     });            
             
             
@@ -161,6 +170,11 @@ $xajax->printJavascript('../comunes/xajax/');
                         {
                               $('contenedorAbogadosDemandantes').toggle();
                             xajax_buscarAbogadoDemandantePopup('','','');  
+                        }
+                        if (num==5)
+                        {
+                            $('contenedorAsistidosRefiere').toggle();
+                            xajax_buscarDemandantePopup('','','','contenedorAsistidosRefiere');                  
                         }
                     }                
                     function monto(caja,monto)
@@ -252,7 +266,8 @@ $xajax->printJavascript('../comunes/xajax/');
                             <input type="hidden" id="id_solicitante" name="id_solicitante" value="" />                    
                             <input type="hidden" id="id_contrarios" name="id_contrarios" value="" />                   
                             <input type="hidden" id="strdocumentos" name="strdocumentos" value="" />
-                            <input type="hidden" id="id_honorario" name="id_honorario" value="" />                
+                            <input type="hidden" id="id_honorario" name="id_honorario" value="" />
+                            <input type="hidden" id="id_demandante_referido" name="id_demandante_referido" value="" />                
                             <fieldset style="border:#339933 2px solid">                                        
                                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                     <tr>
@@ -381,6 +396,7 @@ $xajax->printJavascript('../comunes/xajax/');
                                                             <li><a id="link4" href="#" rel="country5">Documentos</a></li>                        
                                                             <li><a id="link5" href="#" rel="country6">Fase</a></li>    
                                                             <li><a id="link6" href="#" rel="country7">Actuaciones</a></li>                                                            
+                                                            <li><a id="link6" href="#" rel="country9">Refiere</a></li>
 
                                                             <!--                                    <li><a id="link7" href="#" rel="country7" style="display:none">Divorcio/Sep</a></li>                                        -->
                                                         </ul>
@@ -1288,6 +1304,285 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                                 </script>
                                                                         </td>
                                                                     </tr>
+                                                                </table>
+                                                            </div>
+                                                            <div id="country9"  class="tabcontent" style="height:100%; overflow-y:auto">
+                                                                <table width="100%" border="0" class="tablaTitulo" >
+                                                                    <tr>
+                                                                        <td colspan="6" bgcolor="#F8F8F8" >
+                                                                            <div align="right">
+                                                                                <img id="saveRefiere"  name="saveRefiere" src="../comunes/images/disk.png" onmouseover="Tip('Guardar Referido')" onmouseout="UnTip()" border="0" onclick="xajax_validar_referido(xajax.getFormValues('frminscribir'));"/>
+                        <!--                                                        <img id="delete" name="delete" src="../comunes/images/page_delete.png" onmouseover="Tip('Eliminar Honorario')" onmouseout="UnTip()" border="0" onclick="if (confirm('¿Seguro desea eliminar el Honorario?'))xajax_eliminarHonorario(xajax.getFormValues('frminserthonorarios'));"/>                            
+                                                                                <img id="back" name="back" src="../comunes/images/arrow_undo.png" onmouseover="Tip('Volver')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_tblprohonorarios.php'"/>-->
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                             
+                                                                    <tr>
+                                                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                                                            <div align="left" style="background-image: url('../comunes/images/barra.png')">
+                                                                                <strong>DEMANDANTE</strong>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>          
+                                                                    <tr>
+                                                                        <td width="20%">
+                                                                            C.I. Demandante:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input type="text" class='inputbox82' id="cedula_cliente_refiere" name="cedula_cliente_refiere" size="20" onKeyDown="xajax_buscarAsistidoPopup('','',document.frminscribir.cedula_cliente.value);"/>                             
+                                                                            <img src="../comunes/images/ico_18_127.gif" onmouseover="Tip('Buscar Asistido')" onmouseout="UnTip()" border="0" onclick="vercatalogo(5);"/>                                                                                        
+                                                                        </td>
+                                                                        <td width="20%">
+                                                                            Nombre:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input type="text" class='inputbox82' id="strnombre_cliente_refiere" name="strnombre_cliente_refiere" size="30" onKeyDown="xajax_buscarAsistidoPopup(document.frminscribir.strnombre_cliente.value,'','');"/>                             
+                                                                        </td>
+                                                                    </tr>     
+                                                                    <tr>
+                                                                        <td colspan="6">
+                                                                            <div id="contenedorAsistidosRefiere" style="width:100%;display: none;" align="left">
+                                                                                <div align="center"></div>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                                                            <div align="center" style="background-image: url('../comunes/images/barra.png')">
+                                                                                <strong>Datos del Demandante</strong>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width="20%">
+                                                                            Tiempo de Servicio:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input type="text" class='inputbox82' id="tiempo_servicio_demandante_refiere" name="tiempo_servicio_demandante_refiere" size="20" />
+                                                                        </td>
+                                                                        <td width="20%">
+                                                                            Fecha Ingreso:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input id="fecingreso_demandante_refiere" name="fecingreso_demandante_refiere" type="text"  class='inputbox82' maxlength='20' size='15' value="">
+                                                                                <img name="button"  id="lanzador_fecingreso_demandante_refiere"  src="../comunes/images/calendar.png" align="middle"/>
+                                                                                <script type="text/javascript">
+                                                                                    Calendar.setup({
+                                                                                        inputField     :    "fecingreso_demandante_refiere",      // id del campo de texto
+                                                                                        ifFormat       :    "%d/%m/%Y",       // formato de la fecha, cuando se escriba en el campo de texto
+                                                                                        button         :    "lanzador_fecingreso_demandante_refiere"   // el id del botn que lanzar el calendario
+                                                                                    });
+                                                                                </script>
+                                                                        </td>
+                                                                        
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width="20%">
+                                                                            Fecha Egreso:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input id="fecegreso_demandante_refiere" name="fecegreso_demandante_refiere" type="text"  class='inputbox82' maxlength='20' size='15' value="">
+                                                                                <img name="button"  id="lanzador_fecegreso_demandante_refiere"  src="../comunes/images/calendar.png" align="middle"/>
+                                                                                <script type="text/javascript">
+                                                                                    Calendar.setup({
+                                                                                        inputField     :    "fecegreso_demandante_refiere",      // id del campo de texto
+                                                                                        ifFormat       :    "%d/%m/%Y",       // formato de la fecha, cuando se escriba en el campo de texto
+                                                                                        button         :    "lanzador_fecegreso_demandante_refiere"   // el id del botn que lanzar el calendario
+                                                                                    });
+                                                                                </script>
+                                                                        </td>
+                                                                        <td width="20%">
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            
+                                                                        </td>
+                                                                        
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td width="20%">
+                                                                            Motivo de la Culminacion de la Relacion Laboral:
+
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <textarea id="motivo_culminacion_demandante_refiere" name="motivo_culminacion_demandante_refiere" rows="4" cols="25" style="resize:none"></textarea>
+                                                                        </td>
+                                                                        <td width="20%">
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                        </td>
+                                                                        
+                                                                    </tr>                                                                    
+                                                                    <tr>
+                                                                        <td width="20%">
+                                                                            Se le canceló algún adelanto de prestaciones:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input type="checkbox" value="1" id="cancelo_prestaciones_demandante_refiere" name="cancelo_prestaciones_demandante_refiere">
+                                                                        </td>
+                                                                    </tr>
+                                                                    
+                                                                        <tr id="campos_prestaciones_demandante_refiere" style="display:none">
+                                                                            <td width="20%">Concepto:</td>
+                                                                            <td width="30%">
+                                                                                <input type="text" class='inputbox82' id="concepto_prestaciones_demandante_refiere" name="concepto_prestaciones_demandante_refiere" />
+                                                                            </td>
+                                                                            <td width="20%">Monto:</td>
+                                                                            <td width="30%">
+                                                                                <input id="monto_prestaciones_demandante_refiere" class='inputbox82' name="monto_prestaciones_demandante_refiere" />
+                                                                            </td>
+                                                                        </tr>
+                                                                    <tr>
+                                                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                                                            <div align="left" style="background-image: url('../comunes/images/barra.png')">
+                                                                                <strong>Referidos del Expediente</strong>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>     
+                                                                    <!--<tr>
+                                                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                                                            <div align="left" style="background-image: url('../comunes/images/barra.png')">
+                                                                                <strong>REPRESENTANTE DE LA ASOCIACIÓN REPRESENTADA POR EL DEMANDANTE</strong>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>          
+                                                                    <tr>
+                                                                        <td width="20%">
+                                                                            Representante:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input type="checkbox" class="inputbox"  name="strrepresentante" id="strrepresentante" value="1"/>
+                                                                        </td>
+                                                                        <td width="20%">
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                        </td>
+                                                                    </tr>                                            
+                                                                    <tr>
+                                                                        <td width="20%">
+                                                                            Razón Social:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input type="text" class='inputbox82' id="raz_social" name="raz_social" size="30" onKeyDown="xajax_buscarAsistidoPopup(document.frminscribir.strnombre_cliente.value,'','');"/>                                                         
+                                                                        </td>
+                                                                        <td width="20%">
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                        </td>
+                                                                    </tr>                                              
+                                                                    <tr>
+                                                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                                                            <div align="left" style="background-image: url('../comunes/images/barra.png')">
+                                                                                <strong>ABOGADOS</strong>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>                                                
+                                                                    <tr>
+                                                                        <td width="20%">
+                                                                            C.I. Abogado Responsable:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input type="text" readonly="readonly" class='inputbox82' id="cedula_abogado_responsable" name="cedula_abogado_responsable" size="20" value="<?php echo $_SESSION['strdocumento']; ?>"/>                                  
+                                                                           <img src="../comunes/images/ico_18_127.gif" onmouseover="Tip('Buscar Abogado Responsable')" onmouseout="UnTip()" border="0" onclick="xajax_buscarAbogado(document.frminscribir.cedula_abogado_responsable.value,'responsable');"/>                                    
+                                                                        </td>
+                                                                        <td width="20%">
+                                                                            Nombre:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input type="text" readonly="readonly" class='inputbox82' id="strnombre_abogado_responsable" name="strnombre_abogado_responsable" size="30" value="<?php echo $_SESSION['strapellido'] . ", " . $_SESSION['strnombre']; ?>" />
+                                                                        </td>
+                                                                    </tr>    
+                                                                    <tr>
+                                                                        <td width="20%">
+                                                                            C.I. Abogado Ejecutor:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input type="text" class='inputbox82' id="cedula_abogado_ejecutor" name="cedula_abogado_ejecutor" size="20" onKeyDown="xajax_buscarAbogadosPopup('','',document.frminscribir.cedula_abogado_ejecutor.value);"/>                                  
+                                                                            <img src="../comunes/images/ico_18_127.gif" onmouseover="Tip('Buscar Abogado Responsable')" onmouseout="UnTip()" border="0" onclick="xajax_buscarAbogado(document.frminscribir.cedula_abogado_responsable.value,'responsable');"/>                                    
+                                                                            <img src="../comunes/images/ico_18_127.gif" onmouseover="Tip('Buscar Abogado Ejecutor')" onmouseout="UnTip()" border="0" onclick="vercatalogo(1);"/>                                                                                        
+                                                                        </td>
+                                                                        <td width="20%">
+                                                                            Nombre:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input type="text" class='inputbox82' id="strnombre_abogado_ejecutor" name="strnombre_abogado_ejecutor" size="30" onKeyDown="xajax_buscarAbogadosPopup(document.frminscribir.strnombre_abogado_ejecutor.value,'','');"/>                                  
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="6">
+                                                                            <div id="contenedorAbogados" style="width:100%;display: none;" align="left">
+                                                                                <div align="center"></div>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>  
+                                                                    <tr>
+                                                                        <td width="20%">
+                                                                            C.I. Abogado Demandante:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input type="text" readonly="readonly" class='inputbox82' id="cedula_abogado_demandante" name="cedula_abogado_demandante" size="20" value=""/>                                  
+                                                                            <img src="../comunes/images/ico_18_127.gif" onmouseover="Tip('Buscar Abogado Responsable')" onmouseout="UnTip()" border="0" onclick="vercatalogo(4);"/>       
+                                                                        </td>
+                                                                        <td width="20%">
+                                                                            Nombre:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input type="text" readonly="readonly" class='inputbox82' id="strnombre_abogado_demandante" name="strnombre_abogado_demandante" size="30" value="" />
+                                                                        </td>
+                                                                    </tr>  
+                                                                    <tr>
+                                                                        <td colspan="6">
+                                                                            <div id="contenedorAbogadosDemandantes" style="width:100%;display: none;" align="left">
+                                                                                <div align="center"></div>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>                                            
+                                                                    <tr>
+                                                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                                                            <div align="left" style="background-image: url('../comunes/images/barra.png')">
+                                                                                <strong>ORGANISMO DEMANDADO</strong>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>                            
+                                                                    <tr>
+                                                                        <td width="20%">
+                                                                            Tipo de Organismo:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <div id="capaIdTipoOrganismo">
+                                                                                <select id="id_tipo_organismo" name="id_tipo_organismo" style='width:50%'>
+                                                                                    <option value="0">Seleccione</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </td> 
+                                                                        <td width="20%">Organismo</td>
+                                                                        <td width="30%">
+                                                                            <div id="capaIdOrganismo">
+                                                                                <select id="id_organismo" name="id_organismo" style='width:50%'>
+                                                                                    <option value="0">Seleccione</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </td>    
+                                                                    </tr>                         
+                                                                    <tr>
+                                                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                                                            <div align="left" style="background-image: url('../comunes/images/barra.png')">
+                                                                                <strong>HISTORIAL DEL DEMANDADO</strong>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>  
+                                                                    <tr>
+                                                                        <td width="20%">
+                                                                            Casos Abiertos:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input type="text" class='inputbox82' id="intcasosabiertos" readonly="readonly" name="intcasosabiertos" size="10" value="0"/>
+                                                                        </td> 
+                                                                        <td width="20%">Casos Cerrados</td>
+                                                                        <td width="30%">
+                                                                            <input type="text" class='inputbox82' id="intcasoscerrados" readonly="readonly" name="intcasoscerrados" size="10" value="0"/>
+                                                                        </td>    
+                                                                    </tr>-->                                                
                                                                 </table>
                                                             </div>
                                                             <!--                                    <div id="country7"  class="tabcontent" style="height:100%; overflow-y:auto;">
