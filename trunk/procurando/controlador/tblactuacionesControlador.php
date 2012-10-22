@@ -2311,8 +2311,8 @@ function editar_expediente($request){
 
     function validar_referido($request){
         $respuesta = new xajaxResponse();
-        if( $request['id_proactuacion_situacion'] !=""){
-            $respuesta->script("xajax_editar_situacion(xajax.getFormValues('frminscribir'),'".$request['id_proactuacion_situacion']."')");
+        if( $request['id_demandante_referido'] !=""){
+            $respuesta->script("xajax_editar_referido(xajax.getFormValues('frminscribir'),'".$request['id_demandante_referido']."')");
         }else{
             $campos_validar= array(
             'Cedula Demandante Refiere'    => 'cedula_cliente_refiere',
@@ -2340,7 +2340,7 @@ function editar_expediente($request){
         $data= $expediente->insertarDemandanteReferido();
         if($data){
             $respuesta->alert("El Referido se ha guardado");
-            //$respuesta->script("xajax_buscarDatosSituaciones('".$request['id_proexpediente']."')");
+            $respuesta->script("xajax_buscarDatosReferidos('".$request['id_proexpediente']."')");
         }else{
             $respuesta->alert("El Referido no se ha guardado");
         }
@@ -2395,7 +2395,7 @@ function editar_expediente($request){
                                 <td align='left' >".  $data[$i]['fecingreso']."</td>                                    
                                 <td align='center' >".$data[$i]['fecegreso']."</td>                                
                                 <td>                                        <a><img src='../comunes/images/table_edit.png' onmouseover='Tip(\"Editar\")' onmouseout='UnTip()' onclick=\"xajax_selectDemandanteReferido('".$data[$i]['id_expediente']."','".$data[$i]['lngcodigo']."')\"></a>
-                                        <a><img src='../comunes/images/table_delete.png' onmouseover='Tip(\"Eliminar\")' onmouseout='UnTip()' onclick=\"eliminar_situacion('".$data[$i]['id_proactuacion']."','".$data[$i]['id_proactuacion_situacion']."')\"></a>
+                                        <a><img src='../comunes/images/table_delete.png' onmouseover='Tip(\"Eliminar\")' onmouseout='UnTip()' onclick=\"eliminar_referido('".$data[$i]['lngcodigo']."','".$data[$i]['id_expediente']."')\"></a>
                                 
                                 
                                 </td>
@@ -2423,6 +2423,7 @@ function editar_expediente($request){
             $respuesta->assign("fecingreso_demandante_refiere","value",$data[0]['fecingreso']);
             $respuesta->assign("fecegreso_demandante_refiere","value",$data[0]['fecegreso']);
             $respuesta->assign('motivo_culminacion_demandante_refiere','value',$data[0]['motivo_culminacion_laboral']);
+            $respuesta->assign('id_demandante_referido','value',$data[0]['lngcodigo']);
             if($data[0]['cancelo_adelanto_prestaciones']){
                 $respuesta->assign('cancelo_prestaciones_demandante_refiere','checked',TRUE);
                 $respuesta->script('jQuery("#campos_prestaciones_demandante_refiere").animate({opacity: "toggle"})');
@@ -2430,6 +2431,33 @@ function editar_expediente($request){
                 $respuesta->assign('monto_prestaciones_demandante_refiere','value',$data[0]['monto']);
             }
             $respuesta->assign('monto_demanda_demandante_refiere','value',$data[0]['monto_demanda']);
+        }
+        return $respuesta;
+    }
+    
+    function eliminar_referido($id_demandante,$id_expediente){
+        $respuesta= new xajaxResponse();
+        $expediente= new clActuaciones();
+        $data= $expediente->eliminarDemandanteReferido($id_demandante);
+        if($data){
+             $respuesta->alert('El Referido se Ha Eliminado exitosamente');
+             $respuesta->script("xajax_buscarDatosReferidos('".$id_expediente."')");
+        }else{
+            $respuesta->alert('El Referido no se Ha Eliminado');
+        }
+        return $respuesta;
+    }
+    
+    function editar_referido($request,$id_demandante){
+        $respuesta= new xajaxResponse();
+        $cliente= new clActuaciones();
+        $cliente->llenar($request);
+        $data= $cliente->actualizarDemandanteReferido($id_demandante);
+        if($data){
+            $respuesta->alert("El Referido se actualizo exitosamente");
+            $respuesta->script("xajax_buscarDatosReferidos('".$request['id_proexpediente']."')");
+        }else{
+            $respuesta->alert("El Referido no se ha actualizado");
         }
         return $respuesta;
     }

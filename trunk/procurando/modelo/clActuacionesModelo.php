@@ -2450,23 +2450,22 @@ public function llenar($request)
 
     }
 
-    public function actualizarDemandanteReferido(){
+    public function actualizarDemandanteReferido($id_demandante){
         $conn = new Conexion();
         $conn->abrirConexion();
-        $sql="update ".clConstantesModelo::correspondencia_table."tbl_demandantes
+        $sql="update ".clConstantesModelo::correspondencia_table."tbl_expediente_referidos
          set
-         cedula='".$this->get_cedula_demandante()."', 
-         nombres='".$this->get_strnombre_demandante()."', 
-         telefono='".$this->get_telefono_demandante()."', 
-         direccion='".$this->get_direccion_demandante()."', 
-         tiempo_servicio='".$this->get_tiempo_servicio_demandante()."', 
-         fecingreso=TO_DATE('".$this->get_fecingreso_demandante()."','DD/MM/YYYY'), 
-         fecegreso=TO_DATE('".$this->get_fecegreso_demandante()."','DD/MM/YYYY'), 
-         motivo_culminacion_laboral='".$this->get_motivo_culminacion_demandante()."', 
-         cancelo_adelanto_prestaciones='".$this->get_cancelo_prestaciones_demandante()."', 
-         concepto='".$this->get_concepto_prestaciones_demandante()."', 
-         monto=".$this->get_monto_prestaciones_demandante()."
-         WHERE lngcodigo=".$this->get_id_demandante();
+         cedula='".$this->get_cedula_demandante_referido()."', 
+         nombres='".$this->get_strnombre_demandante_referido()."',
+         tiempo_servicio='".$this->get_tiempo_servicio_demandante_referido()."', 
+         fecingreso=TO_DATE('".$this->get_fecingreso_demandante_referido()."','DD/MM/YYYY'), 
+         fecegreso=TO_DATE('".$this->get_fecegreso_demandante_referido()."','DD/MM/YYYY'), 
+         motivo_culminacion_laboral='".$this->get_motivo_culminacion_demandante_referido()."', 
+         cancelo_adelanto_prestaciones='".$this->get_cancelo_prestaciones_demandante_referido()."', 
+         concepto='".$this->get_concepto_prestaciones_demandante_referido()."', 
+         monto=".$this->get_monto_prestaciones_demandante_referido().",
+         monto_demanda=".$this->get_monto_demanda_demandante_referido()."
+         WHERE lngcodigo=".$id_demandante;
         $conn->sql=$sql;
         if($conn->ejecutarSentencia()){
              $retorno=true;
@@ -2495,7 +2494,7 @@ public function llenar($request)
               id_demandante,
               id_expediente,
               monto_demanda
-              from ".clConstantesModelo::correspondencia_table."tbl_expediente_referidos where true";
+              from ".clConstantesModelo::correspondencia_table."tbl_expediente_referidos where bolborrado=0";
         if($id_demandante > 0){
             $sql.=" and lngcodigo=".$id_demandante;
         }
@@ -2509,6 +2508,24 @@ public function llenar($request)
         $conn->cerrarConexion();
         return $data;
         
+    }
+    
+    public function eliminarDemandanteReferido($lngcodigo){
+        $conn = new Conexion();
+        $conn->abrirConexion();
+        $sql="update ".clConstantesModelo::correspondencia_table."tbl_expediente_referidos
+         set
+         bolborrado=1
+         WHERE lngcodigo=".$lngcodigo;
+        $conn->sql=$sql;
+        if($conn->ejecutarSentencia()){
+             $retorno=true;
+         }else{
+             $retorno=false;
+         }
+         
+         $conn->cerrarConexion();
+         return $retorno;
     }
     
     
