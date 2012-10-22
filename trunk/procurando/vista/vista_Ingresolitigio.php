@@ -84,6 +84,8 @@ $xajax->registerFunction('llenarSelectFormularioGavetaArchivadorExp');
 $xajax->registerFunction('validar_referido');
 $xajax->registerFunction('guardar_referido');
 $xajax->registerFunction('buscarDatosReferidos');
+$xajax->registerFunction('selectDemandanteReferido');
+
 
 $xajax->processRequest();
 $xajax->printJavascript('../comunes/xajax/');
@@ -1434,6 +1436,16 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                                 <input id="monto_prestaciones_demandante_refiere" class='inputbox82' name="monto_prestaciones_demandante_refiere" />
                                                                             </td>
                                                                         </tr>
+                                                                    
+                                                                    <tr>
+                                                                        <td width="20%">
+                                                                            Monto de la Demanda:
+                                                                        </td>
+                                                                        <td width="30%">
+                                                                            <input type="text" value="" id="monto_demanda_demandante_refiere" name="monto_demanda_demandante_refiere" />
+                                                                        </td>
+                                                                    </tr>
+                                                                    
                                                                     <tr>
                                                                         <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                                                             <div align="left" style="background-image: url('../comunes/images/barra.png')">

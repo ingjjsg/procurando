@@ -2394,7 +2394,7 @@ function editar_expediente($request){
                                 <td align='left' >".$data[$i]['nombres']."</td>
                                 <td align='left' >".  $data[$i]['fecingreso']."</td>                                    
                                 <td align='center' >".$data[$i]['fecegreso']."</td>                                
-                                <td>                                        <a><img src='../comunes/images/table_edit.png' onmouseover='Tip(\"Editar\")' onmouseout='UnTip()' onclick=\"xajax_selectSituacion('".$data[$i]['id_proactuacion']."','".$data[$i]['id_proactuacion_situacion']."')\"></a>
+                                <td>                                        <a><img src='../comunes/images/table_edit.png' onmouseover='Tip(\"Editar\")' onmouseout='UnTip()' onclick=\"xajax_selectDemandanteReferido('".$data[$i]['id_expediente']."','".$data[$i]['lngcodigo']."')\"></a>
                                         <a><img src='../comunes/images/table_delete.png' onmouseover='Tip(\"Eliminar\")' onmouseout='UnTip()' onclick=\"eliminar_situacion('".$data[$i]['id_proactuacion']."','".$data[$i]['id_proactuacion_situacion']."')\"></a>
                                 
                                 
@@ -2409,6 +2409,28 @@ function editar_expediente($request){
         //exit($html);
         $respuesta->assign("contenedorReferidos","innerHTML",$html);
         $respuesta->script("$('#contenedorReferidos').fadeIn()");
+        return $respuesta;
+    }
+    
+    function selectDemandanteReferido($id_expediente,$id_demandante){
+        $respuesta= new xajaxResponse();
+        $expediente= new clActuaciones();
+        $data= $expediente->selectDemandanteReferido($id_expediente,$id_demandante);
+        if($data){
+            $respuesta->assign("cedula_cliente_refiere","value",$data[0]['cedula']);
+            $respuesta->assign("strnombre_cliente_refiere","value",$data[0]['nombres']);
+            $respuesta->assign("tiempo_servicio_demandante_refiere","value",$data[0]['tiempo_servicio']);
+            $respuesta->assign("fecingreso_demandante_refiere","value",$data[0]['fecingreso']);
+            $respuesta->assign("fecegreso_demandante_refiere","value",$data[0]['fecegreso']);
+            $respuesta->assign('motivo_culminacion_demandante_refiere','value',$data[0]['motivo_culminacion_laboral']);
+            if($data[0]['cancelo_adelanto_prestaciones']){
+                $respuesta->assign('cancelo_prestaciones_demandante_refiere','checked',TRUE);
+                $respuesta->script('jQuery("#campos_prestaciones_demandante_refiere").animate({opacity: "toggle"})');
+                $respuesta->assign('concepto_prestaciones_demandante_refiere','value',$data[0]['concepto']);
+                $respuesta->assign('monto_prestaciones_demandante_refiere','value',$data[0]['monto']);
+            }
+            $respuesta->assign('monto_demanda_demandante_refiere','value',$data[0]['monto_demanda']);
+        }
         return $respuesta;
     }
 

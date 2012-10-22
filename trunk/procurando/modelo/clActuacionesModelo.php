@@ -182,6 +182,8 @@
   private   $concepto_prestaciones_demandante_referido;
 
   private   $monto_prestaciones_demandante_referido;
+  
+  private   $monto_demanda_demandante_referido;
 
   private   $id_demandante_referido;
 
@@ -604,6 +606,10 @@ public function llenar($request)
         $this->strnombre_demandante_referido= $request['strnombre_cliente_refiere'];
      }
      
+     if($request['monto_demanda_demandante_refiere'] != ""){
+        $this->monto_demanda_demandante_referido= $request['monto_demanda_demandante_refiere'];
+     }
+     
 
 }//=========================== GET ===================
 
@@ -700,6 +706,10 @@ public function llenar($request)
 
     public function get_monto_prestaciones_demandante_referido(){
         return $this->monto_prestaciones_demandante_referido;
+    }
+    
+    public function get_monto_demanda_demandante_referido(){
+        return $this->monto_demanda_demandante_referido;
     }
 
 
@@ -2413,7 +2423,8 @@ public function llenar($request)
          concepto, 
          monto,
          id_expediente,
-         id_demandante)
+         id_demandante,
+         monto_demanda)
     VALUES (
         '".$this->get_cedula_demandante_referido()."',
         '".$this->get_strnombre_demandante_referido()."',
@@ -2424,7 +2435,9 @@ public function llenar($request)
         '".$this->get_concepto_prestaciones_demandante_referido()."', 
         ".$this->get_monto_prestaciones_demandante_referido().",
         ".$this->get_id_proactuacion().",
-        ".$this->get_id_demandante_referido().");";
+        ".$this->get_id_demandante_referido().",
+        ".$this->get_monto_demanda_demandante_referido().");";
+       // exit($sql);
         $conn->sql=$sql;
         if($conn->ejecutarSentencia()){
             $retorno=TRUE;
@@ -2479,7 +2492,9 @@ public function llenar($request)
               cancelo_adelanto_prestaciones, 
               concepto, 
               monto,
-              id_demandante 
+              id_demandante,
+              id_expediente,
+              monto_demanda
               from ".clConstantesModelo::correspondencia_table."tbl_expediente_referidos where true";
         if($id_demandante > 0){
             $sql.=" and lngcodigo=".$id_demandante;
