@@ -85,6 +85,8 @@ $xajax->registerFunction('validar_referido');
 $xajax->registerFunction('guardar_referido');
 $xajax->registerFunction('buscarDatosReferidos');
 $xajax->registerFunction('selectDemandanteReferido');
+$xajax->registerFunction('eliminar_referido');
+$xajax->registerFunction('editar_referido');
 
 
 $xajax->processRequest();
@@ -247,6 +249,12 @@ $xajax->printJavascript('../comunes/xajax/');
                     function eliminar_situacion(id_expediente,id_situacion){
                         if(confirm("Desea eliminar esta situacion")){
                             xajax_eliminar_situacion(id_expediente,id_situacion);
+                        }
+                    }
+                    
+                    function eliminar_referido(id_expediente){
+                        if(confirm("Desea eliminar este referido")){
+                            xajax_eliminar_referido(id_expediente);
                         }
                     }
                 </script>
