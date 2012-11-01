@@ -15,6 +15,29 @@
     verificarSession();
     
     
+  function selectAllDptoIntegrantes($id_unidad="", $select= "", $ancho= "60%") 
+  {
+        $respuesta= new xajaxResponse();
+        $data= "";
+        $html= "";        
+        $contacto= new clContactoModelo();        
+        $data= $contacto->selectContactoByIdDepartamento($id_unidad);
+        $html= "";
+        $html= "<select id='id_integrantes_unidad' name='id_integrantes_unidad' style='width:".$ancho."'>";            
+        $html.= "<option value='0'>Seleccione</option>";        
+        for($i= 0; $i < count($data); $i++){
+               $seleccionar= "";
+                if($select == $data[$i]['id_contacto']){
+                    $seleccionar= "SELECTED";
+                }            
+                $html.= "<option value='".$data[$i]['id_contacto']."' ".$seleccionar.">".$data[$i]['strapellido'].', '.$data[$i]['strnombre']."</option>";
+        }
+        $html.= "</select>";
+        $respuesta->assign("capaIdTipoIntegrantesUnidad","innerHTML",$html);
+        return $respuesta;
+    }
+        
+    
     function guardarAgendaExpediente($request){
         $respuesta= new xajaxResponse();
         $agenda= new clTblagenda();
@@ -225,13 +248,13 @@
         return $respuesta;
     }     
     
-    function selectAllAgendaAnexadas($fil_id_tipo=0, $fil_id_evento=0, $fil_id_unidad=0, $fil_id_prioridad=0){
+    function selectAllAgendaAnexadas($fil_id_tipo=0, $fil_id_evento=0, $fil_id_unidad=0, $fil_id_prioridad=0, $fil_id_integrantes_unidad=0, $fil_id_expediente=''){
         $respuesta= new xajaxResponse();
         $proagenda= new clTblagenda();
         $data= "";
         $html= "";
-	if (($fil_id_tipo>0) or ($fil_id_evento>0) or ($fil_id_unidad>0) or ($fil_id_prioridad>0))  {
-            $data= $proagenda->selectFiltrarAgendaAnexadas($fil_id_tipo, $fil_id_evento, $fil_id_unidad, $fil_id_prioridad);
+	if (($fil_id_tipo>0) or ($fil_id_evento>0) or ($fil_id_unidad>0) or ($fil_id_prioridad>0)  or ($fil_id_integrantes_unidad>0)  or ($fil_id_expediente!=''))  {
+            $data= $proagenda->selectFiltrarAgendaAnexadas($fil_id_tipo, $fil_id_evento, $fil_id_unidad, $fil_id_prioridad, $fil_id_integrantes_unidad, $fil_id_expediente);
         }
         else
         {
@@ -381,13 +404,13 @@
         return $respuesta;
     } 
     
-    function selectAllAgendaBorrados($fil_id_tipo=0, $fil_id_evento=0, $fil_id_unidad=0, $fil_id_prioridad=0){
+    function selectAllAgendaBorrados($fil_id_tipo=0, $fil_id_evento=0, $fil_id_unidad=0, $fil_id_prioridad=0, $fil_id_integrantes_unidad=0, $fil_id_expediente=''){
         $respuesta= new xajaxResponse();
         $proagenda= new clTblagenda();
         $data= "";
         $html= "";
-	if (($fil_id_tipo>0) or ($fil_id_evento>0) or ($fil_id_unidad>0) or ($fil_id_prioridad>0))  {
-            $data= $proagenda->selectFiltrarAgendaBorrados($fil_id_tipo, $fil_id_evento, $fil_id_unidad, $fil_id_prioridad);
+	if (($fil_id_tipo>0) or ($fil_id_evento>0) or ($fil_id_unidad>0) or ($fil_id_prioridad>0)  or ($fil_id_integrantes_unidad>0)  or ($fil_id_expediente!=''))  {
+            $data= $proagenda->selectFiltrarAgendaBorrados($fil_id_tipo, $fil_id_evento, $fil_id_unidad, $fil_id_prioridad, $fil_id_integrantes_unidad, $fil_id_expediente);
         }
         else
         {
@@ -856,7 +879,7 @@
         $estados= clConstantesModelo::combos();
         $data= $maestro->selectAllMaestroHijos($estados['tipo_departamento_agenda'], "stritema");
         $html= "";
-        $html= "<select id='id_unidad' name='id_unidad' style='width:".$ancho."' onchange=\"xajax_buscarPersonaPopup(document.frmAgenda.id_unidad.value)\">";            
+        $html= "<select id='id_unidad' name='id_unidad' style='width:".$ancho."' onchange=\"xajax_selectAllDptoIntegrantes(document.frmAgenda.id_unidad.value)\">";            
         $html.= "<option value='0'>Seleccione</option>";        
         for($i= 0; $i < count($data); $i++){
                $seleccionar= "";
@@ -1090,17 +1113,21 @@
         return $respuesta;
     }     
 
-    function selectAllAgenda($fil_id_tipo=0, $fil_id_evento=0, $fil_id_unidad=0, $fil_id_prioridad=0){
+    function selectAllAgenda($pagina, $fil_id_tipo=0, $fil_id_evento=0, $fil_id_unidad=0, $fil_id_prioridad=0, $fil_id_integrantes_unidad=0, $fil_id_expediente=''){
         $respuesta= new xajaxResponse();
         $proagenda= new clTblagenda();
         $data= "";
         $html= "";
-	if (($fil_id_tipo>0) or ($fil_id_evento>0) or ($fil_id_unidad>0) or ($fil_id_prioridad>0))  {
-            $data= $proagenda->selectFiltrarAgenda($fil_id_tipo, $fil_id_evento, $fil_id_unidad, $fil_id_prioridad);
+	if (($fil_id_tipo>0) or ($fil_id_evento>0) or ($fil_id_unidad>0) or ($fil_id_prioridad>0)  or ($fil_id_integrantes_unidad>0)  or ($fil_id_expediente!=''))  {
+            $dataC= $proagenda->selectFiltrarAgenda($pagina, $fil_id_tipo, $fil_id_evento, $fil_id_unidad, $fil_id_prioridad, $fil_id_integrantes_unidad, $fil_id_expediente);
+            $data= $dataC[0];
+            $paginacion=true;            
         }
         else
         {
-            $data= $proagenda->selectAllAgenda();
+            $dataC= $proagenda->selectAllAgenda($pagina);
+            $data= $dataC[0];
+            $paginacion=true;
         }
         if($data){
             $html= "<div style='border:solid 1px #CCCCCC;background:#f8f8f8'>
@@ -1232,16 +1259,17 @@
             $html="<div class='celda_etiqueta'>No Hay Items Registrados</div>";
         }
         $respuesta->assign("contenedorAgenda","innerHTML",$html);
+        if ($paginacion) $respuesta->assign("pagAgenda","innerHTML",$dataC[1]);           
         return $respuesta;
     }    
     
-    function selectAllAgendaCreados($fil_id_tipo=0, $fil_id_evento=0, $fil_id_unidad=0, $fil_id_prioridad=0){
+    function selectAllAgendaCreados($fil_id_tipo=0, $fil_id_evento=0, $fil_id_unidad=0, $fil_id_prioridad=0, $fil_id_integrantes_unidad=0, $fil_id_expediente=''){
         $respuesta= new xajaxResponse();
         $proagenda= new clTblagenda();
         $data= "";
         $html= "";
-	if (($fil_id_tipo>0) or ($fil_id_evento>0) or ($fil_id_unidad>0) or ($fil_id_prioridad>0))  {
-            $data= $proagenda->selectFiltrarAgendaCreados($fil_id_tipo, $fil_id_evento, $fil_id_unidad, $fil_id_prioridad);
+	if (($fil_id_tipo>0) or ($fil_id_evento>0) or ($fil_id_unidad>0) or ($fil_id_prioridad>0)  or ($fil_id_integrantes_unidad>0)  or ($fil_id_expediente!=''))  {
+            $data= $proagenda->selectFiltrarAgendaCreados($fil_id_tipo, $fil_id_evento, $fil_id_unidad, $fil_id_prioridad, $fil_id_integrantes_unidad, $fil_id_expediente);
         }
         else
         {
