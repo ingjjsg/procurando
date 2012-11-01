@@ -2,8 +2,11 @@
 class clConstantesModelo {
 
   const id = 'REDNI-ito';
+  const administrador_sistema=112; 
 
-  // esquemas
+  
+
+// esquemas
   const siembra_table='public.';
   const seguridad_table='public.';
   const public_table='public.';
