@@ -6,6 +6,7 @@
     $xajax= new xajax();
     $xajax->registerFunction('selectAllAgendaCreados');
     $xajax->registerFunction('llenarSelectTipoAgenda');
+    $xajax->registerFunction('selectAllDptoIntegrantes');       
     $xajax->registerFunction('llenarSelectTipoEvento');
     $xajax->registerFunction('llenarSelectTipoPrioridad');    
     $xajax->registerFunction('selectAllDpto');
@@ -68,8 +69,10 @@
                 var id_tipo= document.frmAgenda.id_tipo.value;
                 var id_evento= document.frmAgenda.id_evento.value;
                 var id_unidad= document.frmAgenda.id_unidad.value;
-                var id_prioridad= document.frmAgenda.id_prioridad.value;                
-                xajax_selectAllAgendaCreados(id_tipo, id_evento, id_unidad, id_prioridad);                        
+                var id_prioridad= document.frmAgenda.id_prioridad.value;    
+                var id_integrantes_unidad= document.frmAgenda.id_integrantes_unidad.value;                  
+                var id_expediente= document.frmAgenda.id_expediente.value;                          
+                xajax_selectAllAgendaCreados(id_tipo, id_evento, id_unidad, id_prioridad, id_integrantes_unidad, id_expediente);                        
                 ver('formulario');
             }
         </script>
@@ -139,7 +142,27 @@
                                                 </select>
                                             </div>
                                         </td>
-                                    </tr>                                    
+                                    </tr>    
+                                  <?php if ($_SESSION['id_profile']==clConstantesModelo::administrador_sistema) { ?>
+                                   <tr>
+                                        <td width="20%">
+                                            Integrantes de la Unidad:
+                                        </td>
+                                        <td width="30%">
+                                            <div id="capaIdTipoIntegrantesUnidad">
+                                                <select id="id_integrantes_unidad" name="id_integrantes_unidad" style='width:60%'>
+                                                    <option value="0">Seleccione</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td width="20%">
+                                           Codigo de Expediente:
+                                        </td>
+                                        <td width="30%">
+                                            <input type="text" class='inputbox82' id="id_expediente" name="id_expediente" size="20" />                             
+                                        </td>
+                                    </tr>     
+                                    <?php } ?>                                       
                                     <tr>
                                         <td align="right" colspan="8">
                                             <input type="button" value="Filtrar" onclick="filtrar();">
