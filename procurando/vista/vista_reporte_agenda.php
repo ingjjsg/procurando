@@ -9,6 +9,7 @@
 
     $xajax->registerFunction('llenarSelectTipoAgenda');
     $xajax->registerFunction('llenarSelectTipoEvento');
+    $xajax->registerFunction('selectAllDptoIntegrantes');      
     $xajax->registerFunction('llenarSelectTipoPrioridad');
     $xajax->registerFunction('llenarSelectTipoEstadoAgenda');
     $xajax->registerFunction('llenarSelectTipoRecordatorio');
@@ -44,7 +45,7 @@
         <script type='text/javascript' src='../comunes/js/funciones.js'></script>
         <script type="text/javascript" src="../comunes/js/prototype.js"></script>
         <script type="text/javascript" src="../comunes/js/effects.js"></script>
-        <script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>
+<!--        <script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>-->
         <script type="text/javascript" src="../comunes/js/tabcontent.js"></script>
       
         <script src="../comunes/js/calendar.js" type="text/javascript"></script>
@@ -199,8 +200,14 @@
                                             </div>
                                         </td>
                                         <td width="20%">
+                                            Integrantes de la Unidad:
                                         </td>
                                         <td width="30%">
+                                            <div id="capaIdTipoIntegrantesUnidad">
+                                                <select id="id_integrantes_unidad" name="id_integrantes_unidad" style='width:60%'>
+                                                    <option value="0">Seleccione</option>
+                                                </select>
+                                            </div>
                                         </td>
                                     </tr>                                        
                                     <tr id="CapaTrabajador" style="display: none;">

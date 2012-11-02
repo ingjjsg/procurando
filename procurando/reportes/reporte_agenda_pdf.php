@@ -3,11 +3,7 @@ require_once 'plantilla_reporte.php';
 require_once '../modelo/ctblagendaModelo.php';
 
 $proagenda= new clTblagenda();
-$data= "";
-$request=  $_GET['data'];
-$data= $proagenda->selectAgendaReporte($request['id_tipo'], $request['id_evento'], $request['id_prioridad'],$request['id_estado'],$request['id_recordatorio'],$request['id_unidad'],$request['id_refiere'],$request['id_tipo_organismo'],$request['id_organismo']);
-        
-
+$data= $proagenda->selectAgendaReporte($_GET['id_tipo'], $_GET['id_evento'], $_GET['id_prioridad'],$_GET['id_estado'],$_GET['id_recordatorio'],$_GET['id_unidad'],$_GET['id_refiere'],$_GET['id_tipo_organismo'],$_GET['id_organismo'],$_GET['id_integrantes_unidad'],0);
 $pdf=new Plantilla("L");
 $pdf->setTitulo("Agendas");
 $pdf->AddPage();

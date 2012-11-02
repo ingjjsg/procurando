@@ -858,7 +858,8 @@ public function llenar($request)
     }
     
     
-    public function selectAgendaReporte($fil_id_tipo, $fil_id_evento, $fil_id_prioridad,$fil_id_estado,$fil_id_recordatorio,$fil_id_unidad,$fil_id_refiere,$fil_id_tipo_organismo,$fil_id_organismo){
+    public function selectAgendaReporte($fil_id_tipo, $fil_id_evento, $fil_id_prioridad,$fil_id_estado,$fil_id_recordatorio,$fil_id_unidad,$fil_id_refiere,$fil_id_tipo_organismo,$fil_id_organismo,$fil_id_integrantes_unidad){
+//exit($fil_id_tipo.'-'.$fil_id_evento.'-'.$fil_id_prioridad.'-'.$fil_id_estado.'-'.$fil_id_recordatorio.'-'.$fil_id_unidad.'-'.$fil_id_refiere.'-'.$fil_id_tipo_organismo.'-'.$fil_id_organismo.'-'.$fil_id_integrantes_unidad);
         $conn= new Conexion();
         $conn->abrirConexion();
         $sql.= "SELECT id_agenda, id_usuario, id_tipo, id_evento, id_prioridad, id_estado, id_recordatorio, id_unidad, fecagenda, strdescripcion, strtitulo, id_expediente, bolborrado, strpersona, id_refiere, visto, id_seguimiento, origen  ";
@@ -868,7 +869,7 @@ public function llenar($request)
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_estado) AS id_estado_agenda ";
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_recordatorio) AS id_recordatorio_agenda ";
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_unidad) AS id_unidad_agenda ";        
-        $sql.=" from ".clConstantesModelo::correspondencia_table."vista_agenda  Where id_agenda>0  and bolborrado=0  and id_usuario=".$_SESSION['id_contacto'];
+        $sql.=" from ".clConstantesModelo::correspondencia_table."vista_agenda  Where id_agenda>0  and bolborrado=0  ";
         if ($fil_id_tipo>0)
            $sql.=" and id_tipo=".$fil_id_tipo."";
         if ($fil_id_evento>0) 
@@ -887,7 +888,12 @@ public function llenar($request)
            $sql.=" and id_tipo_organismo=".$fil_id_tipo_organismo."";
         if ($fil_id_organismo>0)
            $sql.=" and id_organismo=".$fil_id_organismo."";
-//        exit($sql);      
+//        exit($fil_id_integrantes_unidad);
+        if ($fil_id_integrantes_unidad>0)
+           $sql.=" and id_usuario=".$fil_id_integrantes_unidad.""; 
+        if ($_SESSION['id_profile']!=clConstantesModelo::administrador_sistema)  
+           $sql.=" and id_usuario=".$_SESSION['id_contacto'];            
+//                                                      exit($sql);      
         $sql.=" order by id_agenda desc";
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
@@ -905,9 +911,10 @@ public function llenar($request)
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_estado) AS id_estado_agenda ";
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_recordatorio) AS id_recordatorio_agenda ";
         $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_unidad) AS id_unidad_agenda ";        
-        $sql.=" from ".clConstantesModelo::correspondencia_table."vista_agenda  Where id_agenda=".$id_agenda."  and bolborrado=0  and id_usuario=".$_SESSION['id_contacto'];
-       
+        $sql.=" from ".clConstantesModelo::correspondencia_table."vista_agenda  Where id_agenda=".$id_agenda."  and bolborrado=0 ";
+//        $sql.=" from ".clConstantesModelo::correspondencia_table."vista_agenda  Where id_agenda=".$id_agenda."  and bolborrado=0  and id_usuario=".$_SESSION['id_contacto'];       
         $sql.=" order by id_agenda desc";
+//        exit($sql);
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
         $conn->cerrarConexion();        
