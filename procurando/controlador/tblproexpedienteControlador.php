@@ -1310,6 +1310,7 @@ function selectAllActuaciones($id_expediente){
                 $data_abogado_responsable= $abogado->buscarAbogadoResponsable($data[$i]['id_abogado_resp']);
                 if($data_abogado_responsable){
                     $nombre_abogado_responsable=$data_abogado_responsable[0]['strnombre']." ".$data_abogado_responsable[0]['strapellido'];
+                    $cedula_abogado_responsable=$data_abogado_responsable[0]['strdocumento'];
                 }
              $data_abogado_ejecutor= $abogado->buscarAbogado($data[$i][id_abogado_ejecutor],"ejecutor");
              
@@ -1320,7 +1321,7 @@ function selectAllActuaciones($id_expediente){
                             <td align='left'>".$data[$i]['strnroexpediente']."</td>
                             <td align='center' >".$data[$i]['cedula_cliente']."</td>
                             <td align='center' >".$nombre_asistido."</td>
-                            <td align='center' >".$data[$i]['cedula_abogado_responsable']."</td>
+                            <td align='center' >".$cedula_abogado_responsable."</td>
                             <td align='center' >".$nombre_abogado_responsable."</td>
                             <td align='center' >".$data[$i]['cedula_abogado_ejecutor']."</td>
                             <td align='center' >".$nombre_abogado_ejecutor."</td>
@@ -1725,6 +1726,8 @@ function selectAllActuaciones($id_expediente){
     $honorarios = new cltblprohonorariosModelo();
     $functions= new functions();      
     $data = "";
+    
+    
     $data = $expediente->SelectExpediente($lngcodigo);
     if ($data) {
         $respuesta->assign('id_proexpediente', 'value', $data[0]['id_proexpediente']);
@@ -1732,7 +1735,9 @@ function selectAllActuaciones($id_expediente){
         $respuesta->assign('id_abogado_resp', 'value', $data[0]['id_abogado_resp']);
         $respuesta->assign('id_abogado_ejecutor', 'value', $data[0]['id_abogado_ejecutor']);        
         $respuesta->assign('id_cliente', 'value', $data[0]['id_cliente']);
-        $respuesta->assign('id_contrarios', 'value', $data[0]['id_contrarios']);        
+        $respuesta->assign('id_contrarios', 'value', $data[0]['id_contrarios']); 
+        $abogado_responsable=new clProAbogados();
+        $data_abogado_responsable= $abogado_responsable->buscarAbogadoResponsable($data[0]['id_abogado_resp']);
         
         if ($data[0][strnroexpediente]!='')
         {
@@ -1787,7 +1792,8 @@ function selectAllActuaciones($id_expediente){
         $respuesta->assign('fecexpediente', 'value', $data[0][fecexpediente]);
         $respuesta->assign('strdescripcion', 'value', $data[0][strdescripcion]);
         $respuesta->assign('strletrado', 'value', $data[0][strletrado]);        
-        $respuesta->assign('cedula_abogado_responsable', 'value', $data[0][cedula_abogado_responsable]);
+        //$respuesta->assign('cedula_abogado_responsable', 'value', $data[0][cedula_abogado_responsable]);
+        $respuesta->assign('cedula_abogado_responsable', 'value', $data_abogado_responsable[0][strdocumento]);
         $respuesta->assign('cedula_abogado_ejecutor', 'value', $data[0][cedula_abogado_ejecutor]);
         $respuesta->assign('strdireccion_asistido', 'value', $data[0][strdireccion_asistido]);
         $respuesta->assign('strdireccion_conyugue', 'value', $data[0][strdireccion_conyugue]);
