@@ -224,7 +224,7 @@
         $html= "";
         $data =$maestro->selectAllSistemas('id_maestro');
 //        print_r($data);
-        $html= "<select id='id_sistema' name='id_sistemas' style='width:50%' onchange=\"xajax_selectAllMaestroPadres('id_maestro',document.frmcontacto.id_sistemas.value);\">";
+        $html= "<select id='id_sistema' name='id_sistema' style='width:50%' onchange=\"xajax_selectAllMaestroPadres('id_maestro',document.frmcontacto.id_sistema.value);\">";
         $html.= "<option value='0'>Seleccione</option>";
         if (is_array($data)){
             for ($i= 0; $i < count($data); $i++){
@@ -232,6 +232,7 @@
             }
             $html.= "</select>";
         }
+//        $respuesta->assign("id_sistema", "value", 'document.frmcontacto.id_sistemas.value');           
         $respuesta->assign("capaFormulario2","innerHTML",$html);
         return $respuesta;
     }    
@@ -339,6 +340,7 @@
                                 <th width='10%'>Acci&oacute;n</th>
                             </tr>";
             for ($i= 0; $i < count($data); $i++){
+                $id_sistema_padre=$data[$i]['id_sistema'];
                 $html.= "<tr bgcolor='#f8f8f8'onmouseover=\"this.style.background='#f0f0f0';this.style.color='blue'\" onmouseout=\"this.style.background='#f8f8f8';this.style.color='black'\">
                             <td align='center'>".$data[$i]['id_maestro']."</td>
                             <td align='center' >".$data[$i]['id_origen']."</td>
@@ -362,6 +364,7 @@
                         </tr>";
             }
             $html.= "</table></div>";
+            $respuesta->assign("id_sistema_buscado", "value", $id_sistema_padre);            
         }else{
             $html="<div class='celda_etiqueta'>No Hay Maestros Registrados</div>";
         }
