@@ -79,6 +79,7 @@
             <input type="hidden" name="iduser" value="">
             <input type='hidden' name='id_origen' id='id_origen' value='0'>
             <input type='hidden' name='id_maestro' id='id_maestro' value='0'>
+            <input type='hidden' name='id_sistema_buscado' id='id_sistema_buscado' value='0'>                
             <script src="../comunes/js/wz_tooltip/wz_tooltip.js" type="text/javascript"></script>
             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
@@ -94,7 +95,7 @@
                     <td width="15%" class="menu_izq_titulo">Sistema</td>
                     <td width="85%" align="left" class="menu_izq_titulo">
                         <div id='capaFormulario2'>
-                            <select id='id_sistemas' name='id_sistemas' style='width:90%'>
+                            <select id='id_sistema' name='id_sistema' style='width:90%'>
                                 <option value="0">Seleccione</option>
                             </select>
                         </div>
@@ -109,7 +110,7 @@
                 <tr>
                     <td width="15%" class="menu_izq_titulo">Descripción</td>
                     <td width="85%" align="left" class="menu_izq_titulo">
-                        <input type="text" class='inputbox82' id="stritema_busqueda" name="stritema_busqueda" size="30" onKeyDown="xajax_selectAllMaestroPadresLike(document.frmcontacto.stritema_busqueda.value,'id_maestro',document.frmcontacto.id_sistemas.value);" onKeyUp="xajax_selectAllMaestroPadresLike(document.frmcontacto.stritema_busqueda.value,'id_maestro',document.frmcontacto.id_sistemas.value);"/>
+                        <input type="text" class='inputbox82' id="stritema_busqueda" name="stritema_busqueda" size="30" onKeyDown="xajax_selectAllMaestroPadresLike(document.frmcontacto.stritema_busqueda.value,'id_maestro',document.frmcontacto.id_sistema.value);" onKeyUp="xajax_selectAllMaestroPadresLike(document.frmcontacto.stritema_busqueda.value,'id_maestro',document.frmcontacto.id_sistema.value);"/>
                     </td>
                 </tr>                      
             </table>
