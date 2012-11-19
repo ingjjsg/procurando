@@ -16,6 +16,7 @@ class clMaestroModelo {
     private $sngcant;
     private $bolborrado;
     private $id_origen_nuevo;
+    private $id_sistema;    
 
     public function __construct() {
 
@@ -52,6 +53,12 @@ class clMaestroModelo {
         if($request['bolborrado'] != ""){
             $this->bolborrado= $request['bolborrado'];
         }
+        if($request['id_sistema'] > 0){
+            $this->id_sistema= $request['id_sistema'];
+        }
+       else {
+            $this->id_sistema= $request['id_sistema_buscado'];           
+       }
     }
 
     public function getId_maestro(){
@@ -108,7 +115,12 @@ class clMaestroModelo {
     public function setBolborrado($bolborrado){
         $this->bolborrado= $bolborrado;
     }
-
+    public function getId_sistema(){
+        return $this->id_sistema;
+    }    
+    public function setId_sistema($id_sistema){
+        $this->id_sistema= $id_sistema;
+    }
     
     public static function getTieneHijos($id){
         $conn= new Conexion();
@@ -159,15 +171,18 @@ class clMaestroModelo {
     }    
     
     public function insertMaestro(){
-        $conn= new Conexion();
-        $conn->abrirConexion();
-        $sql= "INSERT INTO ".clConstantesModelo::correspondencia_table."tblmaestros (id_origen, stritema, stritemb, stritemc, lngnumero, sngcant) VALUES ";
-        $sql.= "(".$this->getId_origen().", '".$this->getStritema()."', '".$this->getStritemb()."', '".$this->getStritemc()."', ".$this->getLngnumero().", ";
-        $sql.= $this->getSngcant().")";
-//        exit($sql);        
-        $conn->sql=$sql;
-        $retorno= $conn->ejecutarSentencia();
-        $conn->cerrarConexion();
+        if ($this->getId_sistema()!='')
+        {
+            $conn= new Conexion();
+            $conn->abrirConexion();            
+            $sql= "INSERT INTO ".clConstantesModelo::correspondencia_table."tblmaestros (id_origen, stritema, stritemb, stritemc, lngnumero, sngcant, id_sistema) VALUES ";
+            $sql.= "(".$this->getId_origen().", '".$this->getStritema()."', '".$this->getStritemb()."', '".$this->getStritemc()."', ".$this->getLngnumero().", ";
+            $sql.= $this->getSngcant().", ".$this->getId_sistema().")";
+    //        exit($sql);        
+            $conn->sql=$sql;
+            $retorno= $conn->ejecutarSentencia();
+            $conn->cerrarConexion();
+        }
         return $retorno;
     }
     public function updateMaestro(){
