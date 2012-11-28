@@ -22,7 +22,7 @@ class clCrearMenu {
 	{
             $conn= new Conexion();
             $conn->abrirConexion();
-            $sql= "SELECT * FROM  ".clConstantesModelo::correspondencia_table."tblmaestros  WHERE id_origen='".$id_origen."' and bolborrado= 0  order by sngcant";
+            $sql= "SELECT * FROM  ".clConstantesModelo::correspondencia_table."tblmaestros  WHERE id_origen='".$id_origen."' and bolborrado= 0  order by sngcant asc";
             $conn->sql= $sql;
             $data= $conn->ejecutarSentencia(2);
             $conn->cerrarConexion();

@@ -187,6 +187,7 @@ public function llenar($request)
      if($request['id_refer'] != ""){
         $this->set_id_refer($request['id_refer']);
      }
+    else $this->set_id_refer(0);
 
 
      if($request['fecapertura'] != ""){
@@ -227,6 +228,7 @@ public function llenar($request)
      if($request['id_actuacion_persona'] != ""){
         $this->set_id_actuacion_persona($request['id_actuacion_persona']);
      }
+     else $this->set_id_actuacion_persona(0);
 
 
      if($request['id_honorario'] != ""){
@@ -999,6 +1001,19 @@ public function llenar($request)
 //================================FUNCION INSERTAR============================================
 
     
+    public static function getBuscarAbogado($cedula){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $sql="SELECT strcedula FROM ".clConstantesModelo::correspondencia_table."tbl_abogados WHERE trim(strcedula)='".$cedula."'";        
+//        exit($sql);
+        $conn->sql= $sql;
+        $data= $conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();
+        if ($data[0][strcedula])
+        return $data[0][strcedula];
+        else return "";
+    }        
+    
     public static function getExpedienteClienteAgenda($id_cliente){
         $conn= new Conexion();
         $conn->abrirConexion();
@@ -1145,6 +1160,7 @@ public function llenar($request)
              $sql .=" AND id_proexpediente=".$id_expediente;
          }
          $sql.=" order by id_proexpediente asc";
+//         echo $sql;
          $conn->sql=$sql;
          $data = $conn->ejecutarSentencia(2);
          return $data;
@@ -1237,7 +1253,7 @@ public function llenar($request)
          .$this->getId_abogado_ejecutor().","  
          .$this->getId_solicitante().","
          .$this->getId_contrarios ().")";    
-//        exit($sql);         
+        exit($sql);         
          $conn->sql=$sql;
 
         if($conn->ejecutarSentencia()){
