@@ -15,6 +15,7 @@ if (isset($_GET['id'])) {
 
 $xajax = new xajax();
 $xajax->registerFunction('selectSituacionDetalle');
+$xajax->registerFunction('llenarSelectTipoFaseLitigio');
 $xajax->registerFunction('llenarSelectFormularioTipoEstadoMinuta');
 $xajax->registerFunction('llenarSelectTipoTramite');
 $xajax->registerFunction('llenarSelectTipoAtencion');
@@ -343,7 +344,7 @@ $xajax->printJavascript('../comunes/xajax/');
                                                 </td>
                                             </tr>                            
                                             <tr>
-                                                <td width="20%">Tipo de Tramite                                </td>
+                                                <td width="20%">Origen de la Causa                                </td>
                                                 <td width="30%">
                                                     <div id="capaIdTipoTramite">
                                                         <select id="id_tipo_tramite" name="id_tipo_tramite" style='width:50%'>
@@ -351,7 +352,7 @@ $xajax->printJavascript('../comunes/xajax/');
                                                         </select>
                                                     </div>
                                                 </td>   
-                                                <td width="20%">Tipo de Atención</td>
+                                                <td width="20%">Motivo de la Causa</td>
                                                 <td width="30%">
                                                     <div id="capaIdTipoAtencion">
                                                         <select id="id_tipo_atencion" name="id_tipo_atencion" style='width:50%'>
@@ -359,7 +360,21 @@ $xajax->printJavascript('../comunes/xajax/');
                                                         </select>
                                                     </div>                                 
                                                 </td>      
-                                            </tr>                              
+                                            </tr>       
+                                            <tr>
+                                                <td width="20%">Fase del Origen                                </td>
+                                                <td width="30%">
+                                                    <div id="capaIdFaseLitigio">
+                                                        <select id="id_tipo_fase_litigio" name="id_tipo_fase_litigio" style='width:50%'>
+                                                            <option value="0">Seleccione</option>
+                                                        </select>
+                                                    </div>
+                                                </td>   
+                                                <td width="20%"></td>
+                                                <td width="30%">
+                              
+                                                </td>      
+                                            </tr>                                              
                                             <tr>
                                                 <td width="20%">
                                                     Nro Expediente:

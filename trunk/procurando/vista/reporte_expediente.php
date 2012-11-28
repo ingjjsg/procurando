@@ -2,9 +2,7 @@
 
     session_start();
     require_once ('../comunes/php/fpdf/html2fpdf.php');
-    
     require_once '../modelo/ctblproexpedienteModelo.php';
-    
     require_once '../comunes/php/utilidades.php';
     require_once '../modelo/clFunciones.php';
 

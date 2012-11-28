@@ -98,11 +98,6 @@
                         &nbsp;&nbsp;&nbsp;
                         <?php }?>
                         <img src="../comunes/images/filter.png" onmouseover="Tip('Filtros')" onmouseout="UnTip()" border="0" onclick="verForm('formulario');"/>
-                        &nbsp;&nbsp;&nbsp;
-                        <?php 
-                        if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario('expedientes'),'agenda', clConstantesModelo::acciones_expedientes())) {?>
-                        <img src="../comunes/images/ico_16_4201.gif" onmouseover="Tip('Agenda')" onmouseout="UnTip()" border="0" onclick="location.href='vista_agenda_expediente.php'"/>
-                        <?php }?>
                     </td>
                 </tr>
             </table>
