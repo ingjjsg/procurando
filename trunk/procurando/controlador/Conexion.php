@@ -5,7 +5,7 @@
        public $conex;
        private $host= "localhost"; //ambiente de desarrollo
        private $port= "5432";
-       private $dbname= "procurando_hoy";
+       private $dbname= "procurando_produccion";
        private $user= "postgres";
 //       private $password= 'dbadmin$yara$2010';
        private $password= 'postgres';

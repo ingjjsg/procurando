@@ -11,6 +11,7 @@
     require_once '../modelo/clProClientes.php';
     require_once '../modelo/clProContrarios.php';    
     require_once '../modelo/clProAbogados.php';
+    require_once '../modelo/clExpedienteHijo.php';    
     require_once '../comunes/php/utilidades.php';
     require_once '../modelo/clConstantesModelo.php';
     require_once '../modelo/clFunciones.php';
@@ -18,6 +19,156 @@
     require_once '../modelo/clPermisoModelo.php';
 
     verificarSession();
+    
+    function BuscarAbogadoResponsable(){
+        $respuesta= new xajaxResponse();
+        $cedula_buscada='';
+        $cedula_buscada=clProExpediente::getBuscarAbogado($_SESSION['strdocumento']);
+        if ($cedula_buscada!='')
+        {           
+            $respuesta->assign('cedula_abogado_responsable', 'value', $cedula_buscada);          
+        }
+        else 
+        {
+            $respuesta->script("$('save').hide();");                
+            $respuesta->alert("El Usuario no Esta Registrado como Abogado, No puede Abrir un Expedientes");  
+        }
+        return $respuesta;
+    }       
+    
+    function DeleteHijo($id,$id_expediente){
+        $respuesta= new xajaxResponse();
+	$expediente_hijos= new clTblproexpediente_hijos();
+        if ($id)
+        {
+            $expediente_hijos->BorrarHijo($id);
+            $respuesta->script("xajax_HijoExpediente('".$id_expediente."')");              
+            $respuesta->alert("El Menor de Edad se Elimino exitosamente");
+        }
+        return $respuesta;
+    }       
+    
+    function HijoExpediente($id_expediente){
+        $respuesta= new xajaxResponse();
+        $hijos= new clTblproexpediente_hijos();
+        $data= "";
+        $html= "";         
+        $data=$hijos->selectAllHijos($id_expediente);
+        if($data){
+                $html= "<div style='border:solid 1px #CCCCCC;background:#f8f8f8'>
+                            <table style='text-align:center' border='0' class='tablaTitulo' width='100%'>
+                            <tr>
+                                <td colspan=\"5\" align=\"right\" style=\"color:white; border:#CCCCCC solid 0px;\" bgcolor=\"#273785\" >
+                                    <div align=\"center\" style=\"background-image: url('../comunes/images/barra.png')\">
+                                        <strong>LISTADO DE HIJOS</strong>
+                                    </div>                                
+                                </td>
+                            </tr>                               
+                                <tr>
+                                    <th width='15%'>
+                                        <a href='#'>Cédula</a>
+                                    </th>
+                                    <th width='45%'>
+                                        <a href='#'>Nombre</a>
+                                    </th>
+                                    <th width='15%'>
+                                        <a href='#'>Sexo</a>
+                                    </th> 
+                                    <th width='10%'>
+                                        <a href='#'>Fec Nac.</a>
+                                    </th>                                     
+                                    <th width='5%'>
+                                        <a href='#'>Acción</a>
+                                    </th>                                         
+                                </tr>";
+                for ($i= 0; $i < count($data); $i++){
+
+                    $html.= "<tr bgcolor='#f8f8f8'onmouseover=\"this.style.background='#f0f0f0';this.style.color='blue'\" onmouseout=\"this.style.background='#f8f8f8';this.style.color='black'\" >
+                                <td align='center'>".$data[$i]['cedulahijo']."</td>
+                                <td align='center'>".$data[$i]['nombrehijo']."</td>
+                                <td align='center'>".$data[$i]['id_sexo']."</td>                                    
+                                <td align='center'>".$data[$i]['fecnachijo']."</td>                                                                        
+                                <td align='center'>
+                                        <a>
+                                            <img src='../comunes/images/Delete.png' onmouseover='Tip(\"Eliminar Hijos\")' onmouseout='UnTip()' onclick=\"xajax_DeleteHijo('".$data[$i]['id_hijos']."','".$data[$i]['id_proexpediente']."')\">
+                                        </a>                                   
+                                </td>
+                            </tr>";
+                }
+                $html.= "</table></div>";
+            }else{
+                $html="";
+            }
+        $respuesta->script("$('contenedorHijos').show();");            
+        $respuesta->assign("contenedorHijos","innerHTML",$html);
+        return $respuesta;
+    }       
+    
+    function llenarSelectFormularioSexo($select="") {
+        $respuesta= new xajaxResponse();
+        $maestro= new clMaestroModelo();
+        $data= "";
+        $html= "";
+        $estados= clConstantesModelo::combos();
+        $data= $maestro->selectAllMaestroHijos($estados['sexo'], 'stritema', 2);
+        $html= "<select id='id_sexo' name='id_sexo' style='width:50%' >";
+        $html.= "<option value='0'>Seleccione</option>";
+        if($data){
+            for ($i= 0; $i < count($data); $i++){
+               $seleccionar= "";
+                if($select == $data[$i]['id_maestro']){
+                    $seleccionar= "SELECTED";
+                }
+                $html.= "<option value='".$data[$i]['id_maestro']."' ".$seleccionar.">".$data[$i]['stritema']."</option>";
+            }
+            $html.= "</select>";
+        }
+        $respuesta->assign("capaIdHijoDivorcio","innerHTML",$html);
+        return $respuesta;
+    }       
+    
+    
+    function guardar_hijos($request){
+        $respuesta= new xajaxResponse();
+	$expediente_hijos= new clTblproexpediente_hijos();
+        $expediente_hijos->llenar($request);
+        if (clTblproexpediente_hijos::getCedula($expediente_hijos->getCedulahijo())=='')
+        {
+            if ($expediente_hijos->insertar())
+            {
+                $respuesta->alert("El Menor de Edad se inserto exitosamente");
+                $respuesta->assign("id_proexpediente_hijos", "value", "");
+                $respuesta->script('xajax_llenarSelectFormularioSexo()');
+                $respuesta->assign("nombrehijo", "value", "");
+                $respuesta->assign("cedulahijo", "value", "");            
+                $respuesta->assign("fecnachijo", "value", "");            
+                $respuesta->script("xajax_HijoExpediente('".$request['id_proexpediente']."')");            
+            }else{
+                $respuesta->alert("El Menor de Edad en el Expediente no se ha guardado");
+            }
+        }
+        else $respuesta->alert("El Menor de Edad ya fue Registrado en otro Expediente ");
+        return $respuesta;
+    }        
+    
+    function validar_Hijos($request){
+        $respuesta = new xajaxResponse();
+            $campos_validar= array(
+            'Nombre Menor de Edad'    => 'nombrehijo',
+            'Numero Expediente'    => 'id_proexpediente',                
+            'Cedula'    => 'cedulahijo',
+            'Sexo'  => 'id_sexo',
+            'Fecha de Nacimiento'    => 'fecnachijo',
+            );
+            $validacion=  functions::validarFormulario('frminscribir',$request,$campos_validar);
+            if($validacion){
+                $respuesta->alert($validacion['msg']);
+                $respuesta->script($validacion['focus']);
+            }else{
+                $respuesta->script("xajax_guardar_hijos(xajax.getFormValues('frminscribir'))");
+            }
+        return $respuesta;
+    }    
     
     
     function llenarSelectFormularioTipoEstadoMinuta($select="") {
@@ -1209,7 +1360,7 @@ function selectAllActuaciones($id_expediente){
                                 <td align='center'>".$data[$i]['strapellido']."</td>                                    
                                 <td align='center'>
                                         <a>
-                                            <img src='../comunes/images/s_success.png' onmouseover='Tip(\"Elegir Abogado\")' onmouseout='UnTip()' onclick=\"xajax_buscarAbogado('".$data[$i]['id_abogado_ejecutor']."','ejecutor')\">
+                                            <img src='../comunes/images/s_success.png' onmouseover='Tip(\"Elegir Abogado\")' onmouseout='UnTip()' onclick=\"xajax_buscarAbogado('".$data[$i]['id_abogado']."','ejecutor')\">
                                         </a>                                   
                                 </td>
                             </tr>";
@@ -1614,13 +1765,18 @@ function selectAllActuaciones($id_expediente){
     }
     
     function mostrarPestanaDivorcio($pestana){
+         $tipo_tramite=  clConstantesModelo::tipo_tramite();        
+//        exit($tipo_tramite['divorcio']);
          $respuesta= new xajaxResponse();
-         $tipo_tramite=  clConstantesModelo::tipo_tramite();
          if($pestana == $tipo_tramite['divorcio']){
              $respuesta->assign("link8","style.display","inline");
-         }else{
-              $respuesta->assign("link8","style.display","none");
          }
+         elseif($pestana == $tipo_tramite['separacion']){
+             $respuesta->assign("link8","style.display","inline");
+         }
+         else{
+              $respuesta->assign("link8","style.display","none");
+         }         
          return $respuesta;
     }
         
@@ -1771,6 +1927,9 @@ function selectAllActuaciones($id_expediente){
         $respuesta->script('xajax_llenarSelectTipoMinuta("frminscribir")');
         $respuesta->script('xajax_llenarSelectFormularioTipoEstadoMinuta()');        
         $respuesta->script('xajax_llenarSelectFormularioTipoActuacion()');
+        
+        $respuesta->script('xajax_llenarSelectFormularioSexo()');        
+        
         $respuesta->script('xajax_llenarSelectTipoFase("frminscribir")');        
 //        $respuesta->script('xajax_buscarAbogado(' . $data[0][id_abogado_resp] . ',"responsable")');   
         
@@ -1783,6 +1942,7 @@ function selectAllActuaciones($id_expediente){
         $respuesta->script('xajax_buscarConyugue(' . $data[0][id_contrarios] . ')');    
         $respuesta->script('xajax_buscarAbogado(' . $data[0][id_abogado_ejecutor] . ',"ejecutor")');        
         $respuesta->script('xajax_buscarDatosSituaciones(' . $data[0][id_proexpediente] . ')'); 
+        $respuesta->script("xajax_HijoExpediente('".$data[0][id_proexpediente]."')");         
         $respuesta->script("xajax_mostrarPestanaDivorcio(".$data[0][id_tipo_tramite].")");
         $respuesta->script("xajax_verDocumentos('".$data[0][id_tipo_tramite]."','".$data[0][strdocumentos]."')");
         $respuesta->assign('fecapertura', 'value', $data[0][fecapertura]);
@@ -1828,10 +1988,13 @@ function selectAllActuaciones($id_expediente){
             $respuesta->script("$('saveSituacion').hide();"); 
             $respuesta->script("$('saveFase').hide();");          
             $respuesta->script("$('saveActuacion').hide();");            
+            $respuesta->script("$('saveHijos').hide();");               
             $respuesta->script("$('cerrar').hide();");            
             $respuesta->script("$('id_cerrar').show();");
             $respuesta->script("$('id_observacion_cerrar').show();");            
         }
+        else
+        $respuesta->script("$('saveHijos').show();");   
     }
     $respuesta->script("$('load').hide();");            
     return $respuesta;

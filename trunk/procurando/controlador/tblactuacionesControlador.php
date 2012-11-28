@@ -1597,19 +1597,21 @@ function selectAllActuaciones($id_expediente){
     } */
     function llenarSelectTipoTramite($formInput, $select= "", $ancho= "60%") {
         $respuesta= new xajaxResponse();
-        $honorarios= new cltblprohonorariosModelo();
+        $maestro= new clMaestroModelo();        
         $data= "";
         $html= "";
-        $data= $honorarios->selectAllHonorariosCargadosLitigio();
-        $html= "<select id='id_tipo_tramite' name='id_tipo_tramite' style='width:".$ancho."' onchange=\"xajax_llenarSelectTipoAtencion('frminscribir','',document.".$formInput.".id_tipo_tramite.value,'');xajax_mostrarPestanaDivorcio(document.".$formInput.".id_tipo_tramite.value);xajax_verDocumentos(document.".$formInput.".id_tipo_tramite.value,0);\">";
+        $estados= clConstantesModelo::combos();
+        $data= $maestro->selectAllMaestroHijos($estados['tipo_origen'], 'stritema');      
+        //$html= "<select id='id_tipo_tramite' name='id_tipo_tramite' style='width:".$ancho."' onchange=\"xajax_llenarSelectTipoAtencion('frminscribir','',document.".$formInput.".id_tipo_tramite.value,'');xajax_verDocumentos(document.".$formInput.".id_tipo_tramite.value,0);\">";
+        $html= "<select id='id_tipo_tramite' name='id_tipo_tramite' style='width:".$ancho."' onchange=\"xajax_llenarSelectTipoAtencion('frminscribir','',document.".$formInput.".id_tipo_tramite.value,'');xajax_llenarSelectTipoFaseLitigio('frminscribir','',document.".$formInput.".id_tipo_tramite.value,'');\">";        
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
             for ($i= 0; $i < count($data); $i++){
                $seleccionar= "";
-                if($select == $data[$i]['id_tipo']){
+                if($select == $data[$i]['id_maestro']){
                     $seleccionar= "SELECTED";
                 }
-                $html.= "<option value='".$data[$i]['id_tipo']."' ".$seleccionar.">".$data[$i]['stritema']."</option>";
+                $html.= "<option value='".$data[$i]['id_maestro']."' ".$seleccionar.">".$data[$i]['stritema']."</option>";
             }
             $html.= "</select>";
         }
@@ -1620,26 +1622,47 @@ function selectAllActuaciones($id_expediente){
 
     function llenarSelectTipoAtencion($formInput, $select= "", $padre="", $ancho= "60%") {
         $respuesta= new xajaxResponse();
-        $honorarios= new cltblprohonorariosModelo();
+        $maestro= new clMaestroModelo();
         $data= "";
-        $html= "";
-        $data= $honorarios->selectAllTramitesCargados($padre);
-//        print_r($data);
-        $html= "<select id='id_tipo_atencion' name='id_tipo_atencion' style='width:".$ancho."' onchange=\"xajax_verCosto(document.".$formInput.".id_tipo_atencion.value)\">";
+        $html= "";;
+        $data= $maestro->selectAllMaestroHijos($padre,'stritema', 4);        
+        $html= "<select id='id_tipo_atencion' name='id_tipo_atencion' style='width:".$ancho."'>";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
             for ($i= 0; $i < count($data); $i++){
                $seleccionar= "";
-                if($select == $data[$i]['id_tramite']){
+                if($select == $data[$i]['id_maestro']){
                     $seleccionar= "SELECTED";
                 }
-                $html.= "<option value='".$data[$i]['id_honorarios']."-".$data[$i]['id_unidad']."-".$data[$i]['id_tramite']."' ".$seleccionar.">".$data[$i]['stritema']." Año ".$data[$i]['ano']."</option>";
+                $html.= "<option value='".$data[$i]['id_maestro']."' ".$seleccionar.">".$data[$i]['stritema']."</option>";
             }
             $html.= "</select>";
         }
         $respuesta->assign("capaIdTipoAtencion","innerHTML",$html);
         return $respuesta;
     }
+    
+    function llenarSelectTipoFaseLitigio($formInput, $select= "", $padre="", $ancho= "60%") {
+        $respuesta= new xajaxResponse();
+        $maestro= new clMaestroModelo();
+        $data= "";
+        $html= "";;
+        $data= $maestro->selectAllMaestroHijos($padre,'stritema', 4);        
+        $html= "<select id='id_tipo_fase_litigio' name='id_tipo_fase_litigio' style='width:".$ancho."' onchange=\"xajax_verCosto(document.".$formInput.".id_tipo_atencion.value)\">";
+        $html.= "<option value='0'>Seleccione</option>";
+        if($data){
+            for ($i= 0; $i < count($data); $i++){
+               $seleccionar= "";
+                if($select == $data[$i]['id_maestro']){
+                    $seleccionar= "SELECTED";
+                }
+                $html.= "<option value='".$data[$i]['id_maestro']."' ".$seleccionar.">".$data[$i]['stritema']."</option>";
+            }
+            $html.= "</select>";
+        }
+        $respuesta->assign("capaIdFaseLitigio","innerHTML",$html);
+        return $respuesta;
+    }    
 //            $respuesta->script('xajax_llenarSelectTipoAtencion("frminscribir",' . $data[0]['id_tipo_atencion'] . ')');
        /*function llenarSelectTipoAtencion($formInput, $select= "", $padre="", $ancho= "60%") {
         $respuesta= new xajaxResponse();
