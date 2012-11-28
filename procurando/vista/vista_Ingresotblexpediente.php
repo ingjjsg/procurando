@@ -14,7 +14,13 @@
     }
 
     $xajax= new xajax();
-    $xajax->registerFunction('selectSituacionDetalle');  
+    $xajax->registerFunction('DeleteHijo'); 
+    $xajax->registerFunction('BuscarAbogadoResponsable');     
+    $xajax->registerFunction('HijoExpediente');     
+    $xajax->registerFunction('guardar_hijos');     
+    $xajax->registerFunction('llenarSelectFormularioSexo');      
+    $xajax->registerFunction('validar_Hijos');      
+    $xajax->registerFunction('selectSituacionDetalle');    
     $xajax->registerFunction('editar_actuacion');      
     $xajax->registerFunction('llenarSelectFormularioTipoEstadoMinuta');      
     $xajax->registerFunction('llenarSelectTipoTramite');
@@ -114,6 +120,7 @@
                 $("#fecexpediente").mask("99/99/9999");               
                 $("#fecapertura").mask("99/99/9999");        
                 $("#fecseparacion").mask("99/99/9999");   
+                $("#fecnachijo").mask("99/99/9999");                   
             });            
             
             
@@ -146,6 +153,7 @@
                 }
                 else{
                     xajax_llenarNroExpediente();
+                    xajax_BuscarAbogadoResponsable();                    
                     xajax_llenarSelectFormularioTipoEstadoMinuta();
                     xajax_llenarSelectTipoRegimen('frminscribir');
                     xajax_llenarSelectTipoTramite('frminscribir');                    
@@ -161,7 +169,7 @@
                     xajax_llenarSelectFormularioTipoEstadoFisicoExp('');                    
                     xajax_llenarSelectFormularioTipoArchivadorExp('');
                     xajax_llenarSelectFormularioPisoArchivadorExp(''); 
-                    xajax_llenarSelectFormularioGavetaArchivadorExp('');                     
+                    xajax_llenarSelectFormularioGavetaArchivadorExp('');     
                     $('load').hide();
                 }
             }
@@ -215,6 +223,7 @@
                 <script src="../comunes/js/wz_tooltip/wz_tooltip.js" type="text/javascript"></script>
                 <input type="hidden" id="id_proexpediente" name="id_proexpediente" value="<?php echo $lngcodigo_expediente ?>" />
                 <input type="hidden" id="id_proexpediente_actuaciones" name="id_proexpediente_actuaciones" value="" />
+                <input type="hidden" id="id_proexpediente_hijos" name="id_proexpediente_hijos" value="" />                
 		<input type="hidden" id="id_proexpediente_situacion" name="id_proexpediente_situacion" value="" />
                 <input type="hidden" id="id_proexpediente_fase" name="id_proexpediente_fase" value="" />                
                 <input type="hidden" id="id_abogado_resp" name="id_abogado_resp" value="<?php echo $_SESSION['id_contacto']; ?>" />
@@ -381,7 +390,7 @@
                                 <div style="background:#F8F8F8; border:solid 1px #cccccc; width:100%; height:400px" align="left">
                                     <div id="country1"  class="tabcontent" style="height:100%; overflow-y:auto">
                                         <table width="100%" border="0" class="tablaTitulo" >
-                                            <tr>
+                                            <!--<tr>
                                                 <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                                     <div align="left" style="background-image: url('../comunes/images/barra.png')">
                                                         <strong>ACTUACIÓN</strong>
@@ -402,7 +411,7 @@
                                                 <td width="20%">&nbsp;
                                                 </td>
                                                 <td width="30%">&nbsp;</td>
-                                            </tr>             
+                                            </tr> -->            
                                             <tr>
                                                 <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                                     <div align="left" style="background-image: url('../comunes/images/barra.png')">
@@ -475,7 +484,7 @@
                                                     C.I. Abogado Responsable:
                                                 </td>
                                                 <td width="30%">
-                                                    <input type="text" readonly="readonly" class='inputbox82' id="cedula_abogado_responsable" name="cedula_abogado_responsable" size="20" value="<?php echo $_SESSION['strdocumento']; ?>"/>                                  
+                                                    <input type="text" readonly="readonly" class='inputbox82' id="cedula_abogado_responsable" name="cedula_abogado_responsable" size="20" value=""/>                                  
 <!--                                                    <img src="../comunes/images/ico_18_127.gif" onmouseover="Tip('Buscar Abogado Responsable')" onmouseout="UnTip()" border="0" onclick="xajax_buscarAbogado(document.frminscribir.cedula_abogado_responsable.value,'responsable');"/>                                    -->
                                                 </td>
                                                 <td width="20%">
@@ -963,20 +972,22 @@
                                             <tr>
                                                 <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                                     <div align="left" style="background-image: url('../comunes/images/barra.png')">
-                                                        <strong>PORTADA</strong>
+                                                        <strong>CITACIÓN</strong>
                                                     </div>
                                                 </td>
                                             </tr>  
                                             <tr>
                                                 <td width="20%">
-                                                    Referencia ó Titulo:
+                                                    <!--Referencia ó Titulo:-->
                                                 </td>
                                                 <td width="30%">
+                                                    <!--
                                                     <div id="capaIdReferencia">
                                                         <select id="id_refer" name="id_refer" style='width:50%'>
                                                             <option value="0">Seleccione</option>
                                                         </select>
-                                                    </div>                                                
+                                                    </div>
+                                                    -->                                                
                                                 </td>
                                                 <td width="20%">Generar Citación:
                                                 </td>
@@ -1027,7 +1038,7 @@
                                          
                                             <tr>
                                                 <td width="20%">
-                                                    Dirección Asistido:
+                                                    Dirección Solicitante:
                                                 </td>
                                                 <td width="30%">
                                                     <input type="text" class='inputbox82' id="strdireccion_asistido" name="strdireccion_asistido" size="30" />
@@ -1067,7 +1078,65 @@
                                                         <strong>MENORES DE EDAD</strong>
                                                     </div>
                                                 </td>
-                                            </tr>                            
+                                            </tr>            
+                                            <tr>
+                                                <td colspan="6" bgcolor="#F8F8F8" >
+                                                    <div align="right">
+                                                    <img id="saveHijos" style="display:none;" name="saveHijos" src="../comunes/images/disk.png" onmouseover="Tip('Guardar Hijos')" onmouseout="UnTip()" border="0" onclick="xajax_validar_Hijos(xajax.getFormValues('frminscribir'));"/>                                                    
+                                                    </div>
+                                                </td>
+                                            </tr>                                              
+                                            <tr>
+                                                <td width="20%">
+                                                    Nombre:
+                                                </td>
+                                                <td width="30%">
+                                                    <input type="text" class='inputbox82' id="nombrehijo" name="nombrehijo" size="30" />
+                                                </td> 
+                                                <td width="20%">Cédula:
+                                                </td>
+                                                <td width="30%">
+                                                    <input type="text" class='inputbox82' id="cedulahijo" name="cedulahijo" size="10" />
+                                                 </td>                                                
+                                            </tr>    
+                                            <tr>
+                                                <td width="20%">
+                                                    Sexo:
+                                                </td>
+                                                <td width="30%">
+                                                    <div id="capaIdHijoDivorcio">
+                                                        <select id="id_sexo" name="id_sexo" style='width:50%'>
+                                                            <option value="0">Seleccione</option>
+                                                        </select>
+                                                    </div>                                                    </td> 
+                                                <td width="20%">F. Nac.:
+                                                </td>
+                                                <td width="30%">
+                                                        <input id="fecnachijo" name="fecnachijo" type="text"  class='inputbox82' maxlength='20' size='15' value="">
+                                                        <img name="button"  id="lanzador_fecnachijo"  src="../comunes/images/calendar.png" align="middle"/>
+                                                        <script type="text/javascript">
+                                                            Calendar.setup({
+                                                                inputField     :    "fecnachijo",      // id del campo de texto
+                                                                ifFormat       :    "%d/%m/%Y",       // formato de la fecha, cuando se escriba en el campo de texto
+                                                                button         :    "lanzador_fecnachijo"   // el id del botn que lanzar el calendario
+                                                            });
+                                                        </script>                                                          
+                                                 </td>                                                
+                                            </tr>       
+                                            <tr>
+                                                <td colspan="6">
+                                                    <div id="contenedorHijos" style="width:100%;display: none;" align="left">
+                                                        <div align="center"></div>
+                                                    </div>
+                                                </td>
+                                            </tr>                                              
+                                            <tr>
+                                                <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                                    <div align="left" style="background-image: url('../comunes/images/barra.png')">
+                                                        <strong>MANUTENCIÓN</strong>
+                                                    </div>
+                                                </td>
+                                            </tr>                                                    
                                             <tr>
                                                 <td width="20%">
                                                     Monto Obligación Manutención:
