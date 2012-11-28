@@ -367,13 +367,16 @@ class clConstantesModelo {
             'tipo_estado_dictamenes'  => '13767' ,
             'ramo_asociaciones' => '13779',
             'tipo_tramite_litigio' => '13774',
-            'tipo_atencion_litigio' => '13781'
+            'tipo_atencion_litigio' => '13781',
+            'sexo' => '12960',
+            'tipo_origen' => '13813'
         );
         }
         
         public static function tipo_tramite(){
             return array(
-              'divorcio' => '13009'  
+              'divorcio' => '13009',
+              'separacion' => '13808'
             );
         }
 

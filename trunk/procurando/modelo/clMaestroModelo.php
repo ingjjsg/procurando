@@ -230,13 +230,14 @@ class clMaestroModelo {
         return $data;
     }    
     
+    
     public function selectAllMaestroHijos($padre, $campo, $id_sistemas=""){
         $conn= new Conexion();
         $conn->abrirConexion();
         $conn->sql= "";
         if ($id_sistemas!='') $sql_insert="AND a.id_sistema= ".$id_sistemas;
         $sql="SELECT a.*, b.stritema as sistema FROM ".clConstantesModelo::correspondencia_table."tblmaestros_vista a, ".clConstantesModelo::correspondencia_table."tblmaestros_sistemas b WHERE a.id_sistema=b.id_sistema and a.id_origen= ".$padre." ".$sql_insert." AND a.bolborrado= 0 ORDER BY a.".$campo." ".$_SESSION["AD"];
-        //exit($sql);        
+//        exit($sql);        
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
         $conn->cerrarConexion();
