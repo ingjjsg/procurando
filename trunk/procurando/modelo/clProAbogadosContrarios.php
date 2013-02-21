@@ -370,6 +370,34 @@ public function llenar($request)
 
 
 
+
+    public static function getBuscarAbogadoRifRepetido($rif){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $sql="SELECT strrif FROM ".clConstantesModelo::correspondencia_table."tbl_abogados_contrarios WHERE trim(strrif)='".$rif."'";        
+//        exit($sql);
+        $conn->sql= $sql;
+        $data= $conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();
+        if ($data[0][strrif])
+        return $data[0][strrif];
+        else return "";
+    }         
+    
+    public static function getBuscarAbogadoCedulaRepetido($cedula){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $sql="SELECT strcedula FROM ".clConstantesModelo::correspondencia_table."tbl_abogados_contrarios WHERE trim(strcedula)='".$cedula."'";        
+//        exit($sql);
+        $conn->sql= $sql;
+        $data= $conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();
+        if ($data[0][strcedula])
+        return $data[0][strcedula];
+        else return "";
+    }         
+    
+    
 //================================FUNCION INSERTAR============================================
 
 
@@ -534,5 +562,19 @@ public function llenar($request)
          $data = $conn->ejecutarSentencia();
          return $data;
     }
+    
+    public function nextValAbogado() {
+               $conn = new Conexion ();
+               $conn->abrirConexion ();
+               $sql="SELECT last_value as maximo FROM " . clConstantesModelo::correspondencia_table . "tbl_abogados_contrarios_id_abogadoscon_seq";
+               $conn->sql = $sql;
+               $data = $conn->ejecutarSentencia (2);
+               if ($data)
+               {
+                    $maximo=$data[0]['maximo'];
+               }
+               $conn->cerrarConexion ();
+               return $maximo;
+     }     
  }
 ?>

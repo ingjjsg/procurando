@@ -116,6 +116,7 @@ public function llenar($request)
      if($request['inthijos'] != ""){
         $this->set_inthijos($request['inthijos']);
      }
+     else $this->set_inthijos(0);
 
 
      if($request['strcodigopostal'] != ""){
@@ -126,6 +127,7 @@ public function llenar($request)
      if($request['datefecnac'] != ""){
         $this->set_datefecnac($request['datefecnac']);
      }
+     else $this->set_datefecnac(date('d/m/Y'));
 
 
      if($request['strobservacion'] != ""){
@@ -408,6 +410,19 @@ public function llenar($request)
     }
 
 
+    public static function getCedulaClienteExpediente($id){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $sql="SELECT id_solicitante FROM ".clConstantesModelo::correspondencia_table."tblproexpediente WHERE id_solicitante=".$id;        
+        //exit($sql);
+        $conn->sql= $sql;
+        $data= $conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();
+        if ($data[0][id_solicitante])
+        return $data[0][id_solicitante];
+        else return "";
+    }    
+    
     public static function getCedulaCliente($cedula){
         $conn= new Conexion();
         $conn->abrirConexion();
@@ -418,6 +433,19 @@ public function llenar($request)
         $conn->cerrarConexion();
         return $data[0][strcedula];
     }     
+    
+    public static function getBuscarAbogadoCedulaRepetido($cedula){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $sql="SELECT strcedula FROM ".clConstantesModelo::correspondencia_table."tbl_clientes WHERE trim(strcedula)='".$cedula."'";        
+//        exit($sql);
+        $conn->sql= $sql;
+        $data= $conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();
+        if ($data[0][strcedula])
+        return $data[0][strcedula];
+        else return "";
+    }              
 
 
 
@@ -465,6 +493,20 @@ public function llenar($request)
          $conn->cerrarConexion();
          return $retorno;
     }
+    
+    public function nextValCliente() {
+               $conn = new Conexion ();
+               $conn->abrirConexion ();
+               $sql="SELECT last_value as maximo FROM " . clConstantesModelo::correspondencia_table . "tbl_clientes_id_cliente_seq";
+               $conn->sql = $sql;
+               $data = $conn->ejecutarSentencia (2);
+               if ($data)
+               {
+                    $maximo=$data[0]['maximo'];
+               }
+               $conn->cerrarConexion ();
+               return $maximo;
+     }    
 //================================FUNCION CONSULTAR===============================================
 
 
@@ -595,6 +637,25 @@ public function llenar($request)
          $data = $conn->ejecutarSentencia(2);
          return $data;
     }
+    
+    function buscarAsistidoCedula($cedula)
+    {
+         $conn= new Conexion();
+         $conn->abrirConexion();
+         $sql="SELECT id_cliente,strcedula,
+         strnombre,
+         strapellido
+         FROM public.tbl_clientes WHERE bolborrado=0";
+         
+         if($cedula !=""){
+             $sql .=" AND strcedula::integer =".$cedula;
+         }
+//         exit($sql);
+         $conn->sql=$sql;
+         //exit($conn->sql);
+         $data = $conn->ejecutarSentencia(2);
+         return $data;
+    }    
 
 
  }

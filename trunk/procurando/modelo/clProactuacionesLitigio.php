@@ -6,24 +6,18 @@
  * Description of clTblagenda
  * @author jsuarez
  */
- class clTbllitigio_actuaciones {
+ class cltblproactuaciones_litigio {
 
 //=========================== VAR ===================
 
 
 
 
-  private   $id_proexpediente_actuaciones;
+  private   $id_litigio_actuaciones;
 
-  private   $id_tipo_actuacion;
+  private   $id_proactuacion;
 
-  private   $id_actuacion;
-
-  private   $id_escrito;
-
-  private   $strobservacion;
-
-  private   $id_proexpediente;
+  private   $stronombreactuacion;
 
   private   $fecactuacion;
 
@@ -32,6 +26,8 @@
   private   $strdescripcionactuacion;
 
   private   $strexpedientetribunal;
+
+  private   $anexa_agenda;
   
   
 //=========================== FUNCION LLENAR ===================
@@ -42,32 +38,17 @@
 public function llenar($request)
 {
      if($request['id_proexpediente_actuaciones'] != ""){
-        $this->id_proexpediente_actuaciones= $request['id_proexpediente_actuaciones'];
+        $this->id_litigio_actuaciones= $request['id_proexpediente_actuaciones'];
      }
 
 
-     if($request['id_tipo_actuacion'] != ""){
-        $this->id_tipo_actuacion= $request['id_tipo_actuacion'];
+     if($request['id_proactuacion'] != ""){
+        $this->id_proactuacion= $request['id_proactuacion'];
      }
 
 
-     if($request['id_actuacion_hijo'] != ""){
-        $this->id_actuacion= $request['id_actuacion_hijo'];
-     }
-
-
-     if($request['id_nombre_actuacion'] != ""){
-        $this->id_escrito= $request['id_nombre_actuacion'];
-     }
-
-
-     if($request['actu_strobservacion'] != ""){
-        $this->strobservacion= $request['actu_strobservacion'];
-     }
-
-
-     if($request['id_proexpediente'] != ""){
-        $this->id_proexpediente= $request['id_proexpediente'];
+     if($request['stronombreactuacion'] != ""){
+        $this->stronombreactuacion= $request['stronombreactuacion'];
      }
 
 
@@ -89,45 +70,30 @@ public function llenar($request)
      if($request['strexpedientetribunal'] != ""){
         $this->strexpedientetribunal= $request['strexpedientetribunal'];
      }
-    
+
+
+     if($request['id_anexa_actuacion'] != ""){
+        $this->anexa_agenda= $request['id_anexa_actuacion'];
+     }
      
      
 }//=========================== GET ===================
 
 
-
-    public function getId_proexpediente_actuaciones(){
-        return $this->id_proexpediente_actuaciones;
+    public function getId_litigio_actuaciones(){
+        return $this->id_litigio_actuaciones;
     }
 
 
 
-    public function getId_tipo_actuacion(){
-        return $this->id_tipo_actuacion;
+    public function getId_proactuacion(){
+        return $this->id_proactuacion;
     }
 
 
 
-    public function getId_actuacion(){
-        return $this->id_actuacion;
-    }
-
-
-
-    public function getId_escrito(){
-        return $this->id_escrito;
-    }
-
-
-
-    public function getStrobservacion(){
-        return $this->strobservacion;
-    }
-
-
-
-    public function getId_proexpediente(){
-        return $this->id_proexpediente;
+    public function getStronombreactuacion(){
+        return $this->stronombreactuacion;
     }
 
 
@@ -153,44 +119,34 @@ public function llenar($request)
     public function getStrexpedientetribunal(){
         return $this->strexpedientetribunal;
     }
+
+
+
+    public function getAnexa_agenda(){
+        return $this->anexa_agenda;
+    }
+
     
 //=========================== SET ===================
 
 
 
 
-    public function setId_proexpediente_actuaciones($id_proexpediente_actuaciones){
-        return $this->id_proexpediente_actuaciones=$id_proexpediente_actuaciones;
+
+    public function setId_litigio_actuaciones($id_litigio_actuaciones){
+        return $this->id_litigio_actuaciones=$id_litigio_actuaciones;
     }
 
 
 
-    public function setId_tipo_actuacion($id_tipo_actuacion){
-        return $this->id_tipo_actuacion=$id_tipo_actuacion;
+    public function setId_proactuacion($id_proactuacion){
+        return $this->id_proactuacion=$id_proactuacion;
     }
 
 
 
-    public function setId_actuacion($id_actuacion){
-        return $this->id_actuacion=$id_actuacion;
-    }
-
-
-
-    public function setId_escrito($id_escrito){
-        return $this->id_escrito=$id_escrito;
-    }
-
-
-
-    public function setStrobservacion($strobservacion){
-        return $this->strobservacion=$strobservacion;
-    }
-
-
-
-    public function setId_proexpediente($id_proexpediente){
-        return $this->id_proexpediente=$id_proexpediente;
+    public function setStronombreactuacion($stronombreactuacion){
+        return $this->stronombreactuacion=$stronombreactuacion;
     }
 
 
@@ -218,32 +174,59 @@ public function llenar($request)
     }
 
 
-public function insertar()
+
+    public function setAnexa_agenda($anexa_agenda){
+        return $this->anexa_agenda=$anexa_agenda;
+    }
+
+
+public function insertar($id_proactuacion,$id_tipo_organismo_centralizado,$id_tipo_organismo)
 {
     $conn= new Conexion();
     $conn->abrirConexion();
-    $sql="Insert into public.tbllitigio_actuaciones 
+    $sql="Insert into public.tblproactuaciones_litigio 
     (
-    id_tipo_actuacion,
-    id_actuacion,
-    id_escrito,
-    strobservacion,
-    id_proactuacion,
-    fecactuacion,
-    strdescripcionactuacion,
-    strexpedientetribunal) 
-    values (
-    ".$this->getId_tipo_actuacion().",
-    ".$this->getId_actuacion().",
-    ".$this->getId_escrito().",
-    '".$this->getStrobservacion()."',
-    ".$this->getId_proexpediente().",
-    TO_DATE('".$this->getFecactuacion()."', 'DD/MM/YYYY'),
-    '".$this->getStrdescripcionactuacion()."',
-    '".$this->getStrexpedientetribunal()."')";
+        id_proactuacion, 
+        stronombreactuacion, 
+        fecactuacion, 
+        strdescripcionactuacion, 
+        anexa_agenda
+    ) 
+    values 
+    (
+        ".$id_proactuacion.",
+        '".$this->getStronombreactuacion()."',
+        TO_DATE('".$this->getFecactuacion()."', 'DD/MM/YYYY'),
+        '".$this->getStrdescripcionactuacion()."',
+        ".$this->getAnexa_agenda().")";
+//    exit($sql);
     $conn->sql = $sql;
     $conn->ejecutarSentencia();
-    $conn->cerrarConexion();
+
+    if ($this->getAnexa_agenda()==clConstantesModelo::anexa_actuacion_agenda)
+    {
+        $sql_agenda="INSERT INTO public.tblagenda (id_usuario, id_tipo, id_evento, id_prioridad, id_estado,id_recordatorio, id_unidad, fecagenda, strdescripcion, strtitulo,id_expediente, id_tipo_organismo, id_organismo, strpersona, id_refiere, id_contacto, date, origen,tipo_expediente) values (".$_SESSION['id_contacto'].",13221,13216,13205,13212,13208,12015,TO_DATE('".$this->getFecactuacion()."', 'DD/MM/YYYY'),'".$this->getStrdescripcionactuacion()."','".$this->getStronombreactuacion()."',".$this->getId_proactuacion().",".$id_tipo_organismo_centralizado.",".$id_tipo_organismo.",'".$_SESSION['strapellido'].", ".$_SESSION['strnombre']."',13225,0,'2013/01/03, 02:44:30 pm','E',1)";    
+        $conn->sql = $sql_agenda;
+        $conn->ejecutarSentencia();
+        $sql="SELECT last_value as maximo FROM " . clConstantesModelo::correspondencia_table . "tblagenda_id_agenda_seq";
+        $conn->sql = $sql;
+        $data = $conn->ejecutarSentencia (2);
+        if ($data) $id_seguimiento=$data[0]['maximo'];
+        //refiere todo el departamento        
+        $sql_contacto= "SELECT  *  from ".clConstantesModelo::correspondencia_table."tblcontacto  where id_coord_maestro=12015";
+        $conn->sql= $sql_contacto;
+        $datos= $conn->ejecutarSentencia(2);   
+            for ($i= 0; $i < count($datos); $i++){
+                $sql_dos= "INSERT INTO ".clConstantesModelo::correspondencia_table."tblagenda (id_usuario, id_tipo, id_evento, id_prioridad, id_estado,id_recordatorio, id_unidad, fecagenda, strdescripcion, strtitulo,id_expediente, id_tipo_organismo, id_organismo, strpersona, id_refiere, date, id_seguimiento, origen,tipo_expediente) values ";
+                $sql_dos.= "(".$datos[$i][id_contacto].",13221,13216,13205,13212,13208,".$_SESSION['id_coord_maestro'].",TO_DATE('".$this->getFecactuacion()."', 'DD/MM/YYYY'),'".$this->getStrdescripcionactuacion()."','".$this->getStronombreactuacion()."',".$this->getId_proactuacion().",".$id_tipo_organismo_centralizado.",".$id_tipo_organismo.",'".$_SESSION['strapellido'].", ".$_SESSION['strnombre']."',13225,TO_DATE('".$this->getFecactuacion()."', 'DD/MM/YYYY'),".$id_seguimiento.",'R',".clConstantesModelo::$TIPO_EXPEDIENTE['litigio'].")";
+    //exit($sql_dos);            
+                $conn->sql=$sql_dos;
+                $conn->ejecutarSentencia();                
+            }  
+    }
+   
+    $conn->cerrarConexion();    
+    
     return true;
 }
 
@@ -257,16 +240,17 @@ public function update()
 {
     $conn= new Conexion();
     $conn->abrirConexion();
-    $sql="UPDATE public.tbllitigio_actuaciones SET
-    id_tipo_actuacion=".$this->getId_tipo_actuacion().",
-    id_actuacion=".$this->getId_actuacion().",
-    id_escrito=".$this->getId_escrito().",
-    strobservacion='".$this->getStrobservacion()."',
-    id_proactuacion=".$this->getId_proexpediente().",
-    fecactuacion=TO_DATE('".$this->getFecactuacion()."', 'DD/MM/YYYY'),
-    strdescripcionactuacion='".$this->getStrdescripcionactuacion()."',
-    strexpedientetribunal='".$this->getStrexpedientetribunal()."'
-    where id_litigio_actuaciones=".$this->getId_proexpediente_actuaciones();
+    $sql="
+       UPDATE 
+          tblproactuaciones_litigio
+       SET 
+       stronombreactuacion='".$this->getStronombreactuacion()."', 
+       fecactuacion=TO_DATE('".$this->getFecactuacion()."', 'DD/MM/YYYY'), 
+       strdescripcionactuacion='".$this->getStrdescripcionactuacion()."',
+       strexpedientetribunal='".$this->getStrexpedientetribunal()."',
+       anexa_agenda=".$this->getAnexa_agenda()." 
+       WHERE
+       id_litigio_actuaciones=".$this->getId_litigio_actuaciones();
 //    exit($sql);
     $conn->sql = $sql;
     $conn->ejecutarSentencia ();
@@ -280,18 +264,64 @@ public function update()
 
 
 
-    public function Delete()
+    public function Delete($id_litigio_actuaciones)
     {
     $conn= new Conexion();
     $conn->abrirConexion();
-    $sql="UPDATE public.tbllitigio_actuaciones SET
+    $sql="UPDATE public.tblproactuaciones_litigio SET
     bolborrado=1
-    where id_proexpediente_actuaciones=getId_proexpediente_actuaciones()";
-    //exit($sql);
+       WHERE
+       id_litigio_actuaciones=".$id_litigio_actuaciones;
+//    exit($sql);
     $conn->sql=$sql;
     $data = $conn->ejecutarSentencia();
     return $data;
     }
+    
+     public function selectAllActuacionesExpedienteLitigio($id_expediente="") {
+         $conn= new Conexion();
+         $conn->abrirConexion();
+         $sql = "";
+         $sql = "SELECT
+                 b.id_litigio_actuaciones, 
+                 b.id_proactuacion, 
+                 b.stronombreactuacion, 
+                 to_char(b.fecactuacion,'DD/MM/YYYY') as fecactuacion,
+                 b.bolborrado, 
+                 b.strdescripcionactuacion, 
+                 b.strexpedientetribunal, 
+                 b.anexa_agenda,
+                (SELECT stritema FROM " . clConstantesModelo::scsd_table . "tblmaestros a1 WHERE a1.id_maestro=b.anexa_agenda) AS  anexa_agenda_text
+            from
+            " . clConstantesModelo::scsd_table . "tblproactuaciones_litigio b where bolborrado=0 and b.id_proactuacion=".$id_expediente;
+//       exit($sql);
+         $conn->sql=$sql;
+         $data = $conn->ejecutarSentencia(2);
+         return $data;  
+     }
+
+     public function selectDetalleActuacionExpedienteLitigio($id_proactuaciones,$id_expediente_actuacion) {
+               $conn = new Conexion ();
+               $conn->abrirConexion ();
+               $sql = "";
+               $sql = "SELECT
+                        b.id_litigio_actuaciones, 
+                        b.id_proactuacion, 
+                        b.stronombreactuacion, 
+                        to_char(b.fecactuacion,'DD/MM/YYYY') as fecactuacion,
+                        b.bolborrado, 
+                        b.strdescripcionactuacion, 
+                        b.strexpedientetribunal, 
+                        b.anexa_agenda                   
+                    from
+                    " . clConstantesModelo::scsd_table . "tblproactuaciones_litigio b"; 
+                   $sql.=" where bolborrado=0 and id_litigio_actuaciones=".$id_proactuaciones." and id_proactuacion=".$id_expediente_actuacion;
+//                  exit($sql);
+               $conn->sql = $sql;
+               $data = $conn->ejecutarSentencia (2);
+               $conn->cerrarConexion ();
+               return $data;
+     } 
     
     
  } 

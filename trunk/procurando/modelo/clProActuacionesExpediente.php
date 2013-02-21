@@ -74,6 +74,7 @@ public function llenar($request)
      if($request['fecactuacion'] != ""){
         $this->fecactuacion= $request['fecactuacion'];
      }
+     else $this->fecactuacion=date('d/m/Y');
 
 
      if($request['bolborrado'] != ""){
@@ -84,11 +85,13 @@ public function llenar($request)
      if($request['strdescripcionactuacion'] != ""){
         $this->strdescripcionactuacion= $request['strdescripcionactuacion'];
      }
+     else $this->strdescripcionactuacion="";
 
 
      if($request['strexpedientetribunal'] != ""){
         $this->strexpedientetribunal= $request['strexpedientetribunal'];
      }
+     else  $this->strexpedientetribunal="";
     
      
      

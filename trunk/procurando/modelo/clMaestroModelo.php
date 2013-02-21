@@ -231,12 +231,15 @@ class clMaestroModelo {
     }    
     
     
-    public function selectAllMaestroHijos($padre, $campo, $id_sistemas=""){
+    public function selectAllMaestroHijos($padre, $campo, $id_sistemas="", $lngnumero=0){
         $conn= new Conexion();
         $conn->abrirConexion();
         $conn->sql= "";
-        if ($id_sistemas!='') $sql_insert="AND a.id_sistema= ".$id_sistemas;
-        $sql="SELECT a.*, b.stritema as sistema FROM ".clConstantesModelo::correspondencia_table."tblmaestros_vista a, ".clConstantesModelo::correspondencia_table."tblmaestros_sistemas b WHERE a.id_sistema=b.id_sistema and a.id_origen= ".$padre." ".$sql_insert." AND a.bolborrado= 0 ORDER BY a.".$campo." ".$_SESSION["AD"];
+        $sql_insert='';
+        $sql_insert_hijo='';
+        if ($id_sistemas!='') $sql_insert=" AND a.id_sistema= ".$id_sistemas;
+        if ($lngnumero>0) $sql_insert_hijo=" AND a.lngnumero= ".$lngnumero;        
+        $sql="SELECT a.*, b.stritema as sistema FROM ".clConstantesModelo::correspondencia_table."tblmaestros_vista a, ".clConstantesModelo::correspondencia_table."tblmaestros_sistemas b WHERE a.id_sistema=b.id_sistema and a.id_origen= ".$padre." ".$sql_insert." ".$sql_insert_hijo." AND a.bolborrado= 0 ORDER BY a.".$campo." ".$_SESSION["AD"];
 //        exit($sql);        
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
@@ -295,5 +298,34 @@ class clMaestroModelo {
         $conn->cerrarConexion();
         return $data;
     }    
+    
+    public static function getJefeCoordinacion(){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $sql="SELECT strapellido, strnombre FROM ".clConstantesModelo::correspondencia_table."tblcontacto a WHERE a.id_cargo_maestro=".clConstantesModelo::jefeunidad." and a.id_coord_maestro= ".$_SESSION['id_coord_maestro'];
+//        exit($sql);
+        $conn->sql= $sql;
+        $data= $conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();
+        if ($data[0][strapellido])
+        return $data[0][strapellido].', '.$data[0][strnombre];
+        else return "";
+    }  
+    
+    public static function getSecretariaCoordinacion(){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $sql="SELECT strapellido, strnombre FROM ".clConstantesModelo::correspondencia_table."tblcontacto a WHERE a.id_cargo_maestro=".clConstantesModelo::secretaria." and a.id_coord_maestro= ".$_SESSION['id_coord_maestro'];
+//        exit($sql);
+        $conn->sql= $sql;
+        $data= $conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();
+        if ($data[0][strapellido])
+        return $data[0][strapellido].', '.$data[0][strnombre];
+        else return "";
+    }      
+    
+    
+
 }
 ?>
