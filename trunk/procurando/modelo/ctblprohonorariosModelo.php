@@ -5,7 +5,7 @@
 /**
  * Description of clRedactarModelo
  *
- * @author jhuidobro
+ * @author jsuarez
  */
 class cltblprohonorariosModelo {
     private $id_honorarios;

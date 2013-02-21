@@ -6,7 +6,7 @@
 /**
  * Description of clContactoExternoModelo
  *
- * @author jhuidobro
+ * @author jsuarez
  */
 class clContactoExternoModelo {
     private $id_contacto_externo;

@@ -7,7 +7,7 @@ require_once 'clConstantesModelo.php';
 /**
  * Description of ContactoModelo
  *
- * @author jhuidobro
+ * @author jsuarez
  */
 class clContactoModelo {
     private $id_contacto;

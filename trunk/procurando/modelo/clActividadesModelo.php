@@ -5,7 +5,7 @@
 /**
  * Description of clActividades
  *
- * @author jhuidobro
+ * @author jsuarez
  */
 class clActividadesModelo {
     private $id_actividad;

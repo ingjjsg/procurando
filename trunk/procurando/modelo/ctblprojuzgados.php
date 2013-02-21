@@ -4,7 +4,7 @@
 /**
  * Description of clRedactarModelo
  *
- * @author jhuidobro
+ * @author jsuarez
  */
 class cltblprojuzgadosModelo {
     private $id_juzgados;

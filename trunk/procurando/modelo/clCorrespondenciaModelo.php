@@ -4,7 +4,7 @@
 /**
  * Description of clRedactarModelo
  *
- * @author jhuidobro
+ * @author jsuarez
  */
 class clCorrespondenciaModelo {
     private $id_corresp;
