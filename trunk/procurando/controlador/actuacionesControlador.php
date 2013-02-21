@@ -6,6 +6,21 @@
     require_once '../modelo/clPermisoModelo.php';
 
     verificarSession();
+    
+    function eliminar_actuacion($id_actuaciones){
+        $respuesta = new xajaxResponse();
+        $actuacion= new clTblproactuaciones();
+        $data = $actuacion->Delete($id_actuaciones);
+             if($data){
+                $respuesta->alert("La Actuación se ha Eliminado con Exito");
+                $respuesta->script("xajax_selectAllActuaciones()");
+            }else{
+                $respuesta->alert("El Actuación no se ha Eliminado");
+            }
+        
+        
+        return $respuesta;
+    }     
 
 function DetalleActuacion($id_proactuaciones) {
     $respuesta= new xajaxResponse();
@@ -76,7 +91,7 @@ function selectAllActuaciones(){
                             }
                             if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario('actuaciones'),'eliminar', clConstantesModelo::acciones_actuaciones())){
                                 $html.="<a>
-                                            <img src='../comunes/images/script_delete.png' onmouseover='Tip(\"Eliminar Asociacion\")' onmouseout='UnTip()'  onclick=\"if(confirm('¿Desea Eliminar Esta Actuación?')){ xajax_eliminarActuacion('".$datos[$i][id_proactuaciones]."','".$datos[$i][id_proactuaciones]."');alert('Datos Eliminados Correctamente');location.href='./vista_listaAsociaciones.php'}\">
+                                            <img src='../comunes/images/script_delete.png' onmouseover='Tip(\"Eliminar Actuación\")' onmouseout='UnTip()'  onclick=\"if(confirm('¿Desea Eliminar Esta Actuación?')){ xajax_eliminar_actuacion('".$datos[$i][id_proactuaciones]."');alert('Datos Eliminados Correctamente');}\">
                                         </a>";
                             }
                             $html.="</td>

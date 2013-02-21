@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../modelo/clProAbogados.php';
+require_once '../modelo/clProAbogadosRepresentantes.php';
 require_once '../comunes/php/utilidades.php';
 require_once '../modelo/clConstantesModelo.php';
 require_once '../modelo/clMaestroModelo.php';
@@ -8,6 +8,53 @@ require_once '../modelo/clPermisoModelo.php';
 
 verificarSession();
 
+
+     function llenarSelectTipoOrganismo($valor, $select= "", $ancho= "60%") {
+        $respuesta= new xajaxResponse();
+        $maestro= new clMaestroModelo();
+        $data= "";
+        $html= "";
+        $data= $maestro->selectAllMaestroHijos($valor, 'stritema');
+        $html= "<select id='id_organismo' name='id_organismo' style='width:".$ancho."' onchange=\"xajax_llenarSelectOrganismo(document.frmabogado_nuevo.id_tipo_organismo.value)\">";
+        $html.= "<option value='0'>Seleccione</option>";
+        if($data){
+            for ($i= 0; $i < count($data); $i++){
+               $seleccionar= "";
+                if($select == $data[$i]['id_maestro']){
+                    $seleccionar= "SELECTED";
+                }
+                $html.= "<option value='".$data[$i]['id_maestro']."' ".$seleccionar.">".$data[$i]['stritema']."</option>";
+            }
+            $html.= "</select>";
+        }
+        $respuesta->assign("capaIdTipoOrganismo","innerHTML",$html);
+        return $respuesta;
+    }
+
+
+    function llenarSelectCenDes($select="") {
+        $respuesta= new xajaxResponse();
+        $maestro= new clMaestroModelo();
+        $data= "";
+        $html= "";
+        $estados= clConstantesModelo::combos();
+        $data= $maestro->selectAllMaestroHijos($estados['tipo_cen_des'],'stritema', 2);
+        $html= "<select id='id_tipo_organismo' name='id_tipo_organismo' style='width:50%' onchange=\"xajax_llenarSelectTipoOrganismo(document.frmabogado_nuevo.id_tipo_organismo.value);\">";
+        $html.= "<option value='0'>Seleccione</option>";
+        if($data){
+            for ($i= 0; $i < count($data); $i++){
+               $seleccionar= "";
+                if($select == $data[$i]['id_maestro']){
+                    $seleccionar= "SELECTED";
+                }
+                $html.= "<option value='".$data[$i]['id_maestro']."' ".$seleccionar.">".$data[$i]['stritema']."</option>";
+            }
+            $html.= "</select>";
+        }
+        $respuesta->assign("capaIdTipoOrganismoCentralizado","innerHTML",$html);
+        return $respuesta;
+    }     
+    
     
     function BuscarAbogadoCedulaRepetida($str){
         $respuesta=new xajaxResponse();
@@ -15,7 +62,7 @@ verificarSession();
         {
             if (is_numeric($str))
             {
-                if (clProAbogados::getBuscarAbogadoCedulaRepetido($str)){
+            if (clProAbogadosRepresentantes::getBuscarAbogadoCedulaRepetido($str)){
                 $respuesta->assign("strcedula", "value", '');               
                 $respuesta->alert("El N° de Cedula Ya existe");   
                 }
@@ -27,13 +74,15 @@ verificarSession();
             }
         }
         return $respuesta;            
-    } 
+    }    
 
-   function BuscarAbogadoRifRepetido($str=""){
+  
+    
+    function BuscarAbogadoRifRepetido($str=""){
         $respuesta=new xajaxResponse();
         if ($str)
         {
-            if (clProAbogados::getBuscarAbogadoRifRepetido($str))
+            if (clProAbogadosRepresentantes::getBuscarAbogadoRifRepetido($str))
             {
               $respuesta->assign("strrif", "value", '');               
               $respuesta->alert("El N° de Rif Ya existe");   
@@ -43,9 +92,10 @@ verificarSession();
         return $respuesta;            
     }       
 
+
 function buscarDatosAbogados(){
         $respuesta= new xajaxResponse();
-        $abogados= new clProAbogados();
+        $abogados= new clProAbogadosRepresentantes();
         $formulario_accion=  clConstantesModelo::getFormulario_accion('abogados','abodados_procuraduria_litigio');
         $data= "";
         $html= "";
@@ -82,7 +132,7 @@ function buscarDatosAbogados(){
                                 </a>";
                             if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario($formulario_accion['formulario']),'editar', $formulario_accion['accion'])){
                                 $html.="<a>
-                                    <img src='../comunes/images/table_edit.png' onmouseover='Tip(\"Editar\")' onmouseout='UnTip()' onclick=\"location.href='vista_nuevo_abogado.php?id=".$data[$i]['id_abogado']."'\">
+                                    <img src='../comunes/images/table_edit.png' onmouseover='Tip(\"Editar\")' onmouseout='UnTip()' onclick=\"location.href='vista_nuevo_abogados_representantes.php?id=".$data[$i]['id_abogado']."'\">
                                 </a>";
                             }
                              if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario($formulario_accion['formulario']),'eliminar', $formulario_accion['accion'])){
@@ -103,7 +153,7 @@ function buscarDatosAbogados(){
     
     function selectAllAbogadosFiltro($nombre="",$apellido="",$cedula="") {
         $respuesta= new xajaxResponse();
-        $clientes= new clProAbogados();
+        $clientes= new clProAbogadosRepresentantes();
         $formulario_accion=  clConstantesModelo::getFormulario_accion('abogados','abodados_procuraduria_litigio');
         $data= "";
         $html= ""; 
@@ -140,7 +190,7 @@ function buscarDatosAbogados(){
                                 </a>";
                             if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario($formulario_accion['formulario']),'editar', $formulario_accion['accion'])){
                                 $html.="<a>
-                                    <img src='../comunes/images/table_edit.png' onmouseover='Tip(\"Editar\")' onmouseout='UnTip()' onclick=\"location.href='vista_nuevo_abogado.php?id=".$data[$i]['id_abogado']."'\">
+                                    <img src='../comunes/images/table_edit.png' onmouseover='Tip(\"Editar\")' onmouseout='UnTip()' onclick=\"location.href='vista_nuevo_abogados_representantes.php?id=".$data[$i]['id_abogado']."'\">
                                 </a>";
                             }
                              if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario($formulario_accion['formulario']),'eliminar', $formulario_accion['accion'])){
@@ -276,9 +326,10 @@ function buscarDatosAbogados(){
         return $respuesta;
     }
     
+    
     function guardar_abogado($request){
         $respuesta= new xajaxResponse();
-        $abogado= new clProAbogados();
+        $abogado= new clProAbogadosRepresentantes();
         $abogado->llenar($request);
         if ($abogado->get_id_abogado()=='')
         {
@@ -302,21 +353,37 @@ function buscarDatosAbogados(){
         }
         return $respuesta;
     }    
-
     
+    
+//    function guardar_abogado($request){
+//        $respuesta= new xajaxResponse();
+//        $abogado= new clProAbogadosRepresentantes();
+//        $abogado->llenar($request);
+//        $data= $abogado->insertar();
+//        if($data){
+//            $respuesta->alert("El abogado se guardo exitosamente");
+//        }else{
+//            $respuesta->alert("El abogado no se ha guardado");
+//        }
+//        return $respuesta;
+//    }
+//    
     function selectAbogado($lngcodigo) {
     $respuesta = new xajaxResponse();
-    $abogado = new clProAbogados();
+    $abogado = new clProAbogadosRepresentantes();
     $data = "";
     $html = "";
     $data = $abogado->SelectAll($lngcodigo);
     if ($data) {
+//        exit($data[0]['id_tipo_organismo']);
         $respuesta->assign('id_abogado', 'value', $data[0]['id_abogado']);
         $respuesta->assign('strnombre', 'value', $data[0]['strnombre']);
         $respuesta->assign('strapellido', 'value', $data[0]['strapellido']);
         $respuesta->assign('strcedula', 'value', $data[0]['strcedula']);
         $respuesta->script('xajax_llenarSelectEstados("frmcliente_nuevo",' . $data[0]['id_estado'] . ')');
         $respuesta->script('xajax_llenarSelectMunicipio(' . $data[0]['id_estado'] . ',' . $data[0]['id_municipio'] . ')');
+        $respuesta->script('xajax_llenarSelectCenDes(' . $data[0]['id_tipo_organismo'] . ')');
+        $respuesta->script('xajax_llenarSelectTipoOrganismo(' . $data[0]['id_tipo_organismo'] . ',' . $data[0]['id_organismo'] . ')');
         $respuesta->assign('strdireccion', 'value', $data[0]['strdireccion']);
         $respuesta->assign('strtelefono', 'value', $data[0]['strtelefono']);
         $respuesta->assign('stremail', 'value', $data[0]['stremail']);
@@ -335,8 +402,6 @@ function buscarDatosAbogados(){
         $respuesta->assign('strcurriculum', 'value', $data[0]['strcurriculum']);
         $respuesta->assign('strnumcolegiado', 'value', $data[0]['strnumcolegiado']);
         $respuesta->assign('strfoto', 'value', $data[0]['strfoto']);
-
-
         $respuesta->assign('strrif', 'value', $data[0]['strrif']);
         $respuesta->assign('strmovil', 'value', $data[0]['strmovil']);
     }
@@ -345,7 +410,7 @@ function buscarDatosAbogados(){
     
     function editar_abogado($request){
         $respuesta= new xajaxResponse();
-        $cliente= new clProAbogados();
+        $cliente= new clProAbogadosRepresentantes();
         $cliente->llenar($request);
         $data= $cliente->Update();
         if($data){
@@ -358,7 +423,7 @@ function buscarDatosAbogados(){
     
     function eliminar_abogado($id_abogado){
         $respuesta = new xajaxResponse();
-        $cliente = new clProAbogados();
+        $cliente = new clProAbogadosRepresentantes();
             $data = $cliente->Delete($id_abogado);
              if($data){
                 $respuesta->alert("El Abogado se ha Eliminado");
@@ -385,21 +450,21 @@ function buscarDatosAbogados(){
         }else if($request['strdireccion'] == ""){
              $respuesta->alert("Ingrese una Direccion");
              $respuesta->script("document.frmcliente_nuevo.strdireccion.focus()");
-        }else if($request['id_estado'] == 0){
-             $respuesta->alert("Seleccione un Estado");
-             $respuesta->script("document.frmabogado_nuevo.id_estado.focus()");
-        }else if($request['id_municipio'] == 0){
-             $respuesta->alert("Seleccione un Municipio");
-             $respuesta->script("document.frmabogado_nuevo.id_municipio.focus()");
-        }else if($request['strtelefono'] == ""){
-             $respuesta->alert("Ingrese un telefono");
-             $respuesta->script("document.frmabogado_nuevo.strtelefono.focus()");
-        }else if($request['stremail'] == ""){
-             $respuesta->alert("Ingrese un Email");
-             $respuesta->script("document.frmabogado_nuevo.stremail.focus()");
-        }elseif($request['id_sexo'] == 0){
-             $respuesta->alert("Seleccione un Sexo");
-             $respuesta->script("document.frmabogado_nuevo.id_sexo.focus()");
+//        }else if($request['id_estado'] == 0){
+//             $respuesta->alert("Seleccione un Estado");
+//             $respuesta->script("document.frmabogado_nuevo.id_estado.focus()");
+//        }else if($request['id_municipio'] == 0){
+//             $respuesta->alert("Seleccione un Municipio");
+//             $respuesta->script("document.frmabogado_nuevo.id_municipio.focus()");
+//        }else if($request['strtelefono'] == ""){
+//             $respuesta->alert("Ingrese un telefono");
+//             $respuesta->script("document.frmabogado_nuevo.strtelefono.focus()");
+//        }else if($request['stremail'] == ""){
+//             $respuesta->alert("Ingrese un Email");
+//             $respuesta->script("document.frmabogado_nuevo.stremail.focus()");
+//        }elseif($request['id_sexo'] == 0){
+//             $respuesta->alert("Seleccione un Sexo");
+//             $respuesta->script("document.frmabogado_nuevo.id_sexo.focus()");
         }else{
            
             $respuesta->script("xajax_guardar_abogado(xajax.getFormValues('frmabogado_nuevo'))");

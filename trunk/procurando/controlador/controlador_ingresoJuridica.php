@@ -93,7 +93,7 @@ verificarSession();
         $data= "";
         $html= "";
         $estados= clConstantesModelo::combos();
-        $data= $maestro->selectAllMaestroHijos($estados['ramo_asociaciones'], 'stritema'); 
+        $data= $maestro->selectAllMaestroHijos($estados['tipo_ramo_asociaciones'], 'stritema'); 
         $html= "<select id='id_ramo' name='id_ramo' style='width:".$ancho."'>";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){

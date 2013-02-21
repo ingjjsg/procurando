@@ -1,6 +1,7 @@
 <?php
     session_start();
-    require_once '../modelo/clProActuacionesExpediente.php';
+    require_once '../modelo/clTblexpediente_historial_usuario.php';
+    require_once '../modelo/clProActuacionesExpediente.php';    
     require_once '../modelo/clProActuaciones.php';    
     require_once '../modelo/clProAsociaciones.php';    
     require_once '../modelo/clMaestroModelo.php';
@@ -20,13 +21,130 @@
 
     verificarSession();
     
+    function buscarAsistidoOnBlur($cedula){
+        $respuesta=new xajaxResponse();
+        $asistido=new clProClientes();
+        $data=$asistido->buscarAsistidoCedula($cedula);
+        if(is_array($data)){
+            $respuesta->assign("strnombre_cliente", "value", $data[0]['strnombre']. " " . $data[0]['strapellido']);
+            $respuesta->assign("id_solicitante", "value", $data[0]['id_cliente']);            
+            $respuesta->assign("cedula_cliente", "value", $data[0]['strcedula']);                    
+            $raz_social=clTblasociaciones::getNombreAsociacion_vista_cliente($data[0]['id_cliente']);
+            if ($raz_social!='')   $respuesta->assign('raz_social', 'value', $raz_social);
+            $respuesta->script("$('contenedorAsistidos').hide();");            
+        }
+        else  {
+            $respuesta->assign("cedula_cliente", "value", "");  
+            $respuesta->assign("strnombre_cliente", "value", "");
+            $respuesta->assign("id_solicitante", "value", "");            
+            $respuesta->alert("Cédula del Solicitante no Existe");}
+            
+        return $respuesta;
+    }    
+    
+    function llenarSelectFormularioAbogadosMotivoReasignar($select= "", $ancho= "60%") {
+        $respuesta= new xajaxResponse();
+        $maestro= new clMaestroModelo();
+//        exit('paso');
+        $data= "";
+        $html= "";
+        $estados= clConstantesModelo::combos();
+        $data= $maestro->selectAllMaestroHijos($estados['tipo_motivo_reasignacion'], 'stritema'); 
+        $html= "<select id='id_motivo_reasignacion' name='id_motivo_reasignacion' style='width:".$ancho."'>";
+        $html.= "<option value='0'>Seleccione</option>";
+        if($data){
+            for ($i= 0; $i < count($data); $i++){
+               $seleccionar= "";
+                if($select == $data[$i]['id_maestro']){
+                    $seleccionar= "SELECTED";
+                }
+                $html.= "<option value='".$data[$i]['id_maestro']."' ".$seleccionar.">".$data[$i]['stritema']."</option>";
+            }
+            $html.= "</select>";
+        }
+        $respuesta->assign("capaIdMotivoReasignacion","innerHTML",$html);
+        return $respuesta;
+    }      
+    
+    
+    function llenarSelectFormularioAbogadosReasignar() {
+        $respuesta= new xajaxResponse();
+        $abogados= new clTblexpediente_historial_usuario();
+        $data= "";
+        $html= "";
+//        $estados= clConstantesModelo::combos();
+        $data= $abogados->selectAbogadosDepartamento();
+        $html= "<select id='id_reasignacion_abogado' name='id_reasignacion_abogado' style='width:50%' >";
+        $html.= "<option value='0'>Seleccione</option>";
+        if($data){
+            for ($i= 0; $i < count($data); $i++){
+               $seleccionar= "";
+                if($_SESSION['id_contacto'] == $data[$i]['id_contacto']){
+                    continue;
+                }
+                $html.= "<option value='".$data[$i]['id_contacto']."' ".$seleccionar.">".strtoupper($data[$i]['strapellido'].", ".$data[$i]['strnombre'])."</option>";
+            }
+            $html.= "</select>";
+        }
+        $respuesta->assign("capaIdAbogadoReasignado","innerHTML",$html);
+        return $respuesta;
+    }         
+    
+    
+    function validar_reasignacion($request){
+        $respuesta = new xajaxResponse();
+        $id_abogado_responsable=clProExpediente::getBuscarIdAbogadoResponsableExpediente($request['id_proexpediente']);
+        if ($_SESSION['id_contacto']==$id_abogado_responsable)
+        {        
+        if( $request['id_proexpediente'] !=""){
+                $campos_validar= array(
+                'Tipo de Motivo para la Reasignación'    => 'id_motivo_reasignacion',
+                'Abogado a Reasignar'    => 'id_reasignacion_abogado',
+                );
+                $validacion=  functions::validarFormulario('frminscribir',$request,$campos_validar);
+                if($validacion){
+                    $respuesta->alert($validacion['msg']);
+                    $respuesta->script($validacion['focus']);
+                }else{
+    //                exit('paso');
+                    $respuesta->script("xajax_guardar_reasignacion(xajax.getFormValues('frminscribir'))");
+                }
+            }
+        }
+        else $respuesta->alert('No es el Abogado responsable del Expediente para Reasignarlo');
+            
+        return $respuesta;
+    }        
+    
+    
+    
+    
+    function guardar_reasignacion($request){
+        $respuesta= new xajaxResponse();
+        $expediente= new clTblexpediente_historial_usuario();
+        $expediente->llenar($request);
+        $cedula=  clTblexpediente_historial_usuario::getNroCedula($request[id_reasignacion_abogado]);
+        $id_nuevo_abogado=  clTblexpediente_historial_usuario::getBuscarIdAbogadoResponsable($cedula);
+        $data= $expediente->update($cedula,$id_nuevo_abogado);
+        if($data){
+            $data= $expediente->insertar();
+            $respuesta->alert("El Expediente se Reasigno Exitosamente, Imprima las Planillas antes de volver al listado, de lo contrario perdera la sesión de este expediente");            
+            $respuesta->script("xajax_buscarDatosExpedientes()");   
+            
+        }else{
+            $respuesta->alert("El Expediente no se Reasigno");
+        }
+        return $respuesta;
+    }    
+    
     function BuscarAbogadoResponsable(){
         $respuesta= new xajaxResponse();
-        $cedula_buscada='';
-        $cedula_buscada=clProExpediente::getBuscarAbogado($_SESSION['strdocumento']);
-        if ($cedula_buscada!='')
+        $data=clProExpediente::getBuscarAbogado2($_SESSION['strdocumento']);
+        if($data)
         {           
-            $respuesta->assign('cedula_abogado_responsable', 'value', $cedula_buscada);          
+            $respuesta->assign('cedula_abogado_responsable', 'value', $data[0][strcedula]);        
+            $respuesta->assign('id_abogado_resp', 'value', $data[0][id_abogado]);          
+            $respuesta->assign('strnombre_abogado_responsable', 'value', $data[0][strapellido].', '.$data[0][strnombre]);            
         }
         else 
         {
@@ -60,7 +178,7 @@
                             <tr>
                                 <td colspan=\"5\" align=\"right\" style=\"color:white; border:#CCCCCC solid 0px;\" bgcolor=\"#273785\" >
                                     <div align=\"center\" style=\"background-image: url('../comunes/images/barra.png')\">
-                                        <strong>LISTADO DE HIJOS</strong>
+                                        <strong>NINOS Y NIÑAS Y/O ADOLECENTES</strong>
                                     </div>                                
                                 </td>
                             </tr>                               
@@ -236,10 +354,10 @@
                                     <a href='#' onclick=\"xajax_orden('id_maestro')\">Expediente</a>
                                 </th>
                                 <th width='5%'>
-                                    <a href='#' onclick=\"xajax_orden('id_origen')\">Cédula Asistido</a>
+                                    <a href='#' onclick=\"xajax_orden('id_origen')\">Cédula Solicitante</a>
                                 </th>
                                 <th width='30%'>
-                                    <a href='#' onclick=\"xajax_orden('stritema')\">Nombre Asistido</a>
+                                    <a href='#' onclick=\"xajax_orden('stritema')\">Nombre Solicitante</a>
                                 </th>
                                 <th width='5%'>
                                     <a href='#' onclick=\"xajax_orden('id_origen')\">Cédula Abogado Responsable</a>
@@ -342,10 +460,10 @@
                                     <a href='#' onclick=\"xajax_orden('id_maestro')\">Expediente</a>
                                 </th>
                                 <th width='5%'>
-                                    <a href='#' onclick=\"xajax_orden('id_origen')\">Cédula Asistido</a>
+                                    <a href='#' onclick=\"xajax_orden('id_origen')\">Cédula Solicitante</a>
                                 </th>
                                 <th width='30%'>
-                                    <a href='#' onclick=\"xajax_orden('stritema')\">Nombre Asistido</a>
+                                    <a href='#' onclick=\"xajax_orden('stritema')\">Nombre Solicitante</a>
                                 </th>
                                 <th width='5%'>
                                     <a href='#' onclick=\"xajax_orden('id_origen')\">Cédula Abogado Responsable</a>
@@ -604,7 +722,7 @@ function selectAllActuaciones($id_expediente){
                                 </td>
                             </tr>                            
                             <tr>
-                                <th width='10%'>
+                                <th width='25%'>
                                     <a href='#' onclick=\"xajax_orden('strrif')\">Tipo Actuación</a>
                                 </th>
                                 <th width='20%'>
@@ -613,7 +731,7 @@ function selectAllActuaciones($id_expediente){
                                 <th width='35%'>
                                     <a href='#' onclick=\"xajax_orden('strnombre_asociacion')\">Nombre</a>
                                 </th>                                
-                                <th width='25%'>
+                                <th width='10%'>
                                     <a href='#' onclick=\"xajax_orden('strdireccion_asociacion')\">Fecha</a>
                                 </th>
                                 <th width='10%'>Acci&oacute;n</th>
@@ -634,6 +752,9 @@ function selectAllActuaciones($id_expediente){
                                            <img src='../comunes/images/script_attach.png' onmouseover=\"Tip('Editar Actuación')\" onmouseout='UnTip()' onclick=\"xajax_selectSituacionDetalle('".$datos[$i][id_proexpediente_actuaciones]."','".$datos[$i][id_proexpediente]."');\">
                                         </a>";
                             }
+                                $html.="<a>
+                                           <img src='../comunes/images/printer.png' onmouseover=\"Tip('Imprimir Actuación')\" onmouseout='UnTip()' onclick=\"location.href='../reportes/reporte_actuacion_oas.php?id=".$datos[$i][id_proexpediente]."&id_actuacion=".$datos[$i][id_proexpediente_actuaciones]."'\">
+                                        </a>";                            
 //                            if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario('actuaciones'),'eliminar', clConstantesModelo::acciones_actuaciones())){
 //                                $html.="<a>
 //                                            <img src='../comunes/images/script_delete.png' onmouseover='Tip(\"Eliminar Asociacion\")' onmouseout='UnTip()'  onclick=\"if(confirm('¿Desea Eliminar Esta Actuación?')){ xajax_eliminarActuacion('".$datos[$i][id_proexpediente_actuaciones]."','".$datos[$i][id_proexpediente]."');alert('Datos Eliminados Correctamente');location.href='./vista_listaAsociaciones.php'}\">
@@ -691,8 +812,6 @@ function selectAllActuaciones($id_expediente){
             'Tipo de Actuación'    => 'id_tipo_actuacion',
             'Actuación'    => 'id_actuacion',
             'Modelo Actuación'  => 'id_escrito',
-            'Observacion'  => 'actu_strobservacion',
-            'Fecha de la Actuación'    => 'fecactuacion',
             'Descripción de la Actuación' => 'strdescripcionactuacion', 
             );
             $validacion=  functions::validarFormulario('frminscribir',$request,$campos_validar);
@@ -1273,7 +1392,7 @@ function selectAllActuaciones($id_expediente){
                             <tr>
                                 <td colspan=\"5\" align=\"right\" style=\"color:white; border:#CCCCCC solid 0px;\" bgcolor=\"#273785\" >
                                     <div align=\"center\" style=\"background-image: url('../comunes/images/barra.png')\">
-                                        <strong>LISTADO DE ASISTIDOS</strong>
+                                        <strong>LISTADO DE SOLICITANTES</strong>
                                     </div>                                
                                 </td>
                             </tr>                               
@@ -1431,10 +1550,10 @@ function selectAllActuaciones($id_expediente){
                                     <a href='#' onclick=\"xajax_orden('id_maestro')\">Expediente</a>
                                 </th>
                                 <th width='5%'>
-                                    <a href='#' onclick=\"xajax_orden('id_origen')\">Cédula Asistido</a>
+                                    <a href='#' onclick=\"xajax_orden('id_origen')\">Cédula Solicitante</a>
                                 </th>
                                 <th width='30%'>
-                                    <a href='#' onclick=\"xajax_orden('stritema')\">Nombre Asistido</a>
+                                    <a href='#' onclick=\"xajax_orden('stritema')\">Nombre Solicitante</a>
                                 </th>
                                 <th width='5%'>
                                     <a href='#' onclick=\"xajax_orden('id_origen')\">Cédula Abogado Responsable</a>
@@ -1461,7 +1580,7 @@ function selectAllActuaciones($id_expediente){
                 $data_abogado_responsable= $abogado->buscarAbogadoResponsable($data[$i]['id_abogado_resp']);
                 if($data_abogado_responsable){
                     $nombre_abogado_responsable=$data_abogado_responsable[0]['strnombre']." ".$data_abogado_responsable[0]['strapellido'];
-                    $cedula_abogado_responsable=$data_abogado_responsable[0]['strdocumento'];
+                    $cedula_abogado_responsable=$data_abogado_responsable[0]['strcedula'];
                 }
              $data_abogado_ejecutor= $abogado->buscarAbogado($data[$i][id_abogado_ejecutor],"ejecutor");
              
@@ -1478,7 +1597,7 @@ function selectAllActuaciones($id_expediente){
                             <td align='center' >".$nombre_abogado_ejecutor."</td>
                             <td align='right'>
                                 <a>
-                                    <img src='../comunes/images/b_pdfdoc.png' onmouseover=\"Tip('Detalles Expediente')\" onmouseout='UnTip()' onclick=\"location.href='reporte_expediente.php?id=".$data[$i]['id_proexpediente']."'\">
+                                    <img src='../comunes/images/b_pdfdoc.png' onmouseover=\"Tip('Detalles Expediente')\" onmouseout='UnTip()' onclick=\"location.href='../reportes/reporte_constancia_portada_oas.php?id=".$data[$i]['id_proexpediente']."'\">
                                 </a>";
                                 if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario('expedientes'),'editar', clConstantesModelo::acciones_expedientes())){
                                 $html.="<a>
@@ -1527,10 +1646,10 @@ function selectAllActuaciones($id_expediente){
                                     <a href='#' onclick=\"xajax_orden('id_maestro')\">Expediente</a>
                                 </th>
                                 <th width='5%'>
-                                    <a href='#' onclick=\"xajax_orden('id_origen')\">Cédula Asistido</a>
+                                    <a href='#' onclick=\"xajax_orden('id_origen')\">Cédula Solicitante</a>
                                 </th>
                                 <th width='30%'>
-                                    <a href='#' onclick=\"xajax_orden('stritema')\">Nombre Asistido</a>
+                                    <a href='#' onclick=\"xajax_orden('stritema')\">Nombre Solicitante</a>
                                 </th>
                                 <th width='5%'>
                                     <a href='#' onclick=\"xajax_orden('id_origen')\">Cédula Abogado Responsable</a>
@@ -1628,6 +1747,29 @@ function selectAllActuaciones($id_expediente){
         return $respuesta;
     } 
 //            $respuesta->script('xajax_llenarSelectTipoAtencion("frminscribir",' . $data[0]['id_tipo_atencion'] . ')');
+//       function llenarSelectTipoAtencion($formInput, $select= "", $padre="", $ancho= "60%") {
+//        $respuesta= new xajaxResponse();
+//        $honorarios= new cltblprohonorariosModelo();
+//        $data= "";
+//        $html= "";
+//        $data= $honorarios->selectAllTramitesCargados($padre);
+////        print_r($data);
+//        $html= "<select id='id_tipo_atencion' name='id_tipo_atencion' style='width:".$ancho."' onchange=\"xajax_verCosto(document.".$formInput.".id_tipo_atencion.value)\">";
+//        $html.= "<option value='0'>Seleccione</option>";
+//        if($data){
+//            for ($i= 0; $i < count($data); $i++){
+//               $seleccionar= "";
+//                if($select == $data[$i]['id_tramite']){
+//                    $seleccionar= "SELECTED";
+//                }
+//                $html.= "<option value='".$data[$i]['id_honorarios']."-".$data[$i]['id_unidad']."-".$data[$i]['id_tramite']."' ".$seleccionar.">".$data[$i]['stritema']." Año ".$data[$i]['ano']."</option>";
+//            }
+//            $html.= "</select>";
+//        }
+//        $respuesta->assign("capaIdTipoAtencion","innerHTML",$html);
+//        return $respuesta;
+//    }
+    
        function llenarSelectTipoAtencion($formInput, $select= "", $padre="", $ancho= "60%") {
         $respuesta= new xajaxResponse();
         $honorarios= new cltblprohonorariosModelo();
@@ -1643,13 +1785,13 @@ function selectAllActuaciones($id_expediente){
                 if($select == $data[$i]['id_tramite']){
                     $seleccionar= "SELECTED";
                 }
-                $html.= "<option value='".$data[$i]['id_honorarios']."-".$data[$i]['id_unidad']."-".$data[$i]['id_tramite']."' ".$seleccionar.">".$data[$i]['stritema']." Año ".$data[$i]['ano']."</option>";
+                $html.= "<option value='".$data[$i]['id_tramite']."' ".$seleccionar.">".$data[$i]['stritema']." Año ".$data[$i]['ano']."</option>";
             }
             $html.= "</select>";
         }
         $respuesta->assign("capaIdTipoAtencion","innerHTML",$html);
         return $respuesta;
-    }
+    }    
     
     function llenarSelectActuacion($formInput, $select= "", $ancho= "60%") {
         $respuesta= new xajaxResponse();
@@ -1679,8 +1821,10 @@ function selectAllActuaciones($id_expediente){
         $maestro= new clMaestroModelo();
         $data= "";
         $html= "";
+//        $estados= clConstantesModelo::combos();
+//        $data= $maestro->selectAllMaestroHijos($estados['tipo_organismo'], 'stritema');
         $estados= clConstantesModelo::combos();
-        $data= $maestro->selectAllMaestroHijos($estados['tipo_organismo'], 'stritema');
+        $data= $maestro->selectAllMaestroHijos($estados['tipo_cen_des'],'stritema', 2);        
         $html= "<select id='id_tipo_organismo' name='id_tipo_organismo' style='width:".$ancho."' onchange=\"xajax_llenarSelectOrganismo(document.".$formInput.".id_tipo_organismo.value)\">";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
@@ -1790,17 +1934,38 @@ function selectAllActuaciones($id_expediente){
         $respuesta= new xajaxResponse();
         $expediente= new clProExpediente();
         $expediente->llenar($request);
-        $nexval = (int) $expediente->nextValExpediente();
-        $data= $expediente->insertar($nexval);
-        if($data){
-            $situacion= new clProExpedienteSituaciones(); 
-            $id=$nexval+1;
-            $data= $situacion->abrirSituacion($id,$expediente->get_fecapertura(),1);            
-            $respuesta->alert("El Expediente se guardo exitosamente");
-            $respuesta->script('xajax_selectExpediente('.$id.')');              
+        if ($expediente->get_id_proexpediente()=='')
+        {   
+            $nexval = (int) $expediente->nextValExpediente();
+            if (stristr($expediente->get_strnroexpediente(),'#'))
+                $expediente->set_strnroexpediente('OAS-' . date('dmY') . '-'.$nexval);
+    //         else 
+    //             $nro_expediente=$expediente->get_strnroexpediente();   
             
-        }else{
-            $respuesta->alert("El Expediente no se ha guardado");
+            if (clProExpediente::getNroExpediente($expediente->get_strnroexpediente())=='')
+            {
+//                exit('paso');  
+                
+                $data= $expediente->insertar();
+                if($data){
+                    $situacion= new clProExpedienteSituaciones(); 
+                    $id=$nexval+1;
+                    $data= $situacion->abrirSituacion($id,$expediente->get_fecapertura(),1);            
+                    $respuesta->alert("El Expediente se guardo exitosamente");
+                    $respuesta->script('xajax_selectExpediente('.$id.')');              
+
+                }else{
+                    $respuesta->alert("El Expediente no se ha guardado");
+                }
+            }
+            else
+                $respuesta->alert("El Nro de Expediente ya Existe");            
+        }
+        else {
+                $data= $expediente->Update();            
+                if($data){
+                    $respuesta->alert("El Expediente se Actualizado exitosamente");
+                }else $respuesta->alert("El Expediente no se ha Actualizado");
         }
         return $respuesta;
     }
@@ -1816,8 +1981,11 @@ function selectAllActuaciones($id_expediente){
         $campos_validar= array(
             'Tipo de Tramite'    => 'id_tipo_tramite',
             'Tipo de atencion'  => 'id_tipo_atencion',
-            'Fecha de Expediente'    => 'fecexpediente',
             'Fecha Apertura' => 'fecapertura',
+            'Cédula del Solicitante' => 'cedula_cliente',  
+            'Cédula del Abogado Ejecutor' => 'cedula_abogado_ejecutor',              
+            'Tipo de Organismo' => 'id_tipo_organismo',
+            'Organismo' => 'id_organismo',            
         );
         $validacion=  functions::validarFormulario('frminscribir',$request,$campos_validar);
         if($validacion){
@@ -1886,6 +2054,8 @@ function selectAllActuaciones($id_expediente){
     
     $data = $expediente->SelectExpediente($lngcodigo);
     if ($data) {
+        $respuesta->script('xajax_llenarSelectFormularioAbogadosMotivoReasignar()');    
+        $respuesta->script('xajax_llenarSelectFormularioAbogadosReasignar()');            
         $respuesta->assign('id_proexpediente', 'value', $data[0]['id_proexpediente']);
         $respuesta->assign('strnroexpediente', 'value', $data[0]['strnroexpediente']);
         $respuesta->assign('id_abogado_resp', 'value', $data[0]['id_abogado_resp']);
@@ -1934,9 +2104,8 @@ function selectAllActuaciones($id_expediente){
 //        $respuesta->script('xajax_buscarAbogado(' . $data[0][id_abogado_resp] . ',"responsable")');   
         
         $respuesta->assign("strnombre_abogado_responsable", "value", $_SESSION['strnombre']. " " . $_SESSION['strapellido']);
-        $respuesta->assign("cedula_abogado_responsable", "value", $_SESSION['strdocumento']);
+        $respuesta->assign("cedula_abogado_responsable", "value", $data[0][cedula_abogado_responsable]);
         $respuesta->assign("id_abogado_resp", "value", $_SESSION['id_contacto']);       
-                
         $respuesta->script('xajax_verCountExpediente(' . $data[0][cedula_cliente] . ')');     
         $respuesta->script('xajax_buscarAsistido(' . $data[0][id_solicitante] . ')');
         $respuesta->script('xajax_buscarConyugue(' . $data[0][id_contrarios] . ')');    
@@ -1953,7 +2122,7 @@ function selectAllActuaciones($id_expediente){
         $respuesta->assign('strdescripcion', 'value', $data[0][strdescripcion]);
         $respuesta->assign('strletrado', 'value', $data[0][strletrado]);        
         //$respuesta->assign('cedula_abogado_responsable', 'value', $data[0][cedula_abogado_responsable]);
-        $respuesta->assign('cedula_abogado_responsable', 'value', $data_abogado_responsable[0][strdocumento]);
+//        $respuesta->assign('cedula_abogado_responsable', 'value', $data_abogado_responsable[0][strdocumento]);
         $respuesta->assign('cedula_abogado_ejecutor', 'value', $data[0][cedula_abogado_ejecutor]);
         $respuesta->assign('strdireccion_asistido', 'value', $data[0][strdireccion_asistido]);
         $respuesta->assign('strdireccion_conyugue', 'value', $data[0][strdireccion_conyugue]);
@@ -1980,6 +2149,18 @@ function selectAllActuaciones($id_expediente){
         $respuesta->script("$('saveSituacion').show();");        
         $respuesta->script("$('saveFase').show();");                
         $respuesta->script("$('saveActuacion').show();");              
+
+        $respuesta->script("$('link3').show();");        
+        $respuesta->script("$('link4').show();");                
+        $respuesta->script("$('link6').show();");        
+        $respuesta->script("$('link7').show();");        
+        $respuesta->script("$('link9').show();");         
+        $respuesta->script("$('saveReasignar').show();");           
+        
+        $respuesta->script("$('portada').show();");                
+        $respuesta->script("$('constancia').show();");              
+        
+        
         $respuesta->script("$('cerrar').show();");        
         if(($data[0][feccierre] !="") or ($data[0][strobservacion_cerrar]!='')) {
             $respuesta->script("xajax_desactivarCampos()");
