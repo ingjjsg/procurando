@@ -4,7 +4,7 @@
 /**
  * Description of maestroModelo
  *
- * @author jhuidobro
+ * @author jsuarez
  */
 class clMaestroModelo {
     private $id_maestro;

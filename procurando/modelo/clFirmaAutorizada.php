@@ -6,7 +6,7 @@
 /**
  * Description of clFirmaAutorizada
  *
- * @author jhuidobro
+ * @author jsuarez
  */
 class clFirmaAutorizada {
     private $id_firma;

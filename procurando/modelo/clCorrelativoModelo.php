@@ -5,7 +5,7 @@
 /**
  * Description of clCorrelativoModelo
  *
- * @author jhuidobro
+ * @author jsuarez
  */
 class clCorrelativoModelo {
     private $id_correlativo;

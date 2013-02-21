@@ -5,7 +5,7 @@
 /**
  * Description of clValidacionModelo
  *
- * @author jhuidobro
+ * @author jsuarez
  */
 class clValidacionModelo {
     private $id_validacion;
