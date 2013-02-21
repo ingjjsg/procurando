@@ -227,6 +227,11 @@
                         $respuesta->alert("¡El Registro Ya Existe!");   
                 }
             }
+            else {
+                        $honorario->updateHonorarios();   
+                        $respuesta->alert("¡El Registro se ha Actualizado exitosamente!");   
+            }
+ 
         }
 	return $respuesta;
     }    

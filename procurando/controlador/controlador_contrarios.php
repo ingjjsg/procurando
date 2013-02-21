@@ -1,9 +1,33 @@
 <?php
+session_start();
 require_once '../modelo/clProContrarios.php';
 require_once '../comunes/php/utilidades.php';
 require_once '../modelo/clConstantesModelo.php';
 require_once '../modelo/clMaestroModelo.php';
 require_once '../modelo/clPermisoModelo.php';
+verificarSession();
+
+
+    function BuscarCedulaRepetida($str){
+        $respuesta=new xajaxResponse();
+        if ($str)
+        {
+            if (is_numeric($str))
+            {
+            if (clProContrarios::getBuscarAbogadoCedulaRepetido($str)){
+                $respuesta->assign("strcedula", "value", '');               
+                $respuesta->alert("El N° de Cedula Ya existe");   
+                }
+            }
+            else {
+//                exit($str.',,,');
+                $respuesta->alert("El N° de Cedula Tiene que ser Numerico");   
+                $respuesta->assign("strcedula", "value", '');               
+            }
+        }
+        return $respuesta;            
+    } 
+
 
 
     function buscar_cedula_contrario($cedula,$id)
@@ -166,7 +190,7 @@ function buscarDatosContrarios(){
         $data= "";
         $html= "";;
         $data= $maestro->selectAllMaestroHijos($valor, 'stritema');
-        $html= "<select id='id_municipio' name='id_municipio' style='width:".$ancho."' onchange=\"xajax_llenarSelectMunicipio(document.".$formInput.".id_estado.value)\">";
+        $html= "<select id='id_municipio' name='id_municipio' style='width:".$ancho."'>";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
             for ($i= 0; $i < count($data); $i++){
@@ -228,19 +252,37 @@ function buscarDatosContrarios(){
         return $respuesta;
     }
     
+    
     function guardar_contrario($request){
         $respuesta= new xajaxResponse();
-        $cliente= new clProContrarios();
-        $cliente->llenar($request);
-        $data= $cliente->insertar();
-        if($data){
-            $respuesta->alert("El Contrario se guardo exitosamente");
-        }else{
-            $respuesta->alert("El Contrario no se ha guardado");
+        $contrario= new clProContrarios();
+        $contrario->llenar($request);
+        if ($contrario->get_id_contrarios()=='')
+        {
+            $data= $contrario->insertar();
+            $id=$contrario->nextValContrario();
+            if($data){
+                $respuesta->script('xajax_selectContrario('.$id.')');
+                $respuesta->alert("El Contrario se inserto exitosamente");
+            }else{
+                $respuesta->alert("El Contrario no se ha guardado");
+            }            
+        }
+        else {
+            $data= $contrario->Update();
+            if($data){
+                $respuesta->script('xajax_selectContrario('.$contrario->get_id_contrarios().')');
+                $respuesta->alert("El Contrario se Actualizo exitosamente");
+            }else{
+                $respuesta->alert("El Contrario no se ha guardado");
+            }    
         }
         return $respuesta;
-    }
+    }    
     
+    
+    
+   
     function selectContrario($lngcodigo){
         $respuesta= new xajaxResponse();
         $clientes= new clProContrarios();
@@ -315,30 +357,6 @@ function buscarDatosContrarios(){
         }else if($request['strcedula'] == ""){
              $respuesta->alert("Ingrese una Cedula");
              $respuesta->script("document.frmcontrario_nuevo.strcedula.focus()");
-        }else if($request['strdireccion'] == ""){
-             $respuesta->alert("Ingrese una Direccion");
-             $respuesta->script("document.frmcontrario_nuevo.strdireccion.focus()");
-        }else if($request['id_estado'] == 0){
-             $respuesta->alert("Seleccione un Estado");
-             $respuesta->script("document.frmcontrario_nuevo.id_estado.focus()");
-        }else if($request['id_municipio'] == 0){
-             $respuesta->alert("Seleccione un Municipio");
-             $respuesta->script("document.frmcontrario_nuevo.id_municipio.focus()");
-        }else if($request['strtelefono'] == ""){
-             $respuesta->alert("Ingrese un telefono");
-             $respuesta->script("document.frmcontrario_nuevo.strtelefono.focus()");
-        }else if($request['stremail'] == ""){
-             $respuesta->alert("Ingrese un Email");
-             $respuesta->script("document.frmcontrario_nuevo.stremail.focus()");
-        }else if($request['id_estado_civil'] == 0){
-             $respuesta->alert("Seleccione un Estado Civil");
-             $respuesta->script("document.frmcontrario_nuevo.id_estado_civil.focus()");
-        }elseif($request['id_sexo'] == 0){
-             $respuesta->alert("Seleccione un Sexo");
-             $respuesta->script("document.frmcontrario_nuevo.id_sexo.focus()");
-        }elseif($request['datefecnac'] == ""){
-             $respuesta->alert("Ingrese una Fecha de Nacimiento");
-             $respuesta->script("document.frmcontrario_nuevo.datefecnac.focus()");
         }else{
            
             $respuesta->script("xajax_guardar_contrario(xajax.getFormValues('frmcontrario_nuevo'))");

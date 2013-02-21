@@ -5,7 +5,44 @@ require_once '../comunes/php/utilidades.php';
 require_once '../modelo/clConstantesModelo.php';
 require_once '../modelo/clMaestroModelo.php';
 require_once '../modelo/clPermisoModelo.php';
+verificarSession();
 
+
+    function BuscarAbogadoCedulaRepetida($str){
+        $respuesta=new xajaxResponse();
+        if ($str)
+        {
+            if (is_numeric($str))
+            {
+                if (clProAbogadosContrarios::getBuscarAbogadoCedulaRepetido($str)){
+                $respuesta->assign("strcedula", "value", '');               
+                $respuesta->alert("El N° de Cedula Ya existe");   
+                }
+            }
+            else {
+//                exit($str.',,,');
+                $respuesta->alert("El N° de Cedula Tiene que ser Numerico");   
+                $respuesta->assign("strcedula", "value", '');               
+            }
+        }
+        return $respuesta;            
+    } 
+
+  
+    
+    function BuscarAbogadoRifRepetido($str=""){
+        $respuesta=new xajaxResponse();
+        if ($str)
+        {
+            if (clProAbogadosContrarios::getBuscarAbogadoRifRepetido($str))
+            {
+              $respuesta->assign("strrif", "value", '');               
+              $respuesta->alert("El N° de Rif Ya existe");   
+            }
+ 
+        }
+        return $respuesta;            
+    }       
  
     
 function formulario_accion(){
@@ -267,15 +304,31 @@ function buscarDatosAbogadosContrarios(){
         $respuesta= new xajaxResponse();
         $abogado= new clProAbogadosContrarios();
         $abogado->llenar($request);
-        $data= $abogado->insertar();
-        if($data){
-            $respuesta->alert("El abogado se guardo exitosamente");
-        }else{
-            $respuesta->alert("El abogado no se ha guardado");
+        if ($abogado->get_id_abogadoscon()=='')
+        {
+            $data= $abogado->insertar();
+            $id=$abogado->nextValAbogado();
+            if($data){
+                $respuesta->script('xajax_selectAbogadoContrario('.$id.')');
+                $respuesta->alert("El Abogado Contrario se inserto exitosamente");
+            }else{
+                $respuesta->alert("El Abogado Contrario no se ha guardado");
+            }            
+        }
+        else {
+            $data= $abogado->Update();
+            if($data){
+                $respuesta->script('xajax_selectAbogadoContrario('.$abogado->get_id_abogadoscon().')');
+                $respuesta->alert("El Abogado Contrario se Actualizo exitosamente");
+            }else{
+                $respuesta->alert("El Abogado Contrario no se ha guardado");
+            }    
         }
         return $respuesta;
-    }
+    }        
     
+    
+   
     function selectAbogadoContrario($lngcodigo) {
     $respuesta = new xajaxResponse();
     $abogado = new clProAbogadosContrarios();
@@ -357,18 +410,6 @@ function buscarDatosAbogadosContrarios(){
         }else if($request['strdireccion'] == ""){
              $respuesta->alert("Ingrese una Direccion");
              $respuesta->script("document.frmcliente_nuevo.strdireccion.focus()");
-        }else if($request['id_estado'] == 0){
-             $respuesta->alert("Seleccione un Estado");
-             $respuesta->script("document.frmabogado_nuevo.id_estado.focus()");
-        }else if($request['id_municipio'] == 0){
-             $respuesta->alert("Seleccione un Municipio");
-             $respuesta->script("document.frmabogado_nuevo.id_municipio.focus()");
-        }else if($request['strtelefono'] == ""){
-             $respuesta->alert("Ingrese un telefono");
-             $respuesta->script("document.frmabogado_nuevo.strtelefono.focus()");
-        }else if($request['stremail'] == ""){
-             $respuesta->alert("Ingrese un Email");
-             $respuesta->script("document.frmabogado_nuevo.stremail.focus()");
 //        }elseif($request['id_sexo'] == 0){
 //             $respuesta->alert("Seleccione un Sexo");
 //             $respuesta->script("document.frmabogado_nuevo.id_sexo.focus()");

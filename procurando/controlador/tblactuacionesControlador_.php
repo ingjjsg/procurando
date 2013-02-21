@@ -1,6 +1,5 @@
 <?php
     session_start();
-    require_once '../modelo/clTblexpediente_historial_usuario.php';
     require_once '../modelo/clProAbogadosRepresentantes.php';
     require_once '../modelo/clproexpedientes_personas_demandadas.php';    
     require_once '../modelo/clproexpedientes_abogados_ejecutores.php';    
@@ -12,7 +11,7 @@
     require_once '../modelo/clProAsociaciones.php';    
     require_once '../modelo/clMaestroModelo.php';
     require_once '../modelo/clActuacionFases.php';    
-    require_once '../modelo/clActuacionesModelo.php';//psdre
+    require_once '../modelo/clActuacionesModelo.php';
     require_once '../modelo/clActuacionSituaciones.php';
     require_once '../modelo/ctblprohonorariosModelo.php';
     require_once '../modelo/clProClientes.php';
@@ -25,106 +24,6 @@
     require_once '../modelo/clPermisoModelo.php';
 
     verificarSession();
-    
-    
-    function llenarSelectFormularioAbogadosMotivoReasignar($select= "", $ancho= "60%") {
-        $respuesta= new xajaxResponse();
-        $maestro= new clMaestroModelo();
-//        exit('paso');
-        $data= "";
-        $html= "";
-        $estados= clConstantesModelo::combos();
-        $data= $maestro->selectAllMaestroHijos($estados['tipo_motivo_reasignacion'], 'stritema'); 
-        $html= "<select id='id_motivo_reasignacion' name='id_motivo_reasignacion' style='width:".$ancho."'>";
-        $html.= "<option value='0'>Seleccione</option>";
-        if($data){
-            for ($i= 0; $i < count($data); $i++){
-               $seleccionar= "";
-                if($select == $data[$i]['id_maestro']){
-                    $seleccionar= "SELECTED";
-                }
-                $html.= "<option value='".$data[$i]['id_maestro']."' ".$seleccionar.">".$data[$i]['stritema']."</option>";
-            }
-            $html.= "</select>";
-        }
-        $respuesta->assign("capaIdMotivoReasignacion","innerHTML",$html);
-        return $respuesta;
-    }      
-    
-    
-    function llenarSelectFormularioAbogadosReasignar() {
-        $respuesta= new xajaxResponse();
-        $abogados= new clTblexpediente_historial_usuario();
-        $data= "";
-        $html= "";
-//        $estados= clConstantesModelo::combos();
-        $data= $abogados->selectAbogadosDepartamento();
-        $html= "<select id='id_reasignacion_abogado' name='id_reasignacion_abogado' style='width:50%'>";
-        $html.= "<option value='0'>Seleccione</option>";
-        if($data){
-            for ($i= 0; $i < count($data); $i++){
-               $seleccionar= "";
-                if($_SESSION['id_contacto'] == $data[$i]['id_contacto']){
-                    continue;
-                }
-                $html.= "<option value='".$data[$i]['id_contacto']."' ".$seleccionar.">".strtoupper($data[$i]['strapellido'].", ".$data[$i]['strnombre'])."</option>";
-            }
-            $html.= "</select>";
-        }
-        $respuesta->assign("capaIdAbogadoReasignado","innerHTML",$html);
-        return $respuesta;
-    }         
-    
-    
-    function validar_reasignacion($request){
-        $respuesta = new xajaxResponse();
-        $id_abogado_responsable=clActuaciones::getBuscarIdAbogadoResponsableExpediente($request['id_proactuacion']);
-        if ($_SESSION['id_contacto']==$id_abogado_responsable)
-        {
-            if( $request['id_proactuacion'] !=""){
-                $campos_validar= array(
-                'Tipo de Motivo para la Reasignación'    => 'id_motivo_reasignacion',
-                'Abogado a Reasignar'    => 'id_reasignacion_abogado',
-                );
-                $validacion=  functions::validarFormulario('frminscribir',$request,$campos_validar);
-                if($validacion){
-                    $respuesta->alert($validacion['msg']);
-                    $respuesta->script($validacion['focus']);
-                }else{
-    //                exit('paso');
-                    $respuesta->script("xajax_guardar_reasignacion(xajax.getFormValues('frminscribir'))");
-                }
-            }
-        }
-        else $respuesta->alert('No es el Abogado responsable del Expediente para Reasignarlo');
-
-        
-        return $respuesta;
-    }        
-    
-    
-    
-    
-    function guardar_reasignacion($request){
-//        exit('paso');
-        $respuesta= new xajaxResponse();
-        $expediente= new clTblexpediente_historial_usuario();
-        $expediente->llenar($request);
-        $cedula=  clTblexpediente_historial_usuario::getNroCedula($request[id_reasignacion_abogado]);
-        $id_nuevo_abogado=  clTblexpediente_historial_usuario::getBuscarIdAbogadoResponsable($cedula);
-        $data= $expediente->updateLitigio($id_nuevo_abogado);
-        if($data){
-            $data= $expediente->insertar();
-            $respuesta->alert("El Expediente se Reasigno Exitosamente, Imprima las Planillas antes de volver al listado, de lo contrario perdera la sesión de este expediente");            
-            $respuesta->script("xajax_buscarDatosExpedientes()");   
-            
-        }else{
-            $respuesta->alert("El Expediente no se Reasigno");
-        }
-        return $respuesta;
-    }    
-        
-    
     
     
     function selectVista_abogados_casos_litigio_cargados_total() {
@@ -220,10 +119,7 @@
         if ($cedula_buscada!='')
         {           
             $respuesta->assign('cedula_abogado_responsable', 'value', $cedula_buscada);          
-            $respuesta->assign('strnombre_abogado_responsable', 'value', clActuaciones::getBuscarAbogadoResponsable($cedula_buscada));          
-            $respuesta->assign('id_abogado_resp', 'value', clActuaciones::getBuscarIdAbogadoResponsable($cedula_buscada));                      
-            
-       }
+        }
         else 
         {
             $respuesta->script("$('save').hide();");                
@@ -551,8 +447,8 @@
             }else{
                 $html="";
             }
-//        $respuesta->script("$('contenedorAbogados').show();");            
         $respuesta->assign("contenedorPersonasDemandadasExpediente","innerHTML",$html);
+        $respuesta->script("$('contenedorPersonasDemandadasExpediente').show();");            
         return $respuesta;
     }    
     
@@ -947,7 +843,7 @@
             $respuesta->assign("div_personas_demandados_demandantes","innerHTML",'<strong>PERSONAS DEMANDANDADAS</strong>');              
             $respuesta->assign("titulo_organismo_vista","innerHTML",'<strong>INFORMACIÓN ORGANISMO DEMANDADO</strong>');  
             $respuesta->assign("sub_titulo_organismo_vista","innerHTML",'<strong>ORGANISMO DEMANDADO</strong>');              
-            $respuesta->assign("div_demandados_demandantes","innerHTML",'<strong>ABOGADOS DEL DEMANDANTE </strong><img src="../comunes/images/user_suit_add.png" onmouseover="Tip(\'Nuevo Abogado\')" onmouseout="UnTip()" border="0" onclick="javascript:$(\'id_tr_abogados_demandantes\').toggle();$(\'contenedorAbogadosDemandantesExpediente\').toggle();"/>');            
+            $respuesta->assign("div_demandados_demandantes","innerHTML",'<strong>ABOGADOS DEL DEMANDANTE </strong><img src="../comunes/images/user_suit_add.png" onmouseover="Tip(\'Nuevo Abogado\')" onmouseout="UnTip()" border="0" onclick="javascript:$(\'id_tr_abogados_demandantes\').toggle();$(\'contenedorAbogadosDemandantesExpediente,\').toggle();"/>');            
             $respuesta->assign("id_actuacion_pestana", "value", clConstantesModelo::demandados);
         }
         else if ($select==clConstantesModelo::demandantes){
@@ -956,7 +852,7 @@
             $respuesta->assign("div_personas_demandados_demandantes","innerHTML",'<strong>PERSONAS DEMANDANTES</strong>');              
             $respuesta->assign("titulo_organismo_vista","innerHTML",'<strong>INFORMACIÓN ORGANISMO DEMANDANTE</strong>');            
             $respuesta->assign("sub_titulo_organismo_vista","innerHTML",'<strong>ORGANISMO DEMANDANTE</strong>');              
-            $respuesta->assign("div_demandados_demandantes","innerHTML",'<strong>ABOGADOS DEL LOS DEMANDADOS </strong><img src="../comunes/images/user_suit_add.png" onmouseover="Tip(\'Nuevo Abogado\')" onmouseout="UnTip()" border="0" onclick="javascript:$(\'id_tr_abogados_demandantes\').toggle();$(\'contenedorAbogadosDemandantesExpediente\').toggle();"/>');                        
+            $respuesta->assign("div_demandados_demandantes","innerHTML",'<strong>ABOGADOS DEL LOS DEMANDADOS </strong><img src="../comunes/images/user_suit_add.png" onmouseover="Tip(\'Nuevo Abogado\')" onmouseout="UnTip()" border="0" onclick="javascript:$(\'id_tr_abogados_demandantes\').toggle();$(\'contenedorAbogadosDemandantesExpediente,\').toggle();"/>');                        
             $respuesta->assign("id_actuacion_pestana", "value", clConstantesModelo::demandantes);
         }            
 //        else {
@@ -2179,6 +2075,7 @@ function selectAllActuaciones($id_expediente){
             }
 //        $respuesta->script("$('contenedorAsistidos').show();");            
         $respuesta->assign("contenedorAbogadosDemandantes","innerHTML",$html);
+        $respuesta->script("$('contenedorAbogadosDemandantes').show();");           
         return $respuesta;
     }
     
@@ -2867,6 +2764,7 @@ function selectAllActuaciones($id_expediente){
     if ($data) {
         if($data[0]['id_demandante'] != ''){
             $data_demandante=$expediente->selectDemandante($data[0]['id_demandante']);
+//            exit(print_r($data_demandante));
             $respuesta->assign('id_demandante','value',$data_demandante[0]['lngcodigo']);
 //            $respuesta->assign('cedula_demandante','value',$data_demandante[0]['cedula']);
 //            $respuesta->assign('strnombre_demandante','value',$data_demandante[0]['nombres']);
@@ -2884,9 +2782,6 @@ function selectAllActuaciones($id_expediente){
 //            }
             
         }
-        $respuesta->script("$('saveReasignar').show();");                
-        $respuesta->script('xajax_llenarSelectFormularioAbogadosMotivoReasignar()');    
-        $respuesta->script('xajax_llenarSelectFormularioAbogadosReasignar()');
         $respuesta->assign('id_proactuacion', 'value', $data[0]['id_proactuacion']);
             $scr = "../vista/vista_uploadDocumento.php?id=" . $data[0]['id_proactuacion'];            
             $html='<iframe  width="100%" scrolling="auto" height="800" frameborder="0" src="'.$scr.'" scrolling="auto" frameborder="0" width="100%" height="600"></iframe>';
@@ -2910,7 +2805,7 @@ function selectAllActuaciones($id_expediente){
             $respuesta->assign("div_personas_demandados_demandantes","innerHTML",'<strong>PERSONAS DEMANDANTES</strong><img src="../comunes/images/user_suit_add.png" onmouseover="Tip(\'Nuevo Persona\')" onmouseout="UnTip()" border="0" onclick="javascript:$(\'contenedorPersonasDemandadas\').hide();$(\'id_tr_personas_demandadas\').toggle();$(\'contenedorPersonasDemandadasExpediente\').toggle();"/>');                           
             $respuesta->assign("titulo_organismo_vista","innerHTML",'<strong>INFORMACIÓN ORGANISMO DEMANDADO</strong>');  
             $respuesta->assign("sub_titulo_organismo_vista","innerHTML",'<strong>ORGANISMO DEMANDADO</strong>');              
-            $respuesta->assign("div_demandados_demandantes","innerHTML",'<strong>ABOGADOS DEL DEMANDANTE </strong><img src="../comunes/images/user_suit_add.png" onmouseover="Tip(\'Nuevo Abogado\')" onmouseout="UnTip()" border="0" onclick="javascript:$(\'contenedorAbogadosDemandantes\').hide();$(\'id_tr_abogados_demandantes\').toggle();$(\'contenedorAbogadosDemandantesExpediente\').toggle();"/>');            
+            $respuesta->assign("div_demandados_demandantes","innerHTML",'<strong>ABOGADOS DEL DEMANDANTE </strong><img src="../comunes/images/user_suit_add.png" onmouseover="Tip(\'Nuevo Abogado\')" onmouseout="UnTip()" border="0" onclick="javascript:$(\'contenedorAbogadosDemandantes\').hide();$(\'id_tr_abogados_demandantes\').toggle();$(\'contenedorAbogadosDemandantesExpediente,\').toggle();"/>');            
             $respuesta->assign("id_actuacion_pestana", "value", clConstantesModelo::demandados);
         }
         else if ($data[0][id_actuacion]==clConstantesModelo::demandantes){
@@ -2919,7 +2814,7 @@ function selectAllActuaciones($id_expediente){
             $respuesta->assign("div_personas_demandados_demandantes","innerHTML",'<strong>PERSONAS DEMANDANDAS</strong><img src="../comunes/images/user_suit_add.png" onmouseover="Tip(\'Nuevo Persona\')" onmouseout="UnTip()" border="0" onclick="javascript:$(\'contenedorPersonasDemandadas\').hide();$(\'id_tr_personas_demandadas\').toggle();$(\'contenedorPersonasDemandadasExpediente\').toggle();"/>');              
             $respuesta->assign("titulo_organismo_vista","innerHTML",'<strong>INFORMACIÓN ORGANISMO DEMANDANTE</strong>');            
             $respuesta->assign("sub_titulo_organismo_vista","innerHTML",'<strong>ORGANISMO DEMANDANTE</strong>');              
-            $respuesta->assign("div_demandados_demandantes","innerHTML",'<strong>ABOGADOS DEL LOS DEMANDADOS </strong><img src="../comunes/images/user_suit_add.png" onmouseover="Tip(\'Nuevo Abogado\')" onmouseout="UnTip()" border="0" onclick="javascript:$(\'contenedorAbogadosDemandantes\').hide();$(\'id_tr_abogados_demandantes\').toggle();$(\'contenedorAbogadosDemandantesExpediente\').toggle();"/>');                        
+            $respuesta->assign("div_demandados_demandantes","innerHTML",'<strong>ABOGADOS DEL LOS DEMANDADOS </strong><img src="../comunes/images/user_suit_add.png" onmouseover="Tip(\'Nuevo Abogado\')" onmouseout="UnTip()" border="0" onclick="javascript:$(\'contenedorAbogadosDemandantes\').hide();$(\'id_tr_abogados_demandantes\').toggle();$(\'contenedorAbogadosDemandantesExpediente,\').toggle();"/>');                        
             $respuesta->assign("id_actuacion_pestana", "value", clConstantesModelo::demandantes);
         }      
         
@@ -2993,8 +2888,7 @@ function selectAllActuaciones($id_expediente){
 //        $respuesta->assign('strrefer', 'value', $data[0][strrefer]);
 //        $respuesta->assign('fecexpediente', 'value', $data[0][fecexpediente]);
 //        $respuesta->assign('strletrado', 'value', $data[0][strletrado]);        
-        $respuesta->assign('cedula_abogado_responsable', 'value', clActuaciones::getBuscarCedulaAbogadoResponsable($data[0]['id_abogado_resp']));
-        $respuesta->assign('strnombre_abogado_responsable', 'value', clActuaciones::getBuscarNombreAbogadoResponsable($data[0]['id_abogado_resp']));        
+//        $respuesta->assign('cedula_abogado_responsable', 'value', $data[0][cedula_abogado_responsable]);
 //        $respuesta->assign('cedula_abogado_ejecutor', 'value', $data[0][cedula_abogado_ejecutor]);
 //        $respuesta->assign('fecadmdem', 'value', $data[0][fecadmdem]);
 //        $respuesta->assign('fecnotdem', 'value', $data[0][fecnotdem]);
@@ -3028,7 +2922,6 @@ function selectAllActuaciones($id_expediente){
         $respuesta->script("$('link6').show();");               
 //        $respuesta->script("$('link7').show();");       
         $respuesta->script("$('link8').show();");       
-        $respuesta->script("$('link10').show();");          
 //        $respuesta->script("$('link9').show();");        
         if(($data[0][feccierre] !="") or ($data[0][strobservacion_cerrar]!='')) {
             $respuesta->script("xajax_desactivarCampos()");

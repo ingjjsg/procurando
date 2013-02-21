@@ -5,7 +5,26 @@ require_once '../modelo/clConstantesModelo.php';
 require_once '../modelo/clMaestroModelo.php';
 require_once '../modelo/clPermisoModelo.php';
 
-
+    function BuscarCedulaRepetida($str=""){
+        $respuesta=new xajaxResponse();
+        if ($str)
+        {
+            if (is_numeric($str))
+            {
+                if (clProClientes::getBuscarAbogadoCedulaRepetido($str))
+                {
+                $respuesta->assign("strcedula", "value", '');               
+                $respuesta->alert("El N° de Cedula Ya existe");   
+                }
+            }
+            else {
+                $respuesta->alert("El N° de Cedula Tiene que ser Numerico");   
+                $respuesta->assign("strcedula", "value", '');               
+                
+            }
+        }
+        return $respuesta;            
+    }  
 
     function buscar_cedula_cliente($cedula,$id)
     {
@@ -230,11 +249,25 @@ function buscarDatosClientes(){
         $respuesta= new xajaxResponse();
         $cliente= new clProClientes();
         $cliente->llenar($request);
-        $data= $cliente->insertar();
-        if($data){
-            $respuesta->alert("El cliente se guardo exitosamente");
-        }else{
-            $respuesta->alert("El Cliente no se ha guardado");
+        if ($cliente->get_id_cliente()=='')
+        {
+            $data= $cliente->insertar();
+            $id=$cliente->nextValCliente();
+            if($data){
+                $respuesta->script('xajax_selectCliente('.$id.')');
+                $respuesta->alert("El Solicitante se inserto exitosamente");
+            }else{
+                $respuesta->alert("El Solicitante no se ha guardado");
+            }            
+        }
+        else {
+            $data= $cliente->Update();
+            if($data){
+                $respuesta->script('xajax_selectCliente('.$cliente->get_id_cliente().')');
+                $respuesta->alert("El Solicitante se Actualizo exitosamente");
+            }else{
+                $respuesta->alert("El Solicitante no se ha guardado");
+            }    
         }
         return $respuesta;
     }
@@ -280,9 +313,9 @@ function buscarDatosClientes(){
         $cliente->llenar($request);
         $data= $cliente->Update();
         if($data){
-            $respuesta->alert("El cliente se actualizo exitosamente");
+            $respuesta->alert("El Solicitante se actualizo exitosamente");
         }else{
-            $respuesta->alert("El Cliente no se ha actualizado");
+            $respuesta->alert("El Solicitante no se ha actualizado");
         }
         return $respuesta;
     }
@@ -290,13 +323,19 @@ function buscarDatosClientes(){
     function eliminar_cliente($id_cliente){
         $respuesta = new xajaxResponse();
         $cliente = new clProClientes();
+        if(clProClientes::getCedulaClienteExpediente($id_cliente)=='')
+        {
             $data = $cliente->Delete($id_cliente);
              if($data){
-                $respuesta->alert("El cliente se ha Eliminado");
+                $respuesta->alert("El Solicitante se ha Eliminado");
                 $respuesta->script("xajax_buscarDatosClientes()");
             }else{
-                $respuesta->alert("El Cliente no se ha Eliminado");
+                $respuesta->alert("El Solicitante no se ha Eliminado");
             }
+        }
+        else {
+                $respuesta->alert("El Solicitante posee Expediente no se puede Eliminar");
+        }
         
         
         return $respuesta;
@@ -316,27 +355,6 @@ function buscarDatosClientes(){
         }else if($request['strdireccion'] == ""){
              $respuesta->alert("Ingrese una Direccion");
              $respuesta->script("document.frmcliente_nuevo.strdireccion.focus()");
-        }else if($request['id_estado'] == 0){
-             $respuesta->alert("Seleccione un Estado");
-             $respuesta->script("document.frmcliente_nuevo.id_estado.focus()");
-        }else if($request['id_municipio'] == 0){
-             $respuesta->alert("Seleccione un Municipio");
-             $respuesta->script("document.frmcliente_nuevo.id_municipio.focus()");
-        }else if($request['strtelefono'] == ""){
-             $respuesta->alert("Ingrese un telefono");
-             $respuesta->script("document.frmcliente_nuevo.strtelefono.focus()");
-        }else if($request['stremail'] == ""){
-             $respuesta->alert("Ingrese un Email");
-             $respuesta->script("document.frmcliente_nuevo.stremail.focus()");
-        }else if($request['id_estado_civil'] == 0){
-             $respuesta->alert("Seleccione un Estado Civil");
-             $respuesta->script("document.frmcliente_nuevo.id_estado_civil.focus()");
-        }elseif($request['id_sexo'] == 0){
-             $respuesta->alert("Seleccione un Sexo");
-             $respuesta->script("document.frmcliente_nuevo.id_sexo.focus()");
-        }elseif($request['datefecnac'] == ""){
-             $respuesta->alert("Ingrese una Fecha de Nacimiento");
-             $respuesta->script("document.frmcliente_nuevo.datefecnac.focus()");
         }else{
            
             $respuesta->script("xajax_guardar_cliente(xajax.getFormValues('frmcliente_nuevo'))");
