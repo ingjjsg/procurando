@@ -1,36 +1,37 @@
 <?php
     session_start();
-    require_once "../controlador/controlador_contrarios.php";
+    require_once "../controlador/controlador_abogados_representantes.php";
     require_once ('../comunes/xajax/xajax_core/xajax.inc.php');
     require_once '../modelo/clPermisoModelo.php';
     require_once '../modelo/clConstantesModelo.php';
-    if ($_SESSION['id_oficina']=='L') $nombre_modulo='Demandante';
-    else  $nombre_modulo='Solicitantes';  
-    
-    $formulario_accion=  clConstantesModelo::getFormulario_accion('contrarios','demandantes_litigio');
-
     if(isset($_GET['id'])){
-        $lngcodigo_cliente = $_GET['id'];
-        $titulo_formulario = 'Editar '.$nombre_modulo;
-        $funcion = 'xajax_editar_contrario';
+        $lngcodigo_abogado = $_GET['id'];
+        $titulo_formulario = 'Editar Abogado Representante';
+        $funcion = 'xajax_editar_abogado';
     }else{
-        $titulo_formulario = 'Nuevo '.$nombre_modulo;
-        $funcion = 'xajax_validar_contrario';
+        $titulo_formulario = 'Nuevo Abogado Abogado Representante';
+        $funcion = 'xajax_validar_abogado';
     }
     
+    $formulario_accion=  clConstantesModelo::getFormulario_accion('abogados','abodados_procuraduria_litigio');
+    
     $xajax= new xajax();
-    $xajax->registerFunction('BuscarCedulaRepetida');   
-    $xajax->registerFunction('buscarDatosContrarios');
-    $xajax->registerFunction('buscar_cedula_contrario');
-    $xajax->registerFunction('selectAllContrariosFiltro');
+   
+    $xajax->registerFunction('llenarSelectTipoOrganismo');
+    $xajax->registerFunction('llenarSelectCenDes');    
+    $xajax->registerFunction('BuscarAbogadoCedulaRepetida');    
+    $xajax->registerFunction('BuscarAbogadoRifRepetido');    
+    $xajax->registerFunction('buscarDatosAbogados');    
+    $xajax->registerFunction('selectAllAbogadosFiltro');
     $xajax->registerFunction('llenarSelectEstados');
     $xajax->registerFunction('llenarSelectMunicipio');
+    $xajax->registerFunction('llenarSelectBanco');
     $xajax->registerFunction('llenarSelectEstadoCivil');
     $xajax->registerFunction('llenarSelectSexo');
-    $xajax->registerFunction('guardar_contrario');
-    $xajax->registerFunction('selectContrario');
-    $xajax->registerFunction('editar_contrario');
-    $xajax->registerFunction('validar_contrario');
+    $xajax->registerFunction('guardar_abogado');
+    $xajax->registerFunction('selectAbogado');
+    $xajax->registerFunction('editar_abogado');
+    $xajax->registerFunction('validar_abogado');
     
     
     $xajax->processRequest();
@@ -58,9 +59,9 @@
         <script type='text/javascript' src='../comunes/js/funciones.js'></script>
         <script type="text/javascript" src="../comunes/js/prototype.js"></script>
         <script type="text/javascript" src="../comunes/js/effects.js"></script>
-        <!--<script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>-->
+<!--        <script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>-->
         <script type="text/javascript" src="../comunes/js/tabcontent.js"></script>
-      
+        <script type="text/javascript" src="../comunes/js/ajaxupload.js"></script>
         <script src="../comunes/js/calendar.js" type="text/javascript"></script>
         <script src="../comunes/js/calendar_es.js" type="text/javascript"></script>
         <script src="../comunes/js/calendar_setup.js" type="text/javascript"></script>
@@ -71,6 +72,8 @@
         <style>
             body {padding:0px;margin:0px;text-align:left;font:11px verdana, arial, helvetica, serif; background-color:#FFFFFF;}
         </style>
+        
+
         <script language="javascript">
             jQuery(function($){
                 $("#strtelefono").mask("(9999) 999.99.99",{placeholder:" "});
@@ -78,13 +81,14 @@
                 $("#datefecnac").mask("99/99/9999",{placeholder:" "});
             });
             
-            function cargar(lngcodigo_contrario){
-                if(lngcodigo_contrario != ""){
-                    xajax_selectContrario(lngcodigo_contrario)
+            function cargar(lngcodigo_abogado){
+                if(lngcodigo_abogado != ""){
+                    xajax_selectAbogado(lngcodigo_abogado);
                 }else{
-                    xajax_llenarSelectEstados('frmcontrario_nuevo');
-                    xajax_llenarSelectEstadoCivil('');
-                    xajax_llenarSelectSexo('')
+                    xajax_llenarSelectEstados('frmabogado_nuevo');
+                    xajax_llenarSelectSexo('');
+                    xajax_llenarSelectBanco('')
+                    xajax_llenarSelectCenDes('')                    
                 }
             }
             
@@ -99,25 +103,32 @@
                     d = div.descendants();
                 }
             }
-            
-
+//            
+//            function filtrar(){
+//                var nombre= document.frmclientes.strnombre.value;
+//                var apellido= document.frmclientes.strapellido.value;
+//                var cedula= document.frmclientes.strcedula.value;
+//                
+//                xajax_selectAllClientesFiltro(nombre, apellido,cedula);
+//                verForm('formulario');
+//            }
         </script>
     </head>
-    <body onload="cargar('<?php echo $lngcodigo_cliente ?>')" >
+    <body onload="cargar('<?php echo $lngcodigo_abogado ?>')" >
         <script src="../comunes/js/wz_tooltip/wz_tooltip.js" type="text/javascript"></script>
         <center>
-            <form name="frmcontrario_nuevo" id="frmcontrario_nuevo" method="post">
-            <fieldset style="border:#339933 2px solid">                     
+            <form name="frmabogado_nuevo" id="frmabogado_nuevo" method="post">
+               <fieldset style="border:#339933 2px solid">                
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
-                    <td width="65%" class="menu_izq_titulo">Editar Contrario</td>
-                    <td width="10%" align="center" class="menu_izq_titulo">
+                    <td width="65%" class="menu_izq_titulo"><?php echo $titulo_formulario ?></td>
+                    <td width="150%" align="center" class="menu_izq_titulo">
                         <?php 
                         if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario($formulario_accion['formulario']),'guardar', $formulario_accion['accion'])) {?>
-                        <img src="../comunes/images/16_save.png" onmouseover="Tip('Guardar')" onmouseout="UnTip()" border="0" onclick="<?php echo $funcion ?>(xajax.getFormValues('frmcontrario_nuevo'));"/>
+                            <img src="../comunes/images/16_save.png" onmouseover="Tip('Guardar')" onmouseout="UnTip()" border="0" onclick="<?php echo $funcion ?>(xajax.getFormValues('frmabogado_nuevo'));"/>
                         &nbsp;&nbsp;&nbsp;
                         <?php }?>
-                        <img src="../comunes/images/arrow_undo.png" onmouseover="Tip('Volver')" onmouseout="UnTip()" border="0" onclick="location.href='vista_contrarios.php'"/>
+                        <img src="../comunes/images/arrow_undo.png" onmouseover="Tip('Volver')" onmouseout="UnTip()" border="0" onclick="location.href='vista_abogados_representantes.php'"/>
                     </td>
                 </tr>
             </table>
@@ -125,26 +136,24 @@
                 <tr>
                     <td>
                         <div id="formulario" style=" width:100%;" align="left">
-                                <input type="hidden" class='inputbox' id="id_contrarios" name="id_contrarios" size="30" />
+                                <input type="hidden" class='inputbox' id="id_abogado" name="id_abogado" size="30" />
                                 <table width="100%" border="0" class="tablaVer" >
-                                    <tr>
-                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
-                                            <div align="center" style="background-image: url('../comunes/images/barra.png')">
-                                                <strong>Datos del Contrario</strong>
-                                            </div>
-                                        </td>
-                                    </tr>             
                                     <tr>
                                        <td width="20%">
                                             Cedula:
                                         </td>
                                         <td width="30%">
-                                            <?php if ($lngcodigo_cliente!='') {?>
+                                            <?php if ($lngcodigo_abogado!='') {?>
                                             <input type="text" class='inputbox' id="strcedula" name="strcedula" size="30" />
                                             <?php } else {?>
-                                            <input type="text" class='inputbox' id="strcedula" name="strcedula" onblur="xajax_BuscarCedulaRepetida(document.frmcontrario_nuevo.strcedula.value);" size="30" />
+                                            <input type="text" class='inputbox' id="strcedula" name="strcedula" onblur="xajax_BuscarAbogadoCedulaRepetida(document.frmabogado_nuevo.strcedula.value);" size="30" />
                                             <?php }?>
                                         </td>
+                                       <td width="20%">
+                                            
+                                        </td>
+                                        <td width="30%">
+                                        </td>                                        
                                     </tr>                                    
                                     <tr>
                                         <td width="20%">
@@ -186,7 +195,7 @@
                                     
                                     <tr>
                                         <td width="20%">
-                                            Direccion:
+                                            Domicilio Procesal:
                                         </td>
                                         <td width="30%">
                                             <textarea class="textarea" id="strdireccion" rows="2" cols="25" name="strdireccion"></textarea>
@@ -207,16 +216,6 @@
                                            <input type="text" class='inputbox' id="stremail" name="stremail" size="30" />
                                         </td>
                                         
-                                        <td width="20%">
-                                            Estado Civil:
-                                        </td>
-                                         <td width="30%">
-                                            <div id="capaEstadoCivil">
-                                                <select id="id_estado_civil" name="id_estado_civil" style='width:50%'>
-                                                    <option value="0">Seleccione</option>
-                                                </select>
-                                            </div>
-                                        </td>
                                     </tr>
                                     
                                      <tr>
@@ -230,85 +229,153 @@
                                                 </select>
                                             </div>
                                         </td>
-                                        
-                                        <td width="20%">
-                                           Numero Hijos:
-                                        </td>
-                                         <td width="30%">
-                                            <input type="text" class='inputbox' id="inthijos" name="inthijos" size="30" />
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td width="20%">
+                                         
+                                         <td width="20%">
                                             Codigo Postal:
                                         </td>
                                         <td width="30%">
                                             <input type="text" class='inputbox' id="strcodigopostal" name="strcodigopostal" size="30" />
                                         </td>
-                                        <td width="20%">
-                                            Fecha de Nacimiento:
-                                        </td>
-                                        <td width="30%">
-                                            <input type="text" class='inputbox' id="datefecnac" name="datefecnac" size="30" />
-                                            <img name="button"  id="lanzador1"  src="../comunes/images/calendar.png" align="middle"/>
-                                                <script type="text/javascript">
-                                                    Calendar.setup({
-                                                        inputField     :    "datefecnac",      // id del campo de texto
-                                                        ifFormat       :    "%d/%m/%Y",       // formato de la fecha, cuando se escriba en el campo de texto
-                                                        button         :    "lanzador1"   // el id del botn que lanzar el calendario
-                                                    });
-                                                </script>
-                                        </td>
+                                        
+                                       
                                     </tr>
-                                    
-                                    <tr>
-                                        <td width="20%">
-                                            Observacion:
-                                        </td>
-                                        <td width="30%">
-                                            <textarea id="strobservacion" rows="2" cols="25" name="strobservacion"></textarea>
-                                        </td>
-                                        <td width="20%">
-                                            
-                                        </td>
-                                        <td width="30%">
-                                        </td>
-                                    </tr>
-<!--                                    
-                                    <tr>
-                                        <td width="20%">
-                                            Organizacion:
-                                        </td>
-                                        <td width="30%">
-                                            <input type="text" class='inputbox' id="id_organizacion" name="id_organizacion" size="30" />
-                                        </td>
-                                        <td width="20%">
-                                            Documento Constancia:
-                                        </td>
-                                        <td width="30%">
-                                            <textarea id="strdocumentoconst" rows="2" cols="25" name="strdocumentoconst"></textarea>
-                                            
-                                        </td>
-                                    </tr>
-                                    
+     
                                     <tr>
                                         <td width="20%">
                                             Rif:
                                         </td>
                                         <td width="30%">
-                                            <input type="text" class='inputbox' id="strrif" name="strrif" size="30" />
+                                            <?php if ($lngcodigo_abogado!='') {?>
+                                            <input type="text" class='inputbox' id="strrif" name="strrif" size="30"  />
+                                            <?php } else {?>
+                                            <input type="text" class='inputbox' id="strrif" name="strrif" onblur="xajax_BuscarAbogadoRifRepetido(document.frmabogado_nuevo.strrif.value);" size="30" />
+                                            <?php }?>                                            
                                         </td>
                                         <td width="20%">
-                                            Telefono:
+                                            Movil:
                                         </td>
                                         <td width="30%">
                                             <input type="text" class='inputbox' id="strmovil" name="strmovil" size="30" />
                                         </td>
                                     </tr>
+                                    
+                                     <tr>
+                                        <td width="20%">
+                                            Localidad:
+                                        </td>
+                                        <td width="30%">
+                                            <input type="text" class='inputbox' id="strlocalidad" name="strlocalidad" size="30" />
+                                        </td>
+                                        <td width="20%">
+                                            Fax:
+                                        </td>
+                                        <td width="30%">
+                                            <input type="text" class='inputbox' id="strfax" name="strfax" size="30" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="20%">
+                                            Tipo de Organismo:
+                                        </td>
+                                        <td width="30%">
+                                            <div id="capaIdTipoOrganismoCentralizado">
+                                                <select id="id_tipo_organismo" name="id_tipo_organismo" style='width:50%'>
+                                                    <option value="0">Seleccione</option>
+                                                </select>
+                                            </div>
+                                        </td> 
+                                        <td width="20%">Organismo</td>
+                                        <td width="30%">
+                                            <div id="capaIdTipoOrganismo">
+                                                <select id="id_organismo" name="id_organismo" style='width:50%'>
+                                                    <option value="0">Seleccione</option>
+                                                </select>
+                                            </div>
+                                        </td>    
+                                    </tr>                                         
+                                    
+                                    <tr>
+                                        <td width="20%">
+                                            Pin:
+                                        </td>
+                                        <td width="30%">
+                                            <input type="text" class='inputbox' id="strpin" name="strpin" size="30" />
+                                        </td>
+                                        <td width="20%">
+                                            Nif-Cif:
+                                        </td>
+                                        <td width="30%">
+                                            <input type="text" class='inputbox' id="strnif_cif" name="strnif_cif" size="30" />
+                                        </td>
+                                    </tr>
+                                    
+                                     <tr>
+                                        <td width="20%">
+                                            Banco:
+                                        </td>
+                                        <td width="30%">
+                                          <div id="capaBanco">
+                                                <select id="intbanco" name="intbanco" style='width:90%'>
+                                                    <option value="0">Seleccione</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td width="20%">
+                                            Numero Cuenta:
+                                        </td>
+                                        <td width="30%">
+                                            <input type="text" class='inputbox' id="strcuentaban" name="strcuentaban" size="30" />
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr>
+                                        <td width="20%">
+<!--                                            Foto:-->
+                                            Numero Colegiado:
+                                        </td>
+                                         <td width="50%">
+                                            <input type="text" class='inputbox' id="strnumcolegiado" name="strnumcolegiado" size="30" />                                             
+<!--                                        <div id="foto" style=" text-align: center; width:100;height: 120; border: solid #000 1px;">
+                                            FOTO
+                                        </div>-->
+<!--                                             <a href="javascript:;" id="upload">Subir Foto</a>-->
+                                             </td>
+                                        
+<!--                                            <input type="hidden" class='inputbox' id="strfoto" name="strfoto" size="30" />-->
+                                            
+                                            <td width="20%">
+<!--                                            Numero Colegiado:-->
+                                        </td>
+                                        <td width="30%">
+
+                                        </td>
+                                       
+                                        
+                                    </tr>
+                                    
+                                    <tr>
+                                        
+                                       <td width="20%">
+                                            Curriculum:
+                                        </td>
+                                        <td width="30%">
+                                           <textarea id="strcurriculum" rows="2" cols="25" name="strcurriculum"></textarea>
+                                        </td>
+                                    </tr>
+                                    
+                                       <tr>
+                                        <td width="20%">
+                                            Observacion:
+                                        </td>
+                                        <td width="30%">
+                                            <textarea id="strobservaciones" rows="2" cols="25" name="strobservaciones"></textarea>
+                                        </td>
+                                        
+                                    </tr>
                                   
--->                                    
+                                    
                                 </table>
+                            </fieldset>
                         </div>
                     </td>
                 </tr>
@@ -322,7 +389,6 @@
                 </tr>-->
             </table>
             </form>
-          </fieldset>               
         </center>
     </body>
 </html><?php

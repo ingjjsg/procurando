@@ -1,6 +1,6 @@
 <?php
     session_start();
-    include("../comunes/fckeditor/fckeditor.php") ;    
+    include("../comunes/fckeditor/fckeditor.php");    
     require_once "../controlador/tblproexpedienteControlador.php";
     require_once ('../comunes/xajax/xajax_core/xajax.inc.php');
     
@@ -9,13 +9,18 @@
         $titulo_formulario = 'Editar Expediente';
         $funcion = 'editar';
     }else{
-        $titulo_formulario = 'Nuevo Espediente';
+        $titulo_formulario = 'Nuevo Expediente';
         $funcion = 'validar';
     }
 
     $xajax= new xajax();
-    $xajax->registerFunction('DeleteHijo'); 
-    $xajax->registerFunction('BuscarAbogadoResponsable');     
+    $xajax->registerFunction('buscarAsistidoOnBlur'); 
+    $xajax->registerFunction('llenarSelectFormularioAbogadosMotivoReasignar');     
+    $xajax->registerFunction('llenarSelectFormularioAbogadosReasignar');     
+    $xajax->registerFunction('DeleteHijo');     
+    $xajax->registerFunction('validar_reasignacion');     
+    $xajax->registerFunction('guardar_reasignacion');  
+    $xajax->registerFunction('BuscarAbogadoResponsable');      
     $xajax->registerFunction('HijoExpediente');     
     $xajax->registerFunction('guardar_hijos');     
     $xajax->registerFunction('llenarSelectFormularioSexo');      
@@ -156,12 +161,15 @@
                     xajax_BuscarAbogadoResponsable();                    
                     xajax_llenarSelectFormularioTipoEstadoMinuta();
                     xajax_llenarSelectTipoRegimen('frminscribir');
-                    xajax_llenarSelectTipoTramite('frminscribir');                    
+                    xajax_llenarSelectTipoTramite('frminscribir'); 
+                    xajax_llenarSelectFormularioAbogadosReasignar('');
+                    xajax_llenarSelectFormularioAbogadosMotivoReasignar('');                    
+                    
                     xajax_llenarSelectTipoDivorcio('frminscribir');
                     xajax_llenarSelectActuacion('frminscribir');
                     xajax_llenarSelectTipoOrganismo('frminscribir');
                     xajax_llenarSelectTipoMinuta('frminscribir');
-                    xajax_llenarSelectTipoCita('frminscribir');     
+                    //xajax_llenarSelectTipoCita('frminscribir');     
                     xajax_llenarSelectTipoFase('frminscribir');                         
                     xajax_llenarSelectFormularioTipoActuacion('');  
                     xajax_buscarDatosSituaciones('');
@@ -226,7 +234,7 @@
                 <input type="hidden" id="id_proexpediente_hijos" name="id_proexpediente_hijos" value="" />                
 		<input type="hidden" id="id_proexpediente_situacion" name="id_proexpediente_situacion" value="" />
                 <input type="hidden" id="id_proexpediente_fase" name="id_proexpediente_fase" value="" />                
-                <input type="hidden" id="id_abogado_resp" name="id_abogado_resp" value="<?php echo $_SESSION['id_contacto']; ?>" />
+                <input type="hidden" id="id_abogado_resp" name="id_abogado_resp" value="" />
 		<input type="hidden" id="id_abogado_ejecutor" name="id_abogado_ejecutor" value="" />
                 <input type="hidden" id="id_solicitante" name="id_solicitante" value="" />                    
                 <input type="hidden" id="id_contrarios" name="id_contrarios" value="" />                   
@@ -235,11 +243,17 @@
                 <fieldset style="border:#339933 2px solid">                                        
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                     <tr>
-                        <td width="65%" class="menu_izq_titulo"><?php echo $titulo_formulario ?></td>
-                        <td width="10%" align="center" class="menu_izq_titulo">
-                            <img id="clock" name="back" src="../comunes/images/b_print.png" onmouseover="Tip('Imprimir')" onmouseout="UnTip()" border="0" onclick="javascript:alert('Por Definir Desarrollo del Modulo');"/>                            
+                        <td width="60%" class="menu_izq_titulo"><?php echo $titulo_formulario ?></td>
+                        <td width="15%" align="center" class="menu_izq_titulo">
+                            <img id="portada" style="display:none;" name="portada" src="../comunes/images/book.png" onmouseover="Tip('Imprimir Portada')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='../reportes/reporte_constancia_portada_oas.php?id='+document.frminscribir.id_proexpediente.value"/>                            
+                            <img id="constancia" style="display:none;" name="constancia" src="../comunes/images/b_print.png" onmouseover="Tip('Imprimir Constancia')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='../reportes/reporte_constancia_individual_oas.php?id='+document.frminscribir.id_proexpediente.value"/>                            
                             <img id="save" name="save" src="../comunes/images/disk.png" onmouseover="Tip('Guardar Expediente')" onmouseout="UnTip()" border="0" onclick="<?php echo $funcion ?>('');"/>
                             <img id="cerrar" style="display:none;" name="cerrar" src="../comunes/images/Privileges.png" onmouseover="Tip('Cerrar Expediente')" onmouseout="UnTip()" border="0" onclick="javascript:$('id_cerrar').toggle();$('id_observacion_cerrar').toggle();$('id_observacion_cerrar_button').toggle();"/>                            
+                            <?php 
+                            if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario('expedientes'),'nuevo', clConstantesModelo::acciones_expedientes())) {?>
+                            <img src="../comunes/images/note_add.png" onmouseover="Tip('Nuevo Expediente')" onmouseout="UnTip()" onclick="location.href='vista_Ingresotblexpediente.php'"/>
+                            &nbsp;&nbsp;&nbsp;
+                            <?php }?>                            
                             <img id="back" name="back" src="../comunes/images/arrow_undo.png" onmouseover="Tip('Volver')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_tblproexpediente.php'"/>
                         </td>
                     </tr>
@@ -317,7 +331,11 @@
                                     Nro Expediente:
                                 </td>
                                 <td width="30%">
+                                    <?php if ($lngcodigo_expediente!='') { ?>
                                     <input type="text" readonly="readonly" class='inputbox82' id="strnroexpediente" name="strnroexpediente" size="20" />
+                                    <?php } else { ?>
+                                    <input type="text" class='inputbox82' id="strnroexpediente" name="strnroexpediente" size="20" />
+                                    <?php } ?>
                                 </td>
                                 <td width="20%">
                                     Nro Expediente Auxiliar:
@@ -326,6 +344,29 @@
                                     <input type="text" class='inputbox82' id="strnroexpedienteauxiliar" name="strnroexpedienteauxiliar" size="20" />                                                                    
                                 </td>
                             </tr>
+                            <tr>
+                                <td width="20%">
+                                    Fecha Solicitud:
+                                </td>
+                                <td width="30%">
+                                    <input id="fecapertura" name="fecapertura" type="text"  class='inputbox82' maxlength='20' size='15' value="">
+                                    <img name="button"  id="lanzador_fecapertura"  src="../comunes/images/calendar.png" align="middle"/>
+                                    <script type="text/javascript">
+                                        Calendar.setup({
+                                            inputField     :    "fecapertura",      // id del campo de texto
+                                            ifFormat       :    "%d/%m/%Y",       // formato de la fecha, cuando se escriba en el campo de texto
+                                            button         :    "lanzador_fecapertura"   // el id del botn que lanzar el calendario
+                                        });
+                                    </script>
+                                </td>                                
+                                <td width="20%">
+                                    Costo Contable:
+                                </td>
+                                <td width="30%">
+                                    <input type="text" readonly="readonly" class='inputbox82' id="id_precio_con" name="id_precio_con" size="30" />
+                                </td>
+                            </tr>
+                          
                             <tr>
                                 <td width="20%">
                                     Fecha del Expediente:
@@ -341,29 +382,7 @@
                                         });
                                     </script>
                                 </td>
-                                <td width="20%">
-                                    Costo Contable:
-                                </td>
-                                <td width="30%">
-                                    <input type="text" readonly="readonly" class='inputbox82' id="id_precio_con" name="id_precio_con" size="30" />
-                                </td>
-                            </tr>
-                          
-                            <tr>
-                                <td width="20%">
-                                    Fecha Solicitud:
-                                </td>
-                                <td width="30%">
-                                    <input id="fecapertura" name="fecapertura" type="text"  class='inputbox82' maxlength='20' size='15' value="">
-                                    <img name="button"  id="lanzador_fecapertura"  src="../comunes/images/calendar.png" align="middle"/>
-                                    <script type="text/javascript">
-                                        Calendar.setup({
-                                            inputField     :    "fecapertura",      // id del campo de texto
-                                            ifFormat       :    "%d/%m/%Y",       // formato de la fecha, cuando se escriba en el campo de texto
-                                            button         :    "lanzador_fecapertura"   // el id del botn que lanzar el calendario
-                                        });
-                                    </script>
-                                </td>
+
                                 <td width="20%">
                                     
                                 </td>
@@ -374,18 +393,20 @@
                         </table>
                     </tr>
                     <tr> 
-                        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding-top:10px; padding-bottom:0px;">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding-top:5px; padding-bottom:0px;">
                             <tr><td height="100%">
                             <div align="left">
                                 <ul id="countrytabs" class="shadetabs">
                                     <li><a id="link1" href="#" rel="country1"  class="selected">Datos Generales</a></li> 
                                     <li><a id="link2" href="#" rel="country2">Descripción</a></li> 
-                                    <li><a id="link3" href="#" rel="country3">Situaciónes</a></li>
-                                    <li><a id="link4" href="#" rel="country4">Agenda</a></li>                                    
+                                    <li><a id="link3" href="#" rel="country3" style="display:none">Situaciónes</a></li>
+                                    <li><a id="link4" href="#" rel="country4" style="display:none">Agenda</a></li>                                    
                                     <li><a id="link5" href="#" rel="country5">Documentos</a></li>                        
-                                    <li><a id="link6" href="#" rel="country6">Fase</a></li>    
-                                    <li><a id="link7" href="#" rel="country7">Actuaciones</a></li>                                                            
-                                    <li><a id="link8" href="#" rel="country8" style="display:none">Divorcio/Sep</a></li>                                        
+                                    <li><a id="link6" href="#" rel="country6" style="display:none">Fase</a></li>    
+                                    <li><a id="link7" href="#" rel="country7" style="display:none">Actuaciones</a></li>                                                            
+                                    <li><a id="link8" href="#" rel="country8" style="display:none">Divor./Sep</a></li>                                        
+                                    <li><a id="link9" href="#" rel="country9" style="display:none">Reasignar</a></li>                                        
+                                    
                                 </ul>
                                 <div style="background:#F8F8F8; border:solid 1px #cccccc; width:100%; height:400px" align="left">
                                     <div id="country1"  class="tabcontent" style="height:100%; overflow-y:auto">
@@ -415,16 +436,16 @@
                                             <tr>
                                                 <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                                     <div align="left" style="background-image: url('../comunes/images/barra.png')">
-                                                        <strong>SOLICITANTE</strong>
+                                                        <strong>SOLICITANTES</strong>
                                                     </div>
                                                 </td>
                                             </tr>          
                                             <tr>
                                                 <td width="20%">
-                                                    C.I. Asistido:
+                                                    C.I. Solicitante:
                                                 </td>
                                                 <td width="30%">
-                                                    <input type="text" class='inputbox82' id="cedula_cliente" name="cedula_cliente" size="20" onKeyDown="xajax_buscarAsistidoPopup('','',document.frminscribir.cedula_cliente.value);"/>                             
+                                                    <input type="text" class='inputbox82' id="cedula_cliente" name="cedula_cliente" size="20" onBlur="xajax_buscarAsistidoOnBlur(document.frminscribir.cedula_cliente.value);" onKeyDown="xajax_buscarAsistidoPopup('','',document.frminscribir.cedula_cliente.value);"/>                             
                                                     <img src="../comunes/images/ico_18_127.gif" onmouseover="Tip('Buscar Asistido')" onmouseout="UnTip()" border="0" onclick="vercatalogo(2);"/>                                                                                        
                                                 </td>
                                                 <td width="20%">
@@ -581,7 +602,7 @@
                                                             $oFCKeditor = new FCKeditor('descripcion') ;
                                                             $oFCKeditor->BasePath = '../comunes/fckeditor/' ;
                                                             $oFCKeditor->Height = '300' ;
-                                                            $oFCKeditor->Width= '680';
+                                                            $oFCKeditor->Width= '730';
                                                             $oFCKeditor->ToolbarSet = 'firma';
                                                            // $oFCKeditor->Value = stripslashes($_REQUEST['firmaCorreo']);
                                                             $oFCKeditor->Create();
@@ -682,7 +703,7 @@
                                             </table>
                                     </div>                                    
                                     <div id="country4" class="tabcontent" style="height:900px; overflow-y:auto">
-                                            <table width="100%" border="0" class="tablaTitulo" >
+                                            <table width="99%" border="0" class="tablaTitulo" >
                                             <tr>
                                                 <td colspan="6">
                                                     
@@ -690,7 +711,7 @@
                                                     if ($lngcodigo_expediente)
                                                     {
                                                         $scr="../vista/vista_tblagenda_Expediente.php?id=".$lngcodigo_expediente; ?>
-                                                        <iframe  width="100%" scrolling="auto" height="800" frameborder="0" src="<?php echo $scr; ?>" scrolling="auto" frameborder="0" width="100%" height="600"></iframe>
+                                                        <iframe  width="99%" scrolling="auto" height="800" frameborder="0" src="<?php echo $scr; ?>" scrolling="auto" frameborder="0" width="100%" height="600"></iframe>
                                                      <?php } ?>
                                                 </td>
                                             </tr>
@@ -855,7 +876,7 @@
                                             <tr>
                                                 <td colspan="6" bgcolor="#F8F8F8" >
                                                     <div align="right">
-                                                    <img  src="../comunes/images/application_form_add.png" onmouseover="Tip('Guardar Actuación')" onmouseout="UnTip()" border="0" onclick="$('formularioActuacion').show();"/>
+<!--                                                    <img  src="../comunes/images/application_form_add.png" onmouseover="Tip('Guardar Actuación')" onmouseout="UnTip()" border="0" onclick="$('formularioActuacion').show();"/>-->
                                                     <img id="saveActuacion" style="display:none;" name="saveActuacion" src="../comunes/images/disk.png" onmouseover="Tip('Guardar Actuación')" onmouseout="UnTip()" border="0" onclick="document.frminscribir.strdescripcionactuacion.value= FCKeditorAPI.__Instances['descripcionact'].GetHTML();xajax_validar_actuacion(xajax.getFormValues('frminscribir'));"/>                                                    
                                                     </div>
                                                 </td>
@@ -956,7 +977,7 @@
                                                         $oFCKeditor = new FCKeditor('descripcionact') ;
                                                         $oFCKeditor->BasePath = '../comunes/fckeditor/' ;
                                                         $oFCKeditor->Height = '300' ;
-                                                        $oFCKeditor->Width= '680';
+                                                        $oFCKeditor->Width= '730';
                                                         $oFCKeditor->ToolbarSet = 'firma';
                                                        // $oFCKeditor->Value = stripslashes($_REQUEST['firmaCorreo']);
                                                         $oFCKeditor->Create();
@@ -969,7 +990,7 @@
                                     </div>
                                     <div id="country8"  class="tabcontent" style="height:100%; overflow-y:auto;">
                                         <table width="100%" border="0" class="tablaTitulo" >
-                                            <tr>
+                                            <!--<tr>
                                                 <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                                     <div align="left" style="background-image: url('../comunes/images/barra.png')">
                                                         <strong>CITACIÓN</strong>
@@ -979,8 +1000,8 @@
                                             <tr>
                                                 <td width="20%">
                                                     <!--Referencia ó Titulo:-->
-                                                </td>
-                                                <td width="30%">
+<!--                                                </td>-->
+<!--                                                <td width="30%">-->
                                                     <!--
                                                     <div id="capaIdReferencia">
                                                         <select id="id_refer" name="id_refer" style='width:50%'>
@@ -988,7 +1009,7 @@
                                                         </select>
                                                     </div>
                                                     -->                                                
-                                                </td>
+<!--                                                </td>
                                                 <td width="20%">Generar Citación:
                                                 </td>
                                                 <td width="30%">
@@ -998,7 +1019,7 @@
                                                         </select>
                                                     </div>                                                            
                                                  </td>
-                                            </tr>     
+                                            </tr>  -->
                                             <tr>
                                                 <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                                     <div align="left" style="background-image: url('../comunes/images/barra.png')">
@@ -1075,7 +1096,7 @@
                                             <tr>
                                                 <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                                     <div align="left" style="background-image: url('../comunes/images/barra.png')">
-                                                        <strong>MENORES DE EDAD</strong>
+                                                        <strong>NIÑOS Y NIÑAS Y/O MENORES DE EDAD</strong>
                                                     </div>
                                                 </td>
                                             </tr>            
@@ -1193,7 +1214,46 @@
                                                 </td>    
                                             </tr>                                               
                                         </table>
-                                    </div>                                    
+                                    </div> 
+                                    <div id="country9"  class="tabcontent" style="height:100%; overflow-y:auto">
+                                            <table width="100%" border="0" class="tablaTitulo" >
+                                            <tr>
+                                                <td colspan="6" bgcolor="#F8F8F8" >
+                                                    <div align="right">
+                                                    <img id="saveReasignar" style="display:none;" name="saveReasignar" src="../comunes/images/disk.png" onmouseover="Tip('Reasignar Expediente')" onmouseout="UnTip()" border="0" onclick="xajax_validar_reasignacion(xajax.getFormValues('frminscribir'));"/>                                                    
+                                                    </div>
+                                                </td>
+                                            </tr>                                                  
+                                                <tr>
+                                                    <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                                        <div align="center" style="background-image: url('../comunes/images/barra.png')">
+                                                            <strong>Reasignar Expediente a Otro Usuario</strong>
+                                                        </div>
+                                                    </td>
+                                                </tr>                                                
+                                            <tr>
+                                                <td width="20%">
+                                                    Motivo:
+                                                </td>
+                                                <td width="30%">
+                                                    <div id="capaIdMotivoReasignacion">
+                                                        <select id="id_motivo_reasignacion" name="id_motivo_reasignacion" style='width:50%'>
+                                                            <option value="0">Seleccione</option>
+                                                        </select>
+                                                    </div>                                                            
+                                                 </td> 
+                                                <td width="20%">Abogado
+                                                </td>
+                                                <td width="30%">
+                                                    <div id="capaIdAbogadoReasignado">
+                                                        <select id="id_reasignacion_abogado" name="id_reasignacion_abogado" style='width:50%'>
+                                                            <option value="0">Seleccione</option>
+                                                        </select>
+                                                    </div>                                                            
+                                                 </td>                                                
+                                            </tr>                                             
+                                           </table>
+                                    </div>                                     
                                 </div>
                             </div>
                             </td></tr>

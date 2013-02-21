@@ -14,10 +14,6 @@ if (isset($_GET['id'])) {
 }
 
 $xajax = new xajax();
-$xajax->registerFunction('llenarSelectFormularioAbogadosMotivoReasignar'); 
-$xajax->registerFunction('llenarSelectFormularioAbogadosReasignar');     
-$xajax->registerFunction('validar_reasignacion');     
-$xajax->registerFunction('guardar_reasignacion');  
 $xajax->registerFunction('BuscarUsuarioAbogadoResponsable');
 $xajax->registerFunction('verOtrosMotivo');
 $xajax->registerFunction('verOtrasFases');
@@ -199,8 +195,8 @@ $xajax->printJavascript('../comunes/xajax/');
                         } 
                         if (num==4)
                         {
-                              $('contenedorAbogadosDemandantes').toggle();
-                            xajax_buscarAbogadoDemandantePopup('','','');  
+//                            $('contenedorAbogadosDemandantes').show();
+                            xajax_buscarAbogadoDemandantePopup('','',document.frminscribir.cedula_abogado_demandante.value);;  
                         }
                         if (num==5)
                         {
@@ -214,8 +210,8 @@ $xajax->printJavascript('../comunes/xajax/');
                         }    
                         if (num==7)
                         {
-                            $('contenedorPersonasDemandadas').toggle();
-                            xajax_buscarPersonasDemandadasPopup('','','');                    
+                              $('contenedorPersonasDemandadas').show();
+                              xajax_buscarPersonasDemandadasPopup('','',document.frminscribir.cedula_persona_demandada.value);
                         }                         
                     }                
                     function monto(caja,monto)
@@ -229,8 +225,6 @@ $xajax->printJavascript('../comunes/xajax/');
                         }
                         else{
                             xajax_BuscarUsuarioAbogadoResponsable();
-                            xajax_llenarSelectFormularioAbogadosReasignar('');
-                            xajax_llenarSelectFormularioAbogadosMotivoReasignar('');                              
                             xajax_llenarNroExpediente();
                             xajax_llenarSelectCenDes('');                             
                             xajax_llenarSelectTipoFaseLitigio('frminscribir');
@@ -305,8 +299,7 @@ $xajax->printJavascript('../comunes/xajax/');
                             <input type="hidden" id="id_proexpediente_actuaciones" name="id_proexpediente_actuaciones" value="" />
                             <input type="hidden" id="id_actuacion_pestana" name="id_actuacion_pestana" value="" />
                             <input type="hidden" id="id_proexpediente_fase" name="id_proexpediente_fase" value="" />                
-                            <input type="hidden" id="id_usuario" name="id_usuario" value="<?php echo $_SESSION['id_contacto']; ?>" />
-                            <input type="hidden" id="id_abogado_resp" name="id_abogado_resp" value="" />
+                            <input type="hidden" id="id_abogado_resp" name="id_abogado_resp" value="<?php echo $_SESSION['id_contacto']; ?>" />
                             <input type="hidden" id="strdocumentos" name="strdocumentos" value="" />
                             <input type="hidden" id="id_solicitante" name="id_solicitante" value="" />                            
                             
@@ -511,7 +504,6 @@ $xajax->printJavascript('../comunes/xajax/');
                                                             <li><a id="link7" href="#" rel="country6"  style="display:none">Fase</a></li>    
                                                             <li><a id="link8" href="#" rel="country7"  style="display:none" >Actuaciones</a></li>                                                            
                                                             <li><a id="link9" href="#" rel="country9"  style="display:none" >Refiere</a></li>
-                                                            <li><a id="link10" href="#" rel="country10"  style="display:none" >Reasignar</a></li>
                                                             
                                                            
                                                             <!--                                    <li><a id="link7" href="#" rel="country7" style="display:none">Divorcio/Sep</a></li>                                        -->
@@ -528,108 +520,6 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                     </tr>                                                                       
                                                                 </table>
                                                           <table width="100%" border="0" class="tablaTitulo">                                                                    
-<!--                                                          <table id="demandados" style="display:none;" width="100%" border="0" class="tablaTitulo">                                                                    
-                                                                    <tr>
-                                                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
-                                                                            <div align="left" style="background-image: url('../comunes/images/barra.png')">
-                                                                                <strong>PERSONAS DEMANDADAS </strong>
-                                                                                <img src="../comunes/images/user_suit_add.png" onmouseover="Tip('Nuevo Demandado')" onmouseout="UnTip()" border="0" onclick="javascript:$('id_tr_personas_demandadas').toggle();$('contenedorPersonasDemandadasExpediente').toggle();"/>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>                                                                
-                                                                    <tr id="id_tr_personas_demandadas" style="display:none;">
-                                                                        <td width="20%">
-                                                                            C.I. Persona Natural:
-                                                                        </td>
-                                                                        <td width="30%">
-                                                                            <input type="text" class='inputbox82' id="cedula_persona_demandada" name="cedula_persona_demandada" size="20" onKeyDown="xajax_buscarPersonasDemandadasPopup('','',document.frminscribir.cedula_abogado_ejecutor.value);"/>                                  
-                                                                            <img src="../comunes/images/ico_18_127.gif" onmouseover="Tip('Buscar Abogado Ejecutor')" onmouseout="UnTip()" border="0" onclick="vercatalogo(7);"/>                                                                                       
-                                                                        </td>
-                                                                        <td width="20%">
-                                                                            Nombre:
-                                                                        </td>
-                                                                        <td width="30%">
-                                                                            <input type="text" class='inputbox82' id="strnombre_persona_demandada" name="strnombre_persona_demandada" size="30" onKeyDown="xajax_buscarPersonasDemandadasPopup(document.frminscribir.strnombre_abogado_ejecutor.value,'','');"/>                                  
-                                                                            <input type="images" onmouseover="Tip('Ingresar Personas a Demandar')" style="background-color:#B9D5E3;border:1px outset #B9D5E3;color:#004E7D;cursor:pointer;margin:1px;padding:1px; width:55px; font-size:11px;" onclick="xajax_IngresarPersonasDemandadasExpediente(document.frminscribir.cedula_persona_demandada.value,document.frminscribir.id_proactuacion.value,'Persona');" value="Guardar" id="boton" name="boton">
-                                                                            <input type="images" onmouseover="Tip('Cancelar Personas a Demandar')" style="background-color:#B9D5E3;border:1px outset #B9D5E3;color:#004E7D;cursor:pointer;margin:1px;padding:1px; width:55px; font-size:11px;" onclick="javascript:$('id_tr_personas_demandadas').hide();$('contenedorPersonasDemandadasExpediente').show();" value="Cancelar" id="boton" name="boton">
-                                                                       </td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td colspan="6">
-                                                                            <div id="contenedorPersonasDemandadas" style="width:100%;display: none;" align="left">
-                                                                                <div align="center"></div>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>  
-                                                                    <tr>                                                              
-                                                                        <td colspan="6">
-                                                                            <div id="contenedorPersonasDemandadasExpediente" style="display:none;" align="left">
-                                                                                <div align="center"></div>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>                                                               
-                                                              <tr>
-                                                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
-                                                                            <div align="left" style="background-image: url('../comunes/images/barra.png')">
-                                                                                <strong>DEMANDANTE</strong>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>          
-                                                                    <tr>
-                                                                        <td width="20%">
-                                                                            C.I. Demandante:
-                                                                        </td>
-                                                                        <td width="30%">
-                                                                            <input type="text" class='inputbox82' id="cedula_cliente" name="cedula_cliente" size="20" onKeyDown="xajax_buscarAsistidoPopup('','',document.frminscribir.cedula_cliente.value);"/>                             
-                                                                            <img src="../comunes/images/ico_18_127.gif" onmouseover="Tip('Buscar Asistido')" onmouseout="UnTip()" border="0" onclick="vercatalogo(2);"/>                                                                                        
-                                                                        </td>
-                                                                        <td width="20%">
-                                                                            Nombre:
-                                                                        </td>
-                                                                        <td width="30%">
-                                                                            <input type="text" class='inputbox82' id="strnombre_cliente" name="strnombre_cliente" size="30" onKeyDown="xajax_buscarAsistidoPopup(document.frminscribir.strnombre_cliente.value,'','');"/>                             
-                                                                        </td>
-                                                                    </tr>     
-                                                                    <tr>
-                                                                        <td colspan="6">
-                                                                            <div id="contenedorAsistidos" style="width:100%;display: none;" align="left">
-                                                                                <div align="center"></div>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>     
-                                                                    <tr>
-                                                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
-                                                                            <div align="left" style="background-image: url('../comunes/images/barra.png')">
-                                                                                <strong>REPRESENTANTE DE LA ASOCIACIÓN </strong>
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>          
-                                                                    <tr>
-                                                                        <td width="20%">
-                                                                            Representante:
-                                                                        </td>
-                                                                        <td width="30%">
-                                                                            <input type="checkbox" class="inputbox"  name="strrepresentante" id="strrepresentante" value="1"/>
-                                                                        </td>
-                                                                        <td width="20%">
-                                                                        </td>
-                                                                        <td width="30%">
-                                                                        </td>
-                                                                    </tr>                                            
-                                                                    <tr>
-                                                                        <td width="20%">
-                                                                            Razón Social:
-                                                                        </td>
-                                                                        <td width="30%">
-                                                                            <input type="text" class='inputbox82' id="raz_social" name="raz_social" size="30" onKeyDown="xajax_buscarAsistidoPopup(document.frminscribir.strnombre_cliente.value,'','');"/>                                                         
-                                                                        </td>
-                                                                        <td width="20%">
-                                                                        </td>
-                                                                        <td width="30%">
-                                                                        </td>
-                                                                    </tr>    
-                                                          </table>
-                                                          <table id="demandantes" style="display:none;" width="100%" border="0" class="tablaTitulo" >-->
                                                                     <tr>
                                                                         <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                                                             <div id="div_personas_demandados_demandantes" align="left" style="background-image: url('../comunes/images/barra.png')">
@@ -643,14 +533,14 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                             C.I. Persona Natural:
                                                                         </td>
                                                                         <td width="30%">
-                                                                            <input type="text" class='inputbox82' id="cedula_persona_demandada" name="cedula_persona_demandada" size="20" onKeyDown="xajax_buscarPersonasDemandadasPopup('','',document.frminscribir.cedula_persona_demandada.value);" onBlur="xajax_buscarPersonasDemandadasPopup('','',document.frminscribir.cedula_persona_demandada.value);"/>                                  
+                                                                            <input type="text" class='inputbox82' id="cedula_persona_demandada" name="cedula_persona_demandada" size="20"/>                                  
                                                                             <img src="../comunes/images/ico_18_127.gif" onmouseover="Tip('Buscar Abogado Ejecutor')" onmouseout="UnTip()" border="0" onclick="vercatalogo(7);"/>                                                                                       
                                                                         </td>
                                                                         <td width="20%">
                                                                             Nombre:
                                                                         </td>
                                                                         <td width="30%">
-                                                                            <input type="text" class='inputbox82' id="strnombre_persona_demandada" name="strnombre_persona_demandada" size="30" onKeyDown="xajax_buscarPersonasDemandadasPopup(document.frminscribir.strnombre_persona_demandada.value,'','');"/>                                  
+                                                                            <input type="text" class='inputbox82' id="strnombre_persona_demandada" name="strnombre_persona_demandada" size="30"/>                                  
                                                                             <input type="images" onmouseover="Tip('Ingresar Personas a Demandar')" style="background-color:#B9D5E3;border:1px outset #B9D5E3;color:#004E7D;cursor:pointer;margin:1px;padding:1px; width:55px; font-size:11px;" onclick="xajax_IngresarPersonasDemandadasExpediente(document.frminscribir.cedula_persona_demandada.value,document.frminscribir.id_proactuacion.value,'Persona');" value="Guardar" id="boton" name="boton">
                                                                             <input type="images" onmouseover="Tip('Cancelar Personas a Demandar')" style="background-color:#B9D5E3;border:1px outset #B9D5E3;color:#004E7D;cursor:pointer;margin:1px;padding:1px; width:55px; font-size:11px;" onclick="javascript:$('contenedorPersonasDemandadas').hide();$('id_tr_personas_demandadas').hide();$('contenedorPersonasDemandadasExpediente').show();" value="Cancelar" id="boton" name="boton">
                                                                        </td>
@@ -675,7 +565,7 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                         <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                                                             <div id="div_demandados_demandantes" align="left" style="background-image: url('../comunes/images/barra.png')">
                                                                                 <strong>ABOGADOS DE LOS  </strong>
-                                                                                <img src="../comunes/images/user_suit_add.png" onmouseover="Tip('Nuevo Abogado')" onmouseout="UnTip()" border="0" onclick="javascript:$('contenedorAbogadosDemandantes').hide();$('id_tr_abogados_demandantes').toggle();$('contenedorAbogadosDemandantesExpediente').toggle();"/>
+                                                                                <img src="../comunes/images/user_suit_add.png" onmouseover="Tip('Nuevo Abogado')" onmouseout="UnTip()" border="0" onclick="javascript:$('id_tr_abogados_demandantes').hide();$('contenedorAbogadosDemandantes').toggle();$('contenedorAbogadosDemandantesExpediente').toggle();"/>
                                                                             </div>
                                                                         </td>
                                                                     </tr>                                                                
@@ -684,14 +574,14 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                             C.I. Abogados Demandantes:
                                                                         </td>
                                                                         <td width="30%">
-                                                                            <input type="text" class='inputbox82' id="cedula_abogado_demandante" name="cedula_abogado_demandante" size="20" value="" onKeyDown="xajax_buscarAbogadoDemandantePopup('','',document.frminscribir.cedula_abogado_demandante.value);" onBlur="xajax_buscarAbogadoDemandantePopup('','',document.frminscribir.cedula_abogado_demandante.value);"/>                                  
+                                                                            <input type="text" class='inputbox82' id="cedula_abogado_demandante" name="cedula_abogado_demandante" size="20" value=""/>                                  
                                                                             <img src="../comunes/images/ico_18_127.gif" onmouseover="Tip('Buscar Abogado Demandantes')" onmouseout="UnTip()" border="0" onclick="vercatalogo(4);"/> 
                                                                         </td>
                                                                         <td width="20%">
                                                                             Nombre:
                                                                         </td>
                                                                         <td width="30%">
-                                                                            <input type="text" readonly="readonly" class='inputbox82' id="strnombre_abogado_demandante" name="strnombre_abogado_demandante" size="30" value="" onKeyDown="xajax_buscarAbogadoDemandantePopup(document.frminscribir.strnombre_abogado_demandante.value,'','');"/>
+                                                                            <input type="text" readonly="readonly" class='inputbox82' id="strnombre_abogado_demandante" name="strnombre_abogado_demandante" size="30" value="" />
                                                                             <input type="images" align="center" onmouseover="Tip('Ingresar Abogado Demandantes')" style="background-color:#B9D5E3;border:1px outset #B9D5E3;color:#004E7D;cursor:pointer;margin:1px;padding:1px; width:55px; font-size:11px;" onclick="xajax_IngresarAbogadoExpedienteDemandantes(document.frminscribir.cedula_abogado_demandante.value,document.frminscribir.id_proactuacion.value,'Demandantes');" value="Guardar" id="boton" name="boton">
                                                                             <input type="images" onmouseover="Tip('Cancelar Abogado Demandantes')" style="background-color:#B9D5E3;border:1px outset #B9D5E3;color:#004E7D;cursor:pointer;margin:1px;padding:1px; width:55px; font-size:11px;" onclick="javascript:$('contenedorAbogadosDemandantes').hide();$('id_tr_abogados_demandantes').hide();$('contenedorAbogadosDemandantesExpediente').show();" value="Cancelar" id="boton" name="boton">
                                                                         </td>
@@ -729,16 +619,14 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                             C.I. Abogado Responsable:
                                                                         </td>
                                                                         <td width="30%">
-                                                                         <?php if (!isset($_GET['id'])) $cedula_abo_responsable=$_SESSION['strdocumento']; else $cedula_abo_responsable=''; ?>
-                                                                            <input type="text" readonly="readonly" class='inputbox82' id="cedula_abogado_responsable" name="cedula_abogado_responsable" size="20" value="<?php echo $cedula_abo_responsable; ?>"/>                                  
+                                                                            <input type="text" readonly="readonly" class='inputbox82' id="cedula_abogado_responsable" name="cedula_abogado_responsable" size="20" value="<?php echo $_SESSION['strdocumento']; ?>"/>                                  
                         <!--                                                    <img src="../comunes/images/ico_18_127.gif" onmouseover="Tip('Buscar Abogado Responsable')" onmouseout="UnTip()" border="0" onclick="xajax_buscarAbogado(document.frminscribir.cedula_abogado_responsable.value,'responsable');"/>                                    -->
                                                                         </td>
                                                                         <td width="20%">
                                                                             Nombre:
                                                                         </td>
                                                                         <td width="30%">
-                                                                         <?php if (!isset($_GET['id'])) $nombre_abo_responsable=$_SESSION['strapellido'] . ", " . $_SESSION['strnombre']; else $nombre_abo_responsable=''; ?>
-                                                                            <input type="text" readonly="readonly" class='inputbox82' id="strnombre_abogado_responsable" name="strnombre_abogado_responsable" size="30" value="<?php echo $nombre_abo_responsable; ?>" />
+                                                                            <input type="text" readonly="readonly" class='inputbox82' id="strnombre_abogado_responsable" name="strnombre_abogado_responsable" size="30" value="<?php echo $_SESSION['strapellido'] . ", " . $_SESSION['strnombre']; ?>" />
                                                                         </td>
                                                                     </tr>     
                                                                     <!--
@@ -848,14 +736,14 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                             C.I. Abogados Organismo:
                                                                         </td>
                                                                         <td width="30%">
-                                                                            <input type="text" class='inputbox82' id="cedula_abogado_organismo" name="cedula_abogado_organismo" size="20" value="" onKeyDown="xajax_buscarAbogadosRepresentantesOrganismosPopup('','',document.frminscribir.cedula_abogado_organismo.value);" onBlur="xajax_buscarAbogadosRepresentantesOrganismosPopup('','',document.frminscribir.cedula_abogado_organismo.value);"/>                                  
+                                                                            <input type="text" readonly="readonly" class='inputbox82' id="cedula_abogado_organismo" name="cedula_abogado_organismo" size="20" value=""/>                                  
                                                                            <img src="../comunes/images/ico_18_127.gif" onmouseover="Tip('Buscar Abogado del Organismo Demandado')" onmouseout="UnTip()" border="0" onclick="vercatalogo(6);"/>                                                    
                                                                         </td>
                                                                         <td width="20%">
                                                                             Nombre:
                                                                         </td>
                                                                         <td width="30%">
-                                                                            <input type="text" readonly="readonly" class='inputbox82' id="strnombre_abogado_organismo" name="strnombre_abogado_organismo" size="30" value="" onKeyDown="xajax_buscarAbogadosRepresentantesOrganismosPopup(document.frminscribir.strnombre_abogado_organismo.value,'','');"/>
+                                                                            <input type="text" readonly="readonly" class='inputbox82' id="strnombre_abogado_organismo" name="strnombre_abogado_organismo" size="30" value="" />
                                                                             <input type="images" align="center" onmouseover="Tip('Ingresar Abogado del Organismo Demandado')" style="background-color:#B9D5E3;border:1px outset #B9D5E3;color:#004E7D;cursor:pointer;margin:1px;padding:1px; width:55px; font-size:11px;" onclick="xajax_IngresarAbogadoRepresentantesExpediente(document.frminscribir.cedula_abogado_organismo.value,document.frminscribir.id_proactuacion.value,'Representantes');" value="Guardar" id="boton" name="boton">
                                                                             <input type="images" onmouseover="Tip('Cancelar Abogado Demandantes')" style="background-color:#B9D5E3;border:1px outset #B9D5E3;color:#004E7D;cursor:pointer;margin:1px;padding:1px; width:55px; font-size:11px;" onclick="javascript:$('contenedorAbogadosRepresentantesOrganismos').hide();$('id_tr_abogados_organismo').hide();$('contenedorAbogadosOrganismosExpediente').show();" value="Cancelar" id="boton" name="boton">
                                                                         </td>
@@ -1733,46 +1621,6 @@ $xajax->printJavascript('../comunes/xajax/');
                                                                     </tr>     
                                                                 </table>
                                                             </div>
-                                                            <div id="country10"  class="tabcontent" style="height:100%; overflow-y:auto">
-                                                                    <table width="100%" border="0" class="tablaTitulo" >
-                                                                    <tr>
-                                                                        <td colspan="6" bgcolor="#F8F8F8" >
-                                                                            <div align="right">
-                                                                            <img id="saveReasignar" style="display:none;" name="saveReasignar" src="../comunes/images/disk.png" onmouseover="Tip('Reasignar Expediente')" onmouseout="UnTip()" border="0" onclick="xajax_validar_reasignacion(xajax.getFormValues('frminscribir'));"/>                                                    
-                                                                            </div>
-                                                                        </td>
-                                                                    </tr>                                                  
-                                                                        <tr>
-                                                                            <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
-                                                                                <div align="center" style="background-image: url('../comunes/images/barra.png')">
-                                                                                    <strong>Reasignar Expediente a Otro Usuario</strong>
-                                                                                </div>
-                                                                            </td>
-                                                                        </tr>                                                
-                                                                    <tr>
-                                                                        <td width="20%">
-                                                                            Motivo:
-                                                                        </td>
-                                                                        <td width="30%">
-                                                                            <div id="capaIdMotivoReasignacion">
-                                                                                <select id="id_motivo_reasignacion" name="id_motivo_reasignacion" style='width:50%'>
-                                                                                    <option value="0">Seleccione</option>
-                                                                                </select>
-                                                                            </div>                                                            
-                                                                        </td> 
-                                                                        <td width="20%">Abogado
-                                                                        </td>
-                                                                        <td width="30%">
-                                                                            <div id="capaIdAbogadoReasignado">
-                                                                                <select id="id_reasignacion_abogado" name="id_reasignacion_abogado" style='width:50%'>
-                                                                                    <option value="0">Seleccione</option>
-                                                                                </select>
-                                                                            </div>                                                            
-                                                                        </td>                                                
-                                                                    </tr>                                             
-                                                                </table>
-                                                            </div>                                     
-                                                            
                                                         </div>
                                                     </div>
                                                 </td>

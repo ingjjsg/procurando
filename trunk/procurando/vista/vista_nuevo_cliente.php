@@ -15,6 +15,7 @@
     $xajax= new xajax();
    
     $xajax->registerFunction('buscarDatosClientes');
+    $xajax->registerFunction('BuscarCedulaRepetida');    
     $xajax->registerFunction('buscar_cedula_cliente');
     $xajax->registerFunction('selectAllClientesFiltro');
     $xajax->registerFunction('llenarSelectEstados');
@@ -131,7 +132,19 @@
                                                 <strong>Datos del Cliente</strong>
                                             </div>
                                         </td>
-                                    </tr>                                     
+                                    </tr>            
+                                    <tr>
+                                       <td width="20%">
+                                            Cedula:
+                                        </td>
+                                        <td width="30%">
+                                            <?php if ($lngcodigo_cliente!='') {?>
+                                            <input type="text" class='inputbox' id="strcedula" name="strcedula" size="30" />
+                                            <?php } else {?>
+                                            <input type="text" class='inputbox' id="strcedula" name="strcedula" onblur="xajax_BuscarCedulaRepetida(document.frmcliente_nuevo.strcedula.value);" size="30" />
+                                            <?php }?>
+                                        </td>
+                                    </tr>                                      
                                     <tr>
                                         <td width="20%">
                                             Nombre:
@@ -144,14 +157,6 @@
                                         </td>
                                         <td width="30%">
                                             <input type="text" class='inputbox82' id="strapellido" name="strapellido" size="30" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                       <td width="20%">
-                                            Cedula:
-                                        </td>
-                                        <td width="30%">
-                                            <input type="text" class='inputbox' id="strcedula" name="strcedula" onBlur="xajax_buscar_cedula_cliente(document.frmcliente_nuevo.strcedula.value,document.frmcliente_nuevo.id_cliente.value);" size="30" />
                                         </td>
                                     </tr>
                                     <tr>

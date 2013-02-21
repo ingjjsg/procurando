@@ -7,8 +7,8 @@
 
     $xajax= new xajax();
     $xajax->registerFunction('selectAllActuaciones');
-    /*$xajax->registerFunction('eliminarAsociacion');
-    $xajax->registerFunction('formfiltro');*/
+    $xajax->registerFunction('eliminar_actuacion');
+    /*$xajax->registerFunction('formfiltro');*/
 	$xajax->processRequest();
     $xajax->printJavascript('../comunes/xajax/');
 ?>

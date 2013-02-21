@@ -2,8 +2,12 @@
     session_start();
     require_once "../controlador/tblagendaControlador.php";
     require_once ('../comunes/xajax/xajax_core/xajax.inc.php');
+
     $xajax= new xajax();
-    $xajax->registerFunction('IntroAgenda');    
+    $xajax->registerFunction('selectActividadMensual'); 
+    $xajax->registerFunction('selectSemanaActual');     
+    $xajax->registerFunction('IntroAgenda');     
+    $xajax->registerFunction('selectAgendaMeses');       
 
     $xajax->processRequest();
     $xajax->printJavascript('../comunes/xajax/');
@@ -18,14 +22,17 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta http-equiv="pragma" content="no-cache">
         <link rel="shortcut icon" href="imagenes/favicon.ico" type="image/x-icon" >
+        <link href="../comunes/css/style.css.php" rel="stylesheet" type="text/css"/>
+<!--        <link href="../comunes/css/CalendarControl.css" rel="stylesheet" type="text/css"/>
+        <link href="../comunes/css/TimeControl.css" rel="stylesheet" type="text/css"/>                -->
         <link href="../comunes/css/general.css" rel="stylesheet" type="text/css" />
-        <link href="../comunes/css/intro.css" rel="stylesheet" type="text/css" />        
         <link href="../comunes/css/enlaces.css" rel="stylesheet" type="text/css" />
         <link href="../comunes/css/pagination.css" rel="stylesheet" type="text/css" />
         <link href="../comunes/css/calendar-blue2.css" rel="stylesheet" type="text/css" media="all" title="win2k-cold-1" />
         <script src="../comunes/js/funciones.js" type="text/javascript"></script>
         <script src="../comunes/js/prototype.js" type="text/javascript"></script>
         <script src="../comunes/js/effects.js" type="text/javascript"></script>
+<!--        <script src="../comunes/js/scriptaculous.js" type="text/javascript"></script>-->
         <script src="../comunes/js/calendar.js" type="text/javascript"></script>
         <script src="../comunes/js/calendar_es.js" type="text/javascript"></script>
         <script src="../comunes/js/calendar_setup.js" type="text/javascript"></script>
@@ -69,58 +76,154 @@
                 xajax_selectAllAgenda(id_tipo, id_evento, id_unidad, id_prioridad);                        
                 ver('formulario');
             }
+            function onload()
+            {
+                xajax_selectAgendaMeses(0);         
+                xajax_IntroAgenda();
+                xajax_selectSemanaActual();
+            }             
+            function fowar(step)
+            {
+                var anterior= document.frmAgenda.id_anterior.value;   
+                var actual= document.frmAgenda.id_actual.value;                   
+                var siguiente= document.frmAgenda.id_siguiente.value;                 
+                if (step=='ANY')
+                {
+                    ante=(-1)*anterior;
+                    ante=ante+12;
+                    anterior=(-1)*ante;
+                    document.frmAgenda.id_anterior.value=anterior;     
+                    
+                    sigu=(1)*siguiente;
+                    siguiente=sigu-12;
+                    document.frmAgenda.id_siguiente.value=siguiente;                    
+                }
+                if (step=='AN')
+                {
+                    ante=(-1)*anterior;
+                    ante=ante+1;
+                    anterior=(-1)*ante;
+                    document.frmAgenda.id_anterior.value=anterior;     
+                    
+                    sigu=(1)*siguiente;
+                    siguiente=sigu-1;
+                    document.frmAgenda.id_siguiente.value=siguiente;                    
+                }                
+                else if (step=='SI')
+                {
+                    sigu=(1)*siguiente;
+                    siguiente=sigu+1;
+                    document.frmAgenda.id_siguiente.value=siguiente; 
+                    
+                    ante=(-1)*anterior;
+                    ante=ante-1;
+                    anterior=(-1)*ante;
+                    document.frmAgenda.id_anterior.value=anterior;                       
+                }
+                else if (step=='SIY')
+                {
+                    sigu=(1)*siguiente;
+                    siguiente=sigu+12;
+                    document.frmAgenda.id_siguiente.value=siguiente; 
+                    
+                    ante=(-1)*anterior;
+                    ante=ante-12;
+                    anterior=(-1)*ante;
+                    document.frmAgenda.id_anterior.value=anterior;                       
+                }      
+                else if (step=='AC')
+                {
+                    document.frmAgenda.id_siguiente.value=1; 
+                    document.frmAgenda.id_anterior.value=-1;                       
+                }                 
+            }             
         </script>
     </head>
-    <body onload="xajax_IntroAgenda();">
+    <body onload="onload();">
         <form name="frmAgenda" id="frmAgenda" method="post" style="">
             <script src="../comunes/js/wz_tooltip/wz_tooltip.js" type="text/javascript"></script>
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding-top:10px; padding-bottom:0px;">
-            <tr>
-                <div id="sample-container">
-                    <div id="sample04">
-                        <div id="banner">
-                            <h1>Buzon de Correo</h1>
-                        </div>
-                        <div id="nav">
-                            <p><img src="../comunes/images/intro/correo.jpg" onmouseover="Tip('Ir a Correo')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='bandejaVista.php'"/>                 </p>
-                        </div>
-                        <div id="content">
-                            <h2>0 Leido</h2>
-                            <h2>0 No Leidos</div></h2>
-                        </div>
-                     </div>
-    	         </div>
-                
-                <div id="sample-container">
-                    <div id="sample04">
-                        <div id="banner">
-                            <h1>Buzon de Agenda</h1>
-                        </div>
-                        <div id="nav">
-                            <p><img src="../comunes/images/intro/agenda.jpg" onmouseover="Tip('Ir Agenda')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_tblagenda.php'"/>                 </p>
-                        </div>
-                        <div id="content">
-                            <h2><div id="numagendaleidos"></div></h2>
-                            <h2><div id="numagendanoleidos"></div></h2>
-                        </div>
-                     </div>
-    	         </div>
 
-                <div id="sample-container">
-                    <div id="sample04">
-                        <div id="banner">
-                            <h1>Buzon de Documentos</h1>
-                        </div>
-                        <div id="nav">
-                            <p><img src="../comunes/images/intro/documentos.jpg" onmouseover="Tip('Ir a Documento')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_tblDocumento.php'"/>                 </p>
-                        </div>
-                        <div id="content">
-                            <h2><div id="numdocumentosleidos"></div></h2>
-                            <h2><div id="numdocumentosnoleidos"></div></h2>
-                        </div>
-                  </div>
-    	         </div>
-           </tr>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding-top:10px; padding-bottom:0px;">
+                <tr>
+                    <td>
+                        <div id="formulario" style=" width:100%;" align="left">
+                                <input type="hidden" class='inputbox82' id="id_agenda" name="id_agenda" size="30" />
+                                <input type="hidden" class='inputbox82' id="id_anterior" value="-1" name="id_anterior" size="30" />
+                                <input type="hidden" class='inputbox82' id="id_actual" value="0" name="id_actual" size="30" />
+                                <input type="hidden" class='inputbox82' id="id_siguiente" value="1" name="id_siguiente" size="30" />
+                                <table width="100%" border="0" class="tablaVer" >
+                                   <tr>
+                                        <td width="20%">
+                                        </td>
+                                        <td width="30%">
+                                        
+                                        </td>
+                                        
+                                        <td width="20%">
+                                        </td>
+                                        <td width="30%">
+
+                                        </td>
+                                    </tr>          
+ 
+                                    <tr>
+                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                            <div align="left" style="background-image: url('../comunes/images/barra.png')">
+                                                <strong>DOMINGO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LUNES&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MARTES&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MIERCOLES&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JUEVES&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VIERNES&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SABADO</strong>
+                                            </div>
+                                        </td>
+                                    </tr>                                     
+                                    <tr>
+                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                            <div class="box" id="semana">
+                                              <img src="../comunes/images/ajax-loader.gif">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                            <div align="center" style="background-image: url('../comunes/images/barra.png')">
+                                                <strong>AGENDA PERSONAL</strong>
+                                            </div>
+                                        </td>
+                                    </tr>                                    
+                                    <tr>
+                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                            <div class="box" id="semana_actividad_texto">
+                                              <img src="../comunes/images/ajax-loader.gif">
+                                            </div>
+                                        </td>                                        
+                                    </tr>                                      
+                                    <tr>
+                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                            <div align="center" >
+                    <!--                        <img id="anteriorano" src="../comunes/images/b_firstpage.png"  border="0" onclick="fowar('ANY');xajax_selectAgendaMeses(document.frmAgenda.id_anterior.value);"/>
+                                            &nbsp;&nbsp;&nbsp;                                            -->
+                                            <img id="anterior" src="../comunes/images/b_prevpage.png"  border="0" onclick="xajax_selectAgendaMeses(document.frmAgenda.id_anterior.value);fowar('AN');"/>
+                                            &nbsp;&nbsp;&nbsp;
+                                            <img id="actual" src="../comunes/images/b_nextpage.png"  border="0" onclick="xajax_selectAgendaMeses(document.frmAgenda.id_actual.value);fowar('AC');"/>
+                                            &nbsp;&nbsp;&nbsp;
+                                            <img id="siguiente" src="../comunes/images/b_nextpage.png"  border="0" onclick="xajax_selectAgendaMeses(document.frmAgenda.id_siguiente.value);fowar('SI');"/>
+                    <!--                        &nbsp;&nbsp;&nbsp;
+                                            <img id="siguienteano" src="../comunes/images/b_lastpage.png"  border="0" onclick="fowar('SIY');xajax_selectAgendaMeses(document.frmAgenda.id_siguiente.value);"/>-->
+                                            </div>                    
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                            <div align="left" style="background-image: url('../comunes/images/barra.png')">
+                                                <strong>LUNES&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MARTES&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MIERCOLES&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JUEVES&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VIERNES&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SABADO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DOMINGO</strong>
+                                            </div>
+                                        </td>
+                                    </tr>                                      
+                                    <tr>
+                                        <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                            <div class="box" id="meses">
+                                             <img src="../comunes/images/ajax-loader.gif">
+                                            </div>
+                                        </td>
+                                    </tr>                                    
+                                </table>            
          <table>                
         </form>
     </body>
