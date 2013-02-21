@@ -1,0 +1,117 @@
+#TimeControlIFrame {
+  display: none;
+  left: 0px;
+  position: absolute;
+  top: 0px;
+  height: 250px;
+  width: 250px;
+  z-index: 99;
+}
+
+#TimeControl {
+  position:absolute;
+  background-color:#FFF;
+  margin:0;
+  padding:0;
+  z-index: 100;
+}
+
+#TimeControl table {
+  font-family: arial, verdana, helvetica, sans-serif;
+  font-size: 8pt;
+  border-left: 1px solid #336;
+  border-right: 1px solid #336;
+}
+
+#TimeControl th {
+  font-weight: normal;
+}
+
+#TimeControl th a {
+  font-weight: normal;
+  text-decoration: none;
+  color: #FFF;
+  padding: 1px;
+}
+
+#TimeControl td {
+  text-align: center;
+}
+#TimeControl td.office{
+	background: #99ff99;
+}
+
+#TimeControl td.early{
+	background: #ffffcc;
+	}
+#TimeControl td.other{
+		background:#ff9999;
+}
+#TimeControl .header {
+  background-color: #336;
+}
+
+#TimeControl .weekday {
+  background-color: #DDD;
+  color: #000;
+}
+
+#TimeControl .weekend {
+  background-color: #FFC;
+  color: #000;
+}
+
+#TimeControl .current {
+  border: 1px solid #339;
+  background-color: #336;
+  color: #FFF;
+}
+
+#TimeControl .weekday,
+#TimeControl .weekend,
+#TimeControl .current {
+  display: block;
+  text-decoration: none;
+  border: 1px solid #FFF;
+  width: 2em;
+}
+
+#TimeControl .weekday:hover,
+#TimeControl .weekend:hover,
+#TimeControl .current:hover {
+  color: #FFF;
+  background-color: #336;
+  border: 1px solid #999;
+}
+
+#TimeControl .previous {
+  text-align: left;
+}
+
+#TimeControl .next {
+  text-align: right;
+}
+
+#TimeControl .previous,
+#TimeControl .next {
+  padding: 1px 3px 1px 3px;
+  font-size: 1.4em;
+}
+
+#TimeControl .previous a,
+#TimeControl .next a {
+  color: #FFF;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+#TimeControl .title {
+  text-align: center;
+  font-weight: bold;
+  color: #FFF;
+}
+
+#TimeControl .empty {
+  background-color: #CCC;
+  border: 1px solid #FFF;
+}
