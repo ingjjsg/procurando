@@ -6,17 +6,18 @@
     require_once '../modelo/clConstantesModelo.php';
     if(isset($_GET['id'])){
         $lngcodigo_abogado = $_GET['id'];
-        $titulo_formulario = 'Editar Abogado';
+        $titulo_formulario = 'Editar Abogado Procuradúria';
         $funcion = 'xajax_editar_abogado';
     }else{
-        $titulo_formulario = 'Nuevo Abogado';
+        $titulo_formulario = 'Nuevo Abogado Procuradúria';
         $funcion = 'xajax_validar_abogado';
     }
     
     $formulario_accion=  clConstantesModelo::getFormulario_accion('abogados','abodados_procuraduria_litigio');
     
     $xajax= new xajax();
-   
+    $xajax->registerFunction('BuscarAbogadoCedulaRepetida');
+    $xajax->registerFunction('BuscarAbogadoRifRepetido');       
     $xajax->registerFunction('buscarDatosAbogados');
     $xajax->registerFunction('selectAllAbogadosFiltro');
     $xajax->registerFunction('llenarSelectEstados');
@@ -68,55 +69,6 @@
         <style>
             body {padding:0px;margin:0px;text-align:left;font:11px verdana, arial, helvetica, serif; background-color:#FFFFFF;}
         </style>
-        
-        <script type="text/javascript">
-	jQuery(document).ready(function(){
-		
-		var button = jQuery('#upload'), interval;
-		new AjaxUpload(button,{
-			action: 'subirFoto.php', 
-			name: 'image',
-			onSubmit : function(file, ext){
-				// cambiar el texto del boton cuando se selecicione la imagen		
-				button.text('Subiendo');
-				// desabilitar el boton
-				this.disable();
-				
-				interval = window.setInterval(function(){
-					var text = button.text();
-					if (text.length < 11){
-						button.text(text + '.');					
-					} else {
-						button.text('Subiendo');				
-					}
-				}, 200);
-			},
-			onComplete: function(file, response){
-				button.text('Subir Foto');
-							
-				window.clearInterval(interval);
-							
-				// Habilitar boton otra vez
-				this.enable();
-				
-				// Añadiendo las imagenes a mi lista
-				
-//				if($('#gallery li').length == 0){
-//					$('#gallery').html(response).fadeIn("fast");
-//					$('#gallery li').eq(0).hide().show("slow");
-//				}else{
-					jQuery('#foto').html("<img width='100' height='120' src='fotos/"+response+"' />");
-                                        jQuery('#strfoto').val(response);
-					//$('#gallery li').eq(0).hide().show("slow");
-//				}
-			}
-		});
-		
-		// Listar  fotos que hay en mi tabla
-		jQuery("#foto").load("subirFoto.php?action=listFotos");
-	});
-
-</script>
         <script language="javascript">
             jQuery(function($){
                 $("#strtelefono").mask("(9999) 999.99.99",{placeholder:" "});
@@ -181,6 +133,23 @@
                                 <input type="hidden" class='inputbox' id="id_abogado" name="id_abogado" size="30" />
                                 <table width="100%" border="0" class="tablaVer" >
                                     <tr>
+                                       <td width="20%">
+                                            Cedula:
+                                        </td>
+                                        <td width="30%">
+                                            <?php if ($lngcodigo_abogado!='') {?>
+                                            <input type="text" class='inputbox' id="strcedula" name="strcedula" size="30" />
+                                            <?php } else {?>
+                                            <input type="text" class='inputbox' id="strcedula" name="strcedula" onblur="xajax_BuscarAbogadoCedulaRepetida(document.frmabogado_nuevo.strcedula.value);" size="30" />
+                                            <?php }?>
+                                        </td>
+                                       <td width="20%">
+                                            
+                                        </td>
+                                        <td width="30%">
+                                        </td>                                        
+                                    </tr>                                     
+                                    <tr>
                                         <td width="20%">
                                             Nombre:
                                         </td>
@@ -192,14 +161,6 @@
                                         </td>
                                         <td width="30%">
                                             <input type="text" class='inputbox' id="strapellido" name="strapellido" size="30" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                       <td width="20%">
-                                            Cedula:
-                                        </td>
-                                        <td width="30%">
-                                            <input type="text" class='inputbox' id="strcedula" name="strcedula" size="30" />
                                         </td>
                                     </tr>
                                     <tr>
@@ -228,7 +189,7 @@
                                     
                                     <tr>
                                         <td width="20%">
-                                            Direccion:
+                                            Direccion Procesal:
                                         </td>
                                         <td width="30%">
                                             <textarea class="textarea" id="strdireccion" rows="2" cols="25" name="strdireccion"></textarea>
@@ -280,7 +241,11 @@
                                             Rif:
                                         </td>
                                         <td width="30%">
-                                            <input type="text" class='inputbox' id="strrif" name="strrif" size="30" />
+                                            <?php if ($lngcodigo_abogado!='') {?>
+                                            <input type="text" class='inputbox' id="strrif" name="strrif" size="30"  />
+                                            <?php } else {?>
+                                            <input type="text" class='inputbox' id="strrif" name="strrif" onblur="xajax_BuscarAbogadoRifRepetido(document.frmabogado_nuevo.strrif.value);" size="30" />
+                                            <?php }?>                                            
                                         </td>
                                         <td width="20%">
                                             Movil:

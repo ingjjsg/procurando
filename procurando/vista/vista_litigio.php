@@ -68,12 +68,11 @@
             }
             
             function filtrar(){
-                var cedula_cliente= document.frmexpedientes.cedula_cliente.value;
-                var cedula_abogado_responsable= document.frmexpedientes.cedula_abogado_responsable.value;
+                var nro_tribunal= document.frmexpedientes.nro_tribunal.value;
                 var cedula_abogado_ejecutor= document.frmexpedientes.cedula_abogado_ejecutor.value;
                 var strexpediente= document.frmexpedientes.strexpediente.value;
                 
-                xajax_selectAllExpedientesFiltro(1,cedula_cliente, cedula_abogado_responsable,cedula_abogado_ejecutor,strexpediente);
+                xajax_selectAllExpedientesFiltro(1,nro_tribunal, cedula_abogado_ejecutor,strexpediente);
                 verForm('formulario');
             }
             
@@ -93,10 +92,10 @@
                     <td width="65%" class="menu_izq_titulo">Expedientes Litigio</td>
                     <td width="10%" align="center" class="menu_izq_titulo">
                         <?php 
-                        if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario('expedientes'),'nuevo', clConstantesModelo::acciones_expedientes())) {?>
+                        //if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario('expedientes'),'nuevo', clConstantesModelo::acciones_expedientes())) {?>
                         <img src="../comunes/images/note_add.png" onmouseover="Tip('Nuevo Expediente')" onmouseout="UnTip()" onclick="location.href='vista_Ingresolitigio.php'"/>
                         &nbsp;&nbsp;&nbsp;
-                        <?php }?>
+                        <?php //}?>
                         <img src="../comunes/images/filter.png" onmouseover="Tip('Filtros')" onmouseout="UnTip()" border="0" onclick="verForm('formulario');"/>
                         &nbsp;&nbsp;&nbsp;
                         <?php 
@@ -114,17 +113,17 @@
                                 <table width="100%" border="0" class="tablaVer" >
                                     <tr>
                                         <td width="20%">
-                                            Cédula Solicitante:
+                                            Expediente:
                                         </td>
                                         <td width="30%">
-                                            <input type="text" class='inputbox82' id="cedula_cliente" name="cedula_cliente" size="30" />
+                                            <input type="text" class='inputbox82' id="strexpediente" name="strexpediente" size="30" />
                                         </td>
-                                        <td width="20%">
-                                            Cédula Abogado Responsable:
+                                       <td width="20%">
+                                            N° Tribunal:
                                         </td>
                                         <td width="30%">
-                                            <input type="text" class='inputbox82' id="cedula_abogado_responsable" name="cedula_abogado_responsable" size="30" />
-                                        </td>
+                                            <input type="text" class='inputbox82' id="nro_tribunal" name="nro_tribunal" size="30" />
+                                        </td>                                        
                                     </tr>
                                     <tr>
                                        <td width="20%">
@@ -134,13 +133,10 @@
                                             <input type="text" class='inputbox82' id="cedula_abogado_ejecutor" name="cedula_abogado_ejecutor" size="30" />
                                         </td>
                                         <td width="20%">
-                                            Expediente:
                                         </td>
                                         <td width="30%">
-                                            <input type="text" class='inputbox82' id="strexpediente" name="strexpediente" size="30" />
                                         </td>
-                                    </tr>
-                                  
+                                    </tr>                                    
                                     <tr>
                                         <td align="right" colspan="8">
                                             <input type="button" value="filtrar" onclick="filtrar();">

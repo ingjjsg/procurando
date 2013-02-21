@@ -13,10 +13,14 @@
     if($_GET['clon']!=''){
         $clon=$_GET['clon'];
     }
-        
+    if($_GET['date']!=''){
+        $arreglo_fecha=explode('-',$_GET['date']);
+        $fecha=$arreglo_fecha[2].'/'.$arreglo_fecha[1].'/'.$arreglo_fecha[0];
+    }        
     
     $xajax= new xajax();
-    $xajax->registerFunction('verExpediente');
+    $xajax->registerFunction('buscarExpedienteLitigio');
+    $xajax->registerFunction('verExpediente');    
     $xajax->registerFunction('buscarPersona');    
     $xajax->registerFunction('buscarPersonaPopup');    
     $xajax->registerFunction('verPersona');    
@@ -371,7 +375,7 @@
                                             Fecha del Evento:                                            
                                         </td>
                                         <td width="30%">
-                                            <input type="text" class='inputbox82' id="fecagenda" name="fecagenda" size="10" />
+                                            <input type="text" class='inputbox82' id="fecagenda" name="fecagenda" size="10" value="<?php echo $fecha; ?>" />
                                             <img name="button"  id="lanzador1"  src="../comunes/images/calendar.png" align="middle"/>
                                                 <script type="text/javascript">
                                                     Calendar.setup({

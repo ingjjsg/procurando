@@ -5,7 +5,7 @@
     require_once '../modelo/clPermisoModelo.php';
     require_once '../modelo/clConstantesModelo.php';
     if ($_SESSION['id_oficina']=='L') $nombre_modulo=' Demandantes';
-    else  $nombre_modulo='Solicitantes';
+    else  $nombre_modulo='Conyugues';
     
     $formulario_accion=  clConstantesModelo::getFormulario_accion('contrarios','demandantes_litigio');
 
@@ -93,7 +93,7 @@
             <form name="frmcontrarios" id="frmcontrarios" method="post">
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
-                    <td width="65%" class="menu_izq_titulo">Contrarios</td>
+                    <td width="65%" class="menu_izq_titulo"><?php echo $nombre_modulo; ?> </td>
                     <td width="10%" align="center" class="menu_izq_titulo">
                         <?php 
                         if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario($formulario_accion['formulario']),'nuevo', $formulario_accion['accion'])) {?>

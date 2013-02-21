@@ -8,7 +8,7 @@
 //    else  $nombre_modulo='Abogado Contrario';
     
     if ($_SESSION['id_oficina']=='L') {
-        $nombre_modulo='Demandante';
+        $nombre_modulo='Abogado Demandante';
         $formulario='abogados_demandantes';
         $accion='acciones_abogados_demandantes';
     }
@@ -29,7 +29,8 @@
     }
     
     $xajax= new xajax();
-   
+    $xajax->registerFunction('BuscarAbogadoCedulaRepetida');
+    $xajax->registerFunction('BuscarAbogadoRifRepetido');     
     $xajax->registerFunction('buscarDatosAbogadosContrarios');
     $xajax->registerFunction('selectAllAbogadosContrariosFiltro');
     $xajax->registerFunction('llenarSelectEstados');
@@ -199,6 +200,23 @@
                                         </td>
                                     </tr>                                    
                                     <tr>
+                                       <td width="20%">
+                                            Cedula:
+                                        </td>
+                                        <td width="30%">
+                                            <?php if ($lngcodigo_abogado!='') {?>
+                                            <input type="text" class='inputbox' id="strcedula" name="strcedula" size="30" />
+                                            <?php } else {?>
+                                            <input type="text" class='inputbox' id="strcedula" name="strcedula" onblur="xajax_BuscarAbogadoCedulaRepetida(document.frmabogado_contrario_nuevo.strcedula.value);" size="30" />
+                                            <?php }?>
+                                        </td>
+                                       <td width="20%">
+                                            
+                                        </td>
+                                        <td width="30%">
+                                        </td>                                        
+                                    </tr>                                      
+                                    <tr>
                                         <td width="20%">
                                             Nombre:
                                         </td>
@@ -210,14 +228,6 @@
                                         </td>
                                         <td width="30%">
                                             <input type="text" class='inputbox' id="strapellido" name="strapellido" size="30" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                       <td width="20%">
-                                            Cedula:
-                                        </td>
-                                        <td width="30%">
-                                            <input type="text" class='inputbox' id="strcedula" name="strcedula" size="30" />
                                         </td>
                                     </tr>
                                     <tr>
@@ -246,7 +256,7 @@
                                     
                                     <tr>
                                         <td width="20%">
-                                            Direccion:
+                                            Direccion Procesal:
                                         </td>
                                         <td width="30%">
                                             <textarea class="textarea" id="strdireccion" rows="2" cols="25" name="strdireccion"></textarea>
@@ -303,8 +313,12 @@
                                             Rif:
                                         </td>
                                         <td width="30%">
+                                            <?php if ($lngcodigo_abogado!='') {?>
                                             <input type="text" class='inputbox' id="strrif" name="strrif" size="30" />
-                                        </td>
+                                            <?php } else {?>
+                                            <input type="text" class='inputbox' id="strrif" name="strrif" onblur="xajax_BuscarAbogadoRifRepetido(document.frmabogado_contrario_nuevo.strrif.value);" size="30" />
+                                            <?php }?>
+                                        </td>                                        
                                         <td width="20%">
                                             Movil:
                                         </td>
@@ -328,7 +342,7 @@
                                         </td>
                                     </tr>
                                     
-                                    <tr>
+<!--                                    <tr>
                                         <td width="20%">
                                             IPSA:
                                         </td>
@@ -341,7 +355,7 @@
                                         <td width="30%">
                                             <input type="text" class='inputbox' id="strnif_cif" name="strnif_cif" size="30" />
                                         </td>
-                                    </tr>
+                                    </tr>-->
                                     
 <!--                                     <tr>
                                         <td width="20%">

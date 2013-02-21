@@ -1,25 +1,16 @@
 <?php
     session_start();
-    require_once "../controlador/controlador_abogados_contrarios.php";
+    require_once "../controlador/controlador_abogados_representantes.php";
     require_once ('../comunes/xajax/xajax_core/xajax.inc.php');
     require_once '../modelo/clPermisoModelo.php';
     require_once '../modelo/clConstantesModelo.php';
-    if ($_SESSION['id_oficina']=='L') {
-        $nombre_modulo='Abogados Demandantes';
-        $formulario='abogados_demandantes';
-        $accion='acciones_abogados_demandantes';
-    }
-    else {
-        $nombre_modulo='Abogados Conyugues';
-        $formulario='abogados_contrarios';
-        $accion='acciones_abogados_contrarios';
-    }
+    
+    $formulario_accion=  clConstantesModelo::getFormulario_accion('abogados','abodados_procuraduria_litigio');
 
     $xajax= new xajax();
    
-    $xajax->registerFunction('buscarDatosAbogadosContrarios');
-    $xajax->registerFunction('selectAllAbogadosContrariosFiltro');
-    
+    $xajax->registerFunction('buscarDatosAbogados');
+    $xajax->registerFunction('selectAllAbogadosFiltro');
     $xajax->registerFunction('eliminar_abogado');
     
     $xajax->processRequest();
@@ -78,11 +69,11 @@
             }
             
             function filtrar(){
-                var nombre= document.frmabogados_contrarios.strnombre.value;
-                var apellido= document.frmabogados_contrarios.strapellido.value;
-                var cedula= document.frmabogados_contrarios.strcedula.value;
+                var nombre= document.frmabogados.strnombre.value;
+                var apellido= document.frmabogados.strapellido.value;
+                var cedula= document.frmabogados.strcedula.value;
                 
-                xajax_selectAllAbogadosContrariosFiltro(nombre, apellido,cedula);
+                xajax_selectAllAbogadosFiltro(nombre, apellido,cedula);
                 verForm('formulario');
             }
             
@@ -93,17 +84,17 @@
             }
         </script>
     </head>
-    <body onload="xajax_buscarDatosAbogadosContrarios();" >
+    <body onload="xajax_buscarDatosAbogados()" >
         <script src="../comunes/js/wz_tooltip/wz_tooltip.js" type="text/javascript"></script>
         <center>
-            <form name="frmabogados_contrarios" id="frmabogados_contrarios" method="post">
+            <form name="frmabogados" id="frmabogados" method="post">
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
-                    <td width="65%" class="menu_izq_titulo"><?php echo $nombre_modulo; ?></td>
+                    <td width="65%" class="menu_izq_titulo">Abogados Institutos</td>
                     <td width="10%" align="center" class="menu_izq_titulo">
                         <?php 
-                        if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario($formulario),'nuevo', clConstantesModelo::$accion())) {?>
-                        <img src="../comunes/images/user_add.png" onmouseover="Tip('Nuevo Abogado')" onmouseout="UnTip()" onclick="location.href='vista_nuevo_abogado_contrario.php'"/>
+                        if(clPermisoModelo::getVerificar_Accion(clConstantesModelo::getFormulario($formulario_accion['formulario']),'nuevo', $formulario_accion['accion'])) {?>
+                        <img src="../comunes/images/user_add.png" onmouseover="Tip('Nuevo Abogado Representante')" onmouseout="UnTip()" onclick="location.href='vista_nuevo_abogados_representantes.php'"/>
                         &nbsp;&nbsp;&nbsp;
                         <?php }?>
                         <img src="../comunes/images/filter.png" onmouseover="Tip('Filtros')" onmouseout="UnTip()" border="0" onclick="verForm('formulario');"/>
@@ -161,4 +152,10 @@
             </form>
         </center>
     </body>
-</html>
+</html><?php
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+?>
