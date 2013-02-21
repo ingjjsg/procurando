@@ -2,12 +2,14 @@
 require_once 'plantilla_reporte.php';
 require_once '../modelo/ctblproexpedienteModelo.php';
 require_once '../modelo/clFunciones.php';
-
+//
+//exit($_GET['id_tipo_tramite']);
 $proexpediente= new clProExpediente();
 $data= "";
-$request= unserialize($_GET['data']);
-$data= $proexpediente->selectAllExpedienteReporte($request['id_tipo_tramite'], $request['id_tipo_atencion'], $request['id_actuacion_persona'],$request['id_tipo_organismo'],$request['id_organismo'],$request['id_tipo_fase'],$request['id_fase'],$request['strnroexpediente'],$request['strnroexpedienteauxiliar']);
-
+//$request= unserialize($_GET['data']);
+//exit(print_r($_GET));
+$data= $proexpediente->selectAllExpedienteReporte($_GET['id_tipo_tramite'], $_GET['id_tipo_atencion'], $_GET['id_actuacion_persona'],$_GET['id_tipo_organismo'],$_GET['id_organismo'],$_GET['id_tipo_fase'],$_GET['id_fase'],$_GET['strnroexpediente'],$_GET['strnroexpedienteauxiliar']);
+//print_r($data);
 
 $pdf=new Plantilla("L");
 $pdf->setTitulo("Expedientes");
@@ -19,6 +21,7 @@ $html='
             border: 1px solid #000; 
             line-height: normal;
             text-align:center;
+            font-size:25px;              
         }
         
         tr>th {
@@ -31,39 +34,55 @@ $html='
             width:30px;
         }
         
+        .nroexpediente{
+            width:100px;
+        }
+        
         .departamento {
-            width:150px;
+            width:250px;
         }
         
         .prioridad {
-            width:70px;
+            width:100px;
         }
     </style>
 
     <table>
         <tr>
             <th class="nro">N°</th>
-            <th>Expediente</th>
-            <th>Expediente Auxiliar</th>
-            <th>Tipo Organismo</th>
-            <th>Organismo</th>
-            <th>Titulo</th>
+            <th class="nroexpediente">Expediente</th>
+            <th class="departamento">Tramite</th>
+            <th class="prioridad">Tipo Organismo</th>
+            <th class="departamento">Organismo</th>
          </tr>';
 $count=0;
-
+$indice=0;
 if($data){
-foreach ($data as $key => $value) {
-    
-        $html.='<tr>';
-            $html.='<td class="nro">'.++$count.'</td>';
-            $html.='<td>'.$data[$key]['strnroexpediente'].'</td>';
-            $html.='<td>'.$data[$key]['strnroexpedienteauxiliar'].'</td>';
-            $html.='<td>'.  clFunciones::mostrarStritema($data[$key]['id_tipo_organismo']).'</td>';
-            $html.='<td>'.  clFunciones::mostrarStritema($data[$key]['id_organismo']).'</td>';
-            $html.='<td>'.$data[$key]['strtitulo'].'</td>';
-        $html.="</tr>";
-    
-}
+    foreach ($data as $key => $value) {
+            $html.='<tr>';
+                $html.='<td class="nro">'.++$count.'</td>';
+                $html.='<td>'.strtoupper($data[$key]['strnroexpediente']).'</td>';
+                if ($data[$key]['id_tipo_tramite_text']) 
+                    $html.='<td>'.strtoupper($data[$key]['id_tipo_tramite_text']).'</td>';
+                else            
+                    $html.='<td> No Registrado</td>';
+                if ($data[$key]['id_tipo_organismo']) 
+                    $html.='<td>'.strtoupper($data[$key]['id_tipo_organismo_text']).'</td>';
+                else            
+                    $html.='<td> No Registrado</td>';          
+                if ($data[$key]['id_organismo']) 
+                    $html.='<td>'.strtoupper($data[$key]['id_organismo_text']).'</td>';
+                else            
+                    $html.='<td> No Registrado</td>';
+            $html.="</tr>";
+//        if ($indice>10)
+//        {
+//            $html.='<br /><br /><br />';      
+//            $indice=0;        
+//        }
+//           $indice++;
+
+    }
 }
 
 $html.='</table>';
@@ -72,3 +91,4 @@ $pdf->writeHTML($html);
 $pdf->Output("reporte_expediente.pdf", "I");
 
 ?>
+
