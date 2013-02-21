@@ -402,6 +402,22 @@ public function llenar($request)
         return $this->date=$date;
     }    
     
+    static public function getDiaActividad($fec) {
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $sql = "select strtitulo, to_char(fecagenda,'DD/MM/YYYY') as fecagenda   ";
+        $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_tipo) AS id_tipo_agenda ";
+        $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_evento) AS id_evento_agenda ";
+        $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_prioridad) AS id_prioridad_agenda ";
+        $sql.=" from ".clConstantesModelo::correspondencia_table . "tblagenda  where fecagenda='".date("Y", $fec).'-'.date("m", $fec).'-'.date("d", $fec)."' and id_usuario=".$_SESSION['id_contacto'];        
+//        exit($sql);
+        $conn->sql= $sql;
+        $data= $conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();
+        return $data;
+    }        
+    
+    
     public function selectAllAgendaExpediente($id,$tipo_expediente){
         $conn= new Conexion();
         $conn->abrirConexion();
@@ -646,7 +662,7 @@ public function llenar($request)
                     $conn->ejecutarSentencia();                    
                 }
         }
-        exit($sql)   ;     
+//        exit($sql)   ;     
         $retorno= $this->verIdAgenda();
         $conn->cerrarConexion();
         return $retorno;
@@ -1004,6 +1020,34 @@ public function llenar($request)
     }
         
     
+    public function selectAllAgendaFecha($pagina,$fecha){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $sql.= "SELECT id_agenda, id_usuario, id_tipo, id_evento, id_prioridad, id_estado, id_recordatorio, id_unidad, fecagenda, strdescripcion, strtitulo, id_expediente, bolborrado, strpersona, id_refiere, visto, id_seguimiento, origen  ";
+        $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_tipo) AS id_tipo_agenda ";
+        $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_evento) AS id_evento_agenda ";
+        $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_prioridad) AS id_prioridad_agenda ";
+        $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_estado) AS id_estado_agenda ";
+        $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_recordatorio) AS id_recordatorio_agenda ";
+        $sql.=" ,(SELECT stritema FROM ".clConstantesModelo::correspondencia_table."tblmaestros WHERE id_maestro= id_unidad) AS id_unidad_agenda ";        
+        $sql.=" from ".clConstantesModelo::correspondencia_table."vista_agenda where  bolborrado=0 and id_usuario=".$_SESSION['id_contacto']." and fecagenda='".$fecha."'order by id_agenda desc";
+//        exit($sql);
+        $conn->sql=$sql;
+        $_pagi_sql= $conn->sql;
+        $_pagi_cuantos = 10;
+        $_pagi_nav_num_enlaces = 5;
+        $_pagi_actual = $pagina;
+        include_once '../comunes/php/paginacion/paginator7.inc.php';
+        $data = pg_fetch_all($_pagi_result);
+        $data2[0]= $data;
+        $data2[1]=  "<p>".$_pagi_navegacion."</p>";
+        //echo $_pagi_navegacion;
+        return $data2;        
+        $data= $conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();        
+        return $data;
+    }     
+        
     
  } 
 ?>

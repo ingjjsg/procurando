@@ -156,6 +156,20 @@ public function llenar($request)
         return $this->strnombreactuacion=$strnombreactuacion;
     }
 
+
+     
+     public function Delete($id_actuacion) {
+              $conn = new Conexion ();
+               $conn->abrirConexion ();
+               $sql = "update " . clConstantesModelo::scsd_table . "tblproactuaciones
+                      set
+                      bolborrado=1  where id_proactuaciones=".$id_actuacion;
+//               exit($sql);
+               $conn->sql = $sql;
+               $conn->ejecutarSentencia ();
+               $conn->cerrarConexion ();
+               return true;
+      }     
     
      public function selectDetalleActuacionExpediente($id_proactuaciones,$id_expediente_actuacion) {
                $conn = new Conexion ();
@@ -258,7 +272,7 @@ public function llenar($request)
                 (SELECT stritema
                     FROM " . clConstantesModelo::scsd_table . "tblmaestros a1 WHERE a1.id_maestro=id_actuacion) AS               actuacion
             from
-            " . clConstantesModelo::scsd_table . "tblproactuaciones";
+            " . clConstantesModelo::scsd_table . "tblproactuaciones where bolborrado=0";
 //         exit($sql);
          $conn->sql=$sql;
          $data = $conn->ejecutarSentencia(2);
@@ -297,42 +311,6 @@ public function llenar($request)
                return true;
      }
 
-     public function selectAllActuacionesExpedienteLitigio($id_expediente="") {
-         $conn= new Conexion();
-         $conn->abrirConexion();
-         $sql = "";
-         $sql = "SELECT
-                b.id_litigio_actuaciones, b.id_proactuacion, b.id_tipo_actuacion, b.id_actuacion, b.strdescripcionactuacion, c.strnombreactuacion,
-                to_char(b.fecactuacion,'DD/MM/YYYY') as fecactuacion,
-                (SELECT stritema FROM " . clConstantesModelo::scsd_table . "tblmaestros a1 WHERE a1.id_maestro=b.id_tipo_actuacion) AS              tipo,
-                (SELECT stritema FROM " . clConstantesModelo::scsd_table . "tblmaestros a1 WHERE a1.id_maestro=b.id_actuacion) AS               actuacion
-            from
-            " . clConstantesModelo::scsd_table . "tbllitigio_actuaciones b, tblproactuaciones c  where b.id_escrito=c.id_proactuaciones";
-         if($id_expediente !=""){
-             $sql.=" and b.id_proactuacion=".$id_expediente;
-         }      
-
-         //exit($sql);
-         $conn->sql=$sql;
-         $data = $conn->ejecutarSentencia(2);
-         return $data;  
-     }
-
-     public function selectDetalleActuacionExpedienteLitigio($id_proactuaciones,$id_expediente_actuacion) {
-               $conn = new Conexion ();
-               $conn->abrirConexion ();
-               $sql = "";
-               $sql = "SELECT
-      id_litigio_actuaciones, id_proactuacion, id_tipo_actuacion, id_actuacion, id_escrito, strdescripcionactuacion, to_char(fecactuacion,'DD/MM/YYYY') as fecactuacion, strobservacion, strexpedientetribunal
-                    from
-                    " . clConstantesModelo::scsd_table . "tbllitigio_actuaciones"; 
-                   $sql.=" where id_litigio_actuaciones=".$id_proactuaciones." and id_proactuacion=".$id_expediente_actuacion;
-      //            exit($sql);
-               $conn->sql = $sql;
-               $data = $conn->ejecutarSentencia (2);
-               $conn->cerrarConexion ();
-               return $data;
-     } 
 
 
 /*

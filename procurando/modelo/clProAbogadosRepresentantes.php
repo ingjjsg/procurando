@@ -2,10 +2,10 @@
 
 require_once "../controlador/Conexion.php";
  /**
- * Description of clTbl_abogados
- * @author jmendoza
+ * Description of cltbl_abogados_representantes
+ * @author jsuarez
  */
- class clProAbogados {
+ class clProAbogadosRepresentantes {
 
 //=========================== VAR ===================
 
@@ -57,6 +57,10 @@ require_once "../controlador/Conexion.php";
   private   $id_sexo;
 
   private   $strcedula;
+  
+  private   $id_tipo_organismo;
+
+  private   $id_organismo;  
 
 //=========================== FUNCION LLENAR ===================
 
@@ -128,7 +132,6 @@ public function llenar($request)
      if($request['intbanco'] != ""){
         $this->set_intbanco($request['intbanco']);
      }
-     else  $this->set_intbanco(0);
 
 
      if($request['strcuentaban'] != ""){
@@ -179,6 +182,17 @@ public function llenar($request)
      if($request['strcedula'] != ""){
         $this->set_strcedula($request['strcedula']);
      }
+     
+
+
+     if($request['id_tipo_organismo'] != ""){
+        $this->set_id_tipo_organismo($request['id_tipo_organismo']);
+     }
+
+
+     if($request['id_organismo'] != ""){
+        $this->set_id_organismo($request['id_organismo']);
+     }     
 
 }//=========================== GET ===================
 
@@ -320,6 +334,18 @@ public function llenar($request)
     public function get_strcedula(){
         return $this->strcedula;
     }
+    
+
+
+    public function get_id_tipo_organismo(){
+        return $this->id_tipo_organismo;
+    }
+
+
+
+    public function get_id_organismo(){
+        return $this->id_organismo;
+    }    
 
 
 
@@ -465,11 +491,22 @@ public function llenar($request)
     }
 
 
+    public function set_id_tipo_organismo($id_tipo_organismo){
+        return $this->id_tipo_organismo=$id_tipo_organismo;
+    }
+
+
+
+    public function set_id_organismo($id_organismo){
+        return $this->id_organismo=$id_organismo;
+    }
+    
+    
 
     public static function getBuscarAbogadoRifRepetido($rif){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $sql="SELECT strrif FROM ".clConstantesModelo::correspondencia_table."tbl_abogados WHERE trim(strrif)='".$rif."'";        
+        $sql="SELECT strrif FROM ".clConstantesModelo::correspondencia_table."tbl_abogados_representantes WHERE trim(strrif)='".$rif."'";        
 //        exit($sql);
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
@@ -482,7 +519,7 @@ public function llenar($request)
     public static function getBuscarAbogadoCedulaRepetido($cedula){
         $conn= new Conexion();
         $conn->abrirConexion();
-        $sql="SELECT strcedula FROM ".clConstantesModelo::correspondencia_table."tbl_abogados WHERE trim(strcedula)='".$cedula."'";        
+        $sql="SELECT strcedula FROM ".clConstantesModelo::correspondencia_table."tbl_abogados_representantes WHERE trim(strcedula)='".$cedula."'";        
 //        exit($sql);
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
@@ -499,12 +536,14 @@ public function llenar($request)
      public function insertar(){
          $conn= new Conexion();
          $conn->abrirConexion();
-         $sql="Insert into public.tbl_abogados (
+         $sql="Insert into public.tbl_abogados_representantes (
          strdireccion,
          strcodigopostal,
          strlocalidad,
          id_estado,
          id_municipio,
+         id_tipo_organismo,
+         id_organismo,         
          strtelefono,
          strmovil,
          strfax,
@@ -526,7 +565,9 @@ public function llenar($request)
          .$this->get_strcodigopostal()."','"
          .$this->get_strlocalidad()."',"
          .$this->get_id_estado().","
-         .$this->get_id_municipio().",'"
+         .$this->get_id_municipio().","
+         .$this->get_id_tipo_organismo().","
+         .$this->get_id_organismo().",'"                 
          .$this->get_strtelefono()."','"
          .$this->get_strmovil()."','"
          .$this->get_strfax()."','"
@@ -545,7 +586,7 @@ public function llenar($request)
          .$this->get_id_sexo()."','"
          .$this->get_strcedula()."')";
          
-         
+//         exit($sql);
          $conn->sql=$sql;
          if($conn->ejecutarSentencia()){
              $retorno=true;
@@ -555,20 +596,6 @@ public function llenar($request)
          $conn->cerrarConexion();
          return $retorno;
     }
-    
-    public function nextValAbogado() {
-               $conn = new Conexion ();
-               $conn->abrirConexion ();
-               $sql="SELECT last_value as maximo FROM " . clConstantesModelo::correspondencia_table . "tbl_abogados_id_abogado_seq";
-               $conn->sql = $sql;
-               $data = $conn->ejecutarSentencia (2);
-               if ($data)
-               {
-                    $maximo=$data[0]['maximo'];
-               }
-               $conn->cerrarConexion ();
-               return $maximo;
-     }      
 //================================FUNCION CONSULTAR===============================================
 
 
@@ -582,6 +609,8 @@ public function llenar($request)
          id_estado,
          id_municipio,
          strtelefono,
+         id_tipo_organismo,
+         id_organismo,
          strmovil,
          strfax,
          stremail,
@@ -597,12 +626,12 @@ public function llenar($request)
          strnumcolegiado,
          strrif,
          id_sexo,
-         strcedula FROM public.tbl_abogados WHERE bolborrado=0";
+         strcedula FROM public.tbl_abogados_representantes WHERE bolborrado=0";
          if($lngcodigo != ""){
              $sql.=" AND id_abogado=$lngcodigo";
          }
          
-         //exit($sql);
+//         exit($sql);
          $conn->sql=$sql;
          $data = $conn->ejecutarSentencia(2);
          return $data;
@@ -618,6 +647,8 @@ public function llenar($request)
          strlocalidad,
          id_estado,
          id_municipio,
+         id_tipo_organismo,
+         id_organismo,         
          strtelefono,
          strmovil,
          strfax,
@@ -634,15 +665,15 @@ public function llenar($request)
          strnumcolegiado,
          strrif,
          id_sexo,
-         strcedula FROM public.tbl_abogados WHERE bolborrado=0";
+         strcedula FROM public.tbl_abogados_representantes WHERE bolborrado=0";
          if($strnombre != ""){
-             $sql .= " AND UPPER(tbl_abogados.strnombre) LIKE '%".strtoupper($strnombre)."%'";
+             $sql .= " AND UPPER(tbl_abogados_representantes.strnombre) LIKE '%".strtoupper($strnombre)."%'";
          }
          if($strapellido != ""){
-             $sql .= " AND UPPER(tbl_abogados.strapellido) LIKE '%".strtoupper($strapellido)."%'";
+             $sql .= " AND UPPER(tbl_abogados_representantes.strapellido) LIKE '%".strtoupper($strapellido)."%'";
          }
          if($strcedula != ""){
-             $sql .= " AND tbl_abogados.strcedula LIKE '%".strtoupper($strcedula)."%'";
+             $sql .= " AND tbl_abogados_representantes.strcedula LIKE '%".strtoupper($strcedula)."%'";
          }
          
          $conn->sql=$sql;
@@ -655,12 +686,14 @@ public function llenar($request)
      public function Update(){
          $conn= new Conexion();
          $conn->abrirConexion();
-         $sql="UPDATE public.tbl_abogados SET
+         $sql="UPDATE public.tbl_abogados_representantes SET
          strdireccion='".$this->get_strdireccion()."',
          strcodigopostal='".$this->get_strcodigopostal()."',
          strlocalidad='".$this->get_strlocalidad()."',
          id_estado=".$this->get_id_estado().",
          id_municipio=".$this->get_id_municipio().",
+         id_tipo_organismo=".$this->get_id_tipo_organismo().",
+         id_organismo=".$this->get_id_organismo().",
          strtelefono='".$this->get_strtelefono()."',
          strmovil='".$this->get_strmovil()."',
          strfax='".$this->get_strfax()."',
@@ -678,6 +711,7 @@ public function llenar($request)
          strrif='".$this->get_strrif()."',
          id_sexo=".$this->get_id_sexo().",
          strcedula='".$this->get_strcedula()."' WHERE id_abogado=".$this->get_id_abogado();
+//         exit($sql);
          $conn->sql=$sql;
          $data = $conn->ejecutarSentencia();
          return $data;
@@ -686,7 +720,7 @@ public function llenar($request)
     function Delete($id_abogado){
         $conn= new Conexion();
          $conn->abrirConexion();
-         $sql="UPDATE public.tbl_abogados SET
+         $sql="UPDATE public.tbl_abogados_representantes SET
          bolborrado=1
          WHERE id_abogado=".$id_abogado;
          $conn->sql=$sql;
@@ -694,14 +728,16 @@ public function llenar($request)
          return $data;
     }
     
-    public function buscarAbogResponsable($id=""){
+    public function buscarAbogRepresentantes($id=""){
          $conn= new Conexion();
          $conn->abrirConexion();
-         $sql="SELECT id_contacto,
+         $sql="SELECT id_abogado,
          strnombre,
          strapellido,
-         strdocumento as strcedula FROM public.tblcontacto WHERE bolborrado=0  AND id_contacto=$id";
-
+         strcedula FROM public.tbl_abogados_representantes WHERE bolborrado=0";
+         if($id != ""){
+             $sql.=" AND id_abogado=$id";
+         }
          
 //         exit($sql);
          $conn->sql=$sql;
@@ -715,8 +751,10 @@ public function llenar($request)
          $sql="SELECT id_abogado,
          strnombre,
          strapellido,
-         strcedula FROM public.tbl_abogados WHERE bolborrado=0 AND id_abogado='$id'";
-
+         strcedula FROM public.tbl_abogados_representantes WHERE bolborrado=0";
+         if($id != ""){
+             $sql.=" AND id_abogado='$id'";
+         }
          
 //         exit($sql);
          $conn->sql=$sql;
@@ -726,15 +764,34 @@ public function llenar($request)
        public function buscarAbogadoResponsable($id=""){
          $conn= new Conexion();
          $conn->abrirConexion();
-         $sql="SELECT id_abogado,
+         $sql="SELECT id_contacto,
          strnombre,
          strapellido,
-         strcedula  FROM public.tbl_abogados WHERE bolborrado=0  AND id_abogado=".$id;         
+         strdocumento FROM public.tblcontacto WHERE bolborrado=0";
+         if($id != ""){
+             $sql.=" AND id_contacto='$id'";
+         }
+         
 //         exit($sql);
          $conn->sql=$sql;
          $data = $conn->ejecutarSentencia(2);
          return $data;
     }    
+    
+    
+    public function nextValAbogado() {
+               $conn = new Conexion ();
+               $conn->abrirConexion ();
+               $sql="SELECT last_value as maximo FROM " . clConstantesModelo::correspondencia_table . "tbl_abogados_representantes_id_abogado_seq";
+               $conn->sql = $sql;
+               $data = $conn->ejecutarSentencia (2);
+               if ($data)
+               {
+                    $maximo=$data[0]['maximo'];
+               }
+               $conn->cerrarConexion ();
+               return $maximo;
+     }      
  }
 
 ?>

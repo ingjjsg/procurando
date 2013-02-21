@@ -128,10 +128,13 @@
 
 public function llenar($request)
 {
+
      $functions= new functions();   
+   
      if($request['id_proexpediente'] != ""){
         $this->set_id_proexpediente($request['id_proexpediente']);
      }
+     
 
 
      if($request['id_proclientecasos'] != ""){
@@ -241,11 +244,15 @@ public function llenar($request)
      }
 
 
-     if($request['id_tipo_atencion'] != ""){
-        $tipo=  explode('-', $request['id_tipo_atencion']);
-        $this->set_id_tipo_atencion($tipo[2]);
-     }
+//     if($request['id_tipo_atencion'] != ""){
+//        $tipo=  explode('-', $request['id_tipo_atencion']);
+//        $this->set_id_tipo_atencion($tipo[2]);
+//     }
 
+     if($request['id_tipo_atencion'] != ""){
+        $this->set_id_tipo_atencion($request['id_tipo_atencion']);
+     }     
+     
 
      if($request['id_tipo_organismo'] != ""){
         $this->set_id_tipo_organismo($request['id_tipo_organismo']);
@@ -275,6 +282,7 @@ public function llenar($request)
      if($request['fecexpediente'] != ""){
         $this->set_fecexpediente($request['fecexpediente']);
      }
+     else $this->set_fecexpediente('');
 
 
      if($request['strdireccion_asistido'] != ""){
@@ -307,18 +315,22 @@ public function llenar($request)
      if($request['id_regimen'] != ""){
         $this->set_id_regimen($request['id_regimen']);
      }
+     else $this->set_id_regimen(0);
      
      if($request['strdocumentos'] != ""){
         $this->set_strdocumentos($request['strdocumentos']);
      }
+     else $this->set_strdocumentos('');
      
      if($request['strdias'] != ""){
         $this->set_strdias($request['strdias']);
      }
+     else $this->set_strdias('');
      
      if($request['strhoras'] != ""){
         $this->set_strhoras($request['strhoras']);
-     }     
+     }    
+     else $this->set_strhoras('');
      
      if($request['intcuotames1'] != ""){
         $this->set_intcuotames1($functions->toFloat($request['intcuotames1']));
@@ -336,12 +348,14 @@ public function llenar($request)
      
      if($request['cedula_conyugue'] != ""){
         $this->set_cedula_conyugue($request['cedula_conyugue']);
-     }     
+     }
+     else $this->set_cedula_conyugue('');
      
      
      if($request['id_citacion'] != ""){
         $this->set_id_citacion($request['id_citacion']);
-     }   
+     }
+     else $this->set_id_citacion(0);
      
      if($request['strobservacion_cerrar'] != ""){
         $this->set_strobservacion_cerrar($request['strobservacion_cerrar']);
@@ -351,54 +365,65 @@ public function llenar($request)
      if($request['strnroexpedienteauxiliar'] != ""){
         $this->set_strnroexpedienteauxiliar($request['strnroexpedienteauxiliar']);
      }
+     else $this->set_strnroexpedienteauxiliar('');
 
      if($request['strrepresentante'] != ""){
         $this->set_strrepresentante($request['strrepresentante']);        
-     }        
+     } 
+     else $this->set_strrepresentante('');
      
      if($request['id_estado_fisico_expediente'] != ""){
-        $this->id_estado_fisico_expediente= $request['id_estado_fisico_expediente'];
+        $this->setId_estado_fisico_expediente($request['id_estado_fisico_expediente']);
      }
+     else $this->setId_estado_fisico_expediente(0);
 
 
      if($request['id_tipo_espacio'] != ""){
-        $this->id_tipo_espacio= $request['id_tipo_espacio'];
+        $this->setId_tipo_espacio($request['id_tipo_espacio']);
      }
+     else $this->setId_tipo_espacio(0);
 
 
      if($request['id_tipo_archivador'] != ""){
-        $this->id_tipo_archivador= $request['id_tipo_archivador'];
+        $this->setId_tipo_archivador($request['id_tipo_archivador']);
      }
+     else $this->setId_tipo_archivador(0);
 
 
      if($request['id_tipo_piso_archivador'] != ""){
-        $this->id_tipo_piso_archivador= $request['id_tipo_piso_archivador'];
+        $this->setId_tipo_piso_archivador($request['id_tipo_piso_archivador']);
      }
+     else $this->setId_tipo_piso_archivador(0);
 
 
      if($request['id_tipo_archivador_gaveta'] != ""){
-        $this->id_tipo_archivador_gaveta= $request['id_tipo_archivador_gaveta'];
+        $this->setId_tipo_archivador_gaveta($request['id_tipo_archivador_gaveta']);
      }  
+     else $this->setId_tipo_archivador_gaveta(0);
      
  
      if($request['id_abogado_resp'] != ""){
-        $this->id_abogado_resp= $request['id_abogado_resp'];
+        $this->setId_abogado_resp($request['id_abogado_resp']);
      }
+     else $this->setId_abogado_resp(0);
 
 
      if($request['id_abogado_ejecutor'] != ""){
-        $this->id_abogado_ejecutor= $request['id_abogado_ejecutor'];
+        $this->setId_abogado_ejecutor($request['id_abogado_ejecutor']);
      }
+     else $this->setId_abogado_ejecutor(0);
 
 
      if($request['id_solicitante'] != ""){
-        $this->id_solicitante= $request['id_solicitante'];
+        $this->setId_solicitante($request['id_solicitante']);
      }
+     else $this->setId_solicitante(0);
 
 
      if($request['id_contrarios'] != ""){
-        $this->id_contrarios= $request['id_contrarios'];
-     }    
+        $this->setId_contrarios($request['id_contrarios']);
+     }
+     else $this->setId_contrarios(0);
      
 
 }//=========================== GET ===================
@@ -979,6 +1004,11 @@ public function llenar($request)
     }    
     
     
+    public function setId_tipo_archivador_gaveta($id_tipo_archivador_gaveta){
+        return $this->id_tipo_archivador_gaveta=$id_tipo_archivador_gaveta;
+    }    
+        
+    
     public function setId_abogado_resp($id_abogado_resp){
         return $this->id_abogado_resp=$id_abogado_resp;
     }
@@ -999,7 +1029,78 @@ public function llenar($request)
 
 
 //================================FUNCION INSERTAR============================================
+    
+    public static function getBuscarIdAbogadoResponsableExpediente($id_expediente){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $sql="SELECT id_usuario FROM ".clConstantesModelo::correspondencia_table."tblproexpediente WHERE id_proexpediente=".$id_expediente;        
+//        exit($sql);
+        $conn->sql= $sql;
+        $data= $conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();
+        if ($data[0][id_usuario])
+        return $data[0][id_usuario];
+        else return "";
+    }         
 
+    public static function getNroExpediente($str){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $sql="SELECT strnroexpediente FROM ".clConstantesModelo::correspondencia_table."tblproexpediente WHERE strnroexpediente like '%".$str."%'";        
+        $conn->sql= $sql;
+        $data= $conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();
+        if ($data[0][strnroexpediente])
+        return $data[0][strnroexpediente];
+        else return "";
+    } 
+    
+    
+     public function SelectExpedienteActuacionReporte($id_expediente){
+         $conn= new Conexion();
+         $conn->abrirConexion();
+         $sql="SELECT *
+         FROM ".clConstantesModelo::correspondencia_table."tblproexpediente_actuaciones WHERE bolborrado=0 ";
+         
+         if($id_expediente !=""){
+             $sql .=" AND id_proexpediente=".$id_expediente;
+         }
+         $sql.=" order by id_proexpediente asc";
+//         echo $sql;
+         $conn->sql=$sql;
+         $data = $conn->ejecutarSentencia(2);
+         return $data;
+    }        
+    
+    
+     public function SelectExpedienteReporte($id_expediente){
+         $conn= new Conexion();
+         $conn->abrirConexion();
+         $sql="SELECT *
+         FROM ".clConstantesModelo::correspondencia_table."vista_tblproexpediente WHERE bolborrado=0 ";
+         
+         if($id_expediente !=""){
+             $sql .=" AND id_proexpediente=".$id_expediente;
+         }
+         $sql.=" order by id_proexpediente asc";
+//         echo $sql;
+         $conn->sql=$sql;
+         $data = $conn->ejecutarSentencia(2);
+         return $data;
+    }    
+    
+     public function SelectExpedienteFasesReporte($id_expediente){
+         $conn= new Conexion();
+         $conn->abrirConexion();
+         $sql="SELECT *
+         FROM ".clConstantesModelo::correspondencia_table."vista_tblproexpediente_fases  where id_proexpediente=".$id_expediente;
+//         echo $sql;
+         $conn->sql=$sql;
+         $data = $conn->ejecutarSentencia(2);
+         return $data;
+    }       
+        
+    
     
     public static function getBuscarAbogado($cedula){
         $conn= new Conexion();
@@ -1024,6 +1125,17 @@ public function llenar($request)
         $conn->cerrarConexion();
         return $data;
     }      
+    
+    public static function getBuscarAbogado2($cedula){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $sql="SELECT id_abogado,strcedula,strnombre,strapellido FROM ".clConstantesModelo::correspondencia_table."tbl_abogados WHERE trim(strcedula)='".$cedula."'";        
+//        exit($sql);
+        $conn->sql= $sql;
+        $data= $conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();
+        return $data;
+    }        
     
     
     
@@ -1153,9 +1265,14 @@ public function llenar($request)
          id_abogado_resp, 
          id_abogado_ejecutor, 
          id_solicitante, 
-         id_contrarios
-         FROM public.tblproexpediente WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
+         id_contrarios";
          
+         if (($_SESSION['id_profile']==  clConstantesModelo::administrador_sistema) || ($_SESSION['id_profile']==clConstantesModelo::coordinador_sistema))
+                $sql.=" FROM public.tblproexpediente WHERE bolborrado=0";
+         else        
+                $sql.=" FROM public.tblproexpediente WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
+         
+        
          if($id_expediente !=""){
              $sql .=" AND id_proexpediente=".$id_expediente;
          }
@@ -1167,7 +1284,7 @@ public function llenar($request)
     }    
     
     
-     public function insertar($nexval){
+     public function insertar(){
          $expediente='OAS-' . date('dmY') . '-'.$nexval;
          $conn= new Conexion();
          $conn->abrirConexion();
@@ -1189,9 +1306,10 @@ public function llenar($request)
          id_organismo,
          id_tipo_minuta,
          id_minuta,
-         strobservacion,
-         fecexpediente,
-         strdireccion_asistido,
+         strobservacion,";
+         if ($this->get_fecexpediente()!='')
+            $sql.="fecexpediente,";
+         $sql.="strdireccion_asistido,
          strobservacion_cerrar,
          strdireccion_conyugue,
          strdireccion_ultimo_domicilio,
@@ -1214,7 +1332,7 @@ public function llenar($request)
          ) VALUES (
          '";
 //         exit($sql);
-         $sql.=$expediente."','"
+         $sql.=$this->get_strnroexpediente()."','"
          .$this->get_strtitulo()."','"
          .$this->get_strdescripcion()."',"
          .$this->get_id_refer().",TO_DATE('"
@@ -1231,9 +1349,13 @@ public function llenar($request)
          .$this->get_id_organismo().","
          .$this->get_id_tipo_minuta().","
          .$this->get_id_minuta().",'"
-         .$this->get_strobservacion()."',TO_DATE('"
-         .$this->get_fecexpediente()."', 'DD/MM/YYYY'),'"
-         .$this->get_strdireccion_asistido()."','"
+         .$this->get_strobservacion()."',";
+//         exit($this->get_fecexpediente().'aqui');
+         if (trim($this->get_fecexpediente())!='')
+            $sql.="TO_DATE('".$this->get_fecexpediente()."', 'DD/MM/YYYY'),'";
+         else
+             $sql.="'";
+          $sql.=$this->get_strdireccion_asistido()."','"
          .$this->get_strobservacion_cerrar()."','"                 
          .$this->get_strdireccion_conyugue()."','"
          .$this->get_strdireccion_ultimo_domicilio()."',TO_DATE('"
@@ -1253,7 +1375,7 @@ public function llenar($request)
          .$this->getId_abogado_ejecutor().","  
          .$this->getId_solicitante().","
          .$this->getId_contrarios ().")";    
-        exit($sql);         
+//        exit($sql);         
          $conn->sql=$sql;
 
         if($conn->ejecutarSentencia()){
@@ -1322,17 +1444,22 @@ public function llenar($request)
          id_abogado_resp, 
          id_abogado_ejecutor, 
          id_solicitante, 
-         id_contrarios
-         FROM public.tblproexpediente WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
+         id_contrarios";
+         if (($_SESSION['id_profile']==  clConstantesModelo::administrador_sistema) || ($_SESSION['id_profile']==clConstantesModelo::coordinador_sistema))
+                $sql.=" FROM public.tblproexpediente WHERE bolborrado=0";
+         else        
+                $sql.=" FROM public.tblproexpediente WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
+
          
 //         if($id_expediente !=""){
 //             $sql .=" AND id_proexpediente=".$id_expediente;
 //         }
-//         exit($sql);
-         $sql.=" order by id_proexpediente asc";
+
+         $sql.=" order by substr(strnroexpediente,9,10) asc";
+//         exit($sql);         
          $conn->sql=$sql;
          $_pagi_sql= $conn->sql;
-         $_pagi_cuantos = 10;
+         $_pagi_cuantos = 20;
          $_pagi_nav_num_enlaces = 5;
          $_pagi_actual = $pagina;
          include_once '../comunes/php/paginacion/paginator6.inc.php';
@@ -1368,9 +1495,10 @@ public function llenar($request)
          id_organismo=".$this->get_id_organismo().",
          id_tipo_minuta=".$this->get_id_tipo_minuta().",
          id_minuta=".$this->get_id_minuta().",
-         strobservacion='".$this->get_strobservacion()."',
-         fecexpediente=TO_DATE('".$this->get_fecexpediente()."','DD/MM/YYYY'),
-         strdireccion_asistido='".$this->get_strdireccion_asistido()."',
+         strobservacion='".$this->get_strobservacion()."',";
+         if ($this->get_fecexpediente()!='')
+            $sql.="fecexpediente=TO_DATE('".$this->get_fecexpediente()."','DD/MM/YYYY'),";
+         $sql.="strdireccion_asistido='".$this->get_strdireccion_asistido()."',
          strdireccion_conyugue='".$this->get_strdireccion_conyugue()."',
          strdireccion_ultimo_domicilio='".$this->get_strdireccion_ultimo_domicilio()."',
          fecseparacion=TO_DATE('".$this->get_fecseparacion()."','DD/MM/YYYY'),";
@@ -1490,8 +1618,11 @@ public function llenar($request)
          id_abogado_resp, 
          id_abogado_ejecutor, 
          id_solicitante, 
-         id_contrarios         
-         strdocumentos FROM public.tblproexpediente WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
+         id_contrarios, strdocumentos ";
+         if (($_SESSION['id_profile']==  clConstantesModelo::administrador_sistema) || ($_SESSION['id_profile']==clConstantesModelo::coordinador_sistema))
+                $sql.=" FROM public.tblproexpediente WHERE bolborrado=0";
+         else        
+                $sql.=" FROM public.tblproexpediente WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
          if($cedula_cliente != ""){
              $sql .= " AND tblproexpediente.cedula_cliente LIKE '%$cedula_cliente%'";
          }
@@ -1777,6 +1908,100 @@ public function llenar($request)
 //         return $data;
     }
 
+//    public function SelectAllExpedienteReporte($id_tipo_tramite,$id_tipo_atencion,$id_actuacion_persona,$id_tipo_organismo,$id_organismo,$id_tipo_fase,$id_fase,$strnroexpediente,$strnroexpedienteauxiliar){
+//         $conn= new Conexion();
+//         $conn->abrirConexion();
+//         $sql="SELECT id_proexpediente,
+//         id_proclientecasos,
+//         id_proabogadoscasos,
+//         id_documentoscasos,
+//         id_usuario,
+//         id_ano,
+//         id_materia,
+//         id_estatus,
+//         strnroexpediente,
+//         strtitulo,
+//         strdescripcion,
+//         id_refer,
+//         to_char(fecapertura,'DD/MM/YYYY') as fecapertura,
+//         to_char(feccierre,'DD/MM/YYYY') as feccierre,
+//         cedula_abogado_responsable,
+//         cedula_abogado_ejecutor,
+//         cedula_cliente,
+//         id_actuacion,
+//         id_honorario,
+//         id_tipo_tramite,
+//         id_tipo_atencion,
+//         id_tipo_organismo,
+//         id_organismo,
+//         id_tipo_minuta,
+//         id_minuta,
+//         strobservacion,
+//         to_char(fecexpediente,'DD/MM/YYYY') as fecexpediente,
+//         strdireccion_asistido,
+//         strdireccion_conyugue,
+//         strdireccion_ultimo_domicilio,
+//         to_char(fecseparacion,'DD/MM/YYYY') as fecseparacion,
+//         intmonto_manutencion,
+//         id_regimen,
+//         id_citacion,
+//         strdias,
+//         strhoras,
+//         intcuotames1,
+//         intcuotames2,
+//         strdocumentos,
+//         cedula_conyugue,
+//         strobservacion_cerrar,
+//         strnroexpedienteauxiliar,
+//         strrepresentante,
+//         id_estado_fisico_expediente, 
+//         id_tipo_espacio, 
+//         id_tipo_archivador, 
+//         id_tipo_piso_archivador, 
+//         id_tipo_archivador_gaveta,
+//         id_abogado_resp, 
+//         id_abogado_ejecutor, 
+//         id_solicitante, 
+//         id_contrarios
+//         FROM public.tblproexpediente WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
+//       
+//         if($id_tipo_tramite > 0){
+//             $sql .=" AND id_tipo_tramite=".$id_tipo_tramite;
+//         }
+//         if($id_tipo_atencion > 0){
+//             $sql .=" AND id_tipo_atencion=".$id_tipo_atencion;
+//         }
+//         if($id_tipo_atencion > 0){
+//             $sql .=" AND id_tipo_atencion=".$id_tipo_atencion;
+//         }
+//         if($id_actuacion > 0){
+//             $sql .=" AND id_actuacion=".$id_actuacion;
+//         }
+//         if($id_tipo_organismo > 0){
+//             $sql .=" AND id_tipo_organismo=".$id_tipo_organismo;
+//         }
+//         if($id_organismo > 0){
+//             $sql .=" AND id_organismo=".$id_organismo;
+//         }
+//         if($id_tipo_fase > 0){
+//             $sql .=" AND id_tipo_fase=".$id_tipo_fase;
+//         }
+//         if($id_fase > 0){
+//             $sql .=" AND id_fase=".$id_fase;
+//         }
+//         if($strnroexpediente !=""){
+//             $sql .=" AND strnroexpediente=".$strnroexpediente;
+//         }
+//         if($strnroexpedienteauxiliar !=""){
+//             $sql .=" AND strnroexpedienteauxiliar=".$strnroexpedienteauxiliar;
+//         }
+//         $sql.=" order by id_proexpediente asc";
+//         $conn->sql=$sql;   
+//         $data = $conn->ejecutarSentencia(2);
+//         return $data;
+//    }    
+    
+
     public function SelectAllExpedienteReporte($id_tipo_tramite,$id_tipo_atencion,$id_actuacion_persona,$id_tipo_organismo,$id_organismo,$id_tipo_fase,$id_fase,$strnroexpediente,$strnroexpedienteauxiliar){
          $conn= new Conexion();
          $conn->abrirConexion();
@@ -1800,9 +2025,18 @@ public function llenar($request)
          id_actuacion,
          id_honorario,
          id_tipo_tramite,
+          ( SELECT tblmaestros.stritema
+           FROM tblmaestros
+          WHERE tblmaestros.id_maestro = id_tipo_tramite) AS id_tipo_tramite_text,         
          id_tipo_atencion,
          id_tipo_organismo,
+          ( SELECT tblmaestros.stritema
+           FROM tblmaestros
+          WHERE tblmaestros.id_maestro = id_tipo_organismo) AS id_tipo_organismo_text,
          id_organismo,
+          ( SELECT tblmaestros.stritema
+           FROM tblmaestros
+          WHERE tblmaestros.id_maestro = id_organismo) AS id_organismo_text,         
          id_tipo_minuta,
          id_minuta,
          strobservacion,
@@ -1831,14 +2065,17 @@ public function llenar($request)
          id_abogado_resp, 
          id_abogado_ejecutor, 
          id_solicitante, 
-         id_contrarios
-         FROM public.tblproexpediente WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
+         id_contrarios";
+         
+         if (($_SESSION['id_profile']==  clConstantesModelo::administrador_sistema) || ($_SESSION['id_profile']==clConstantesModelo::coordinador_sistema))
+                $sql.=" FROM public.tblproexpediente WHERE bolborrado=0";
+         else        
+                $sql.=" FROM public.tblproexpediente WHERE bolborrado=0 and id_usuario=".$_SESSION['id_contacto'];
+         
+                 
        
          if($id_tipo_tramite > 0){
              $sql .=" AND id_tipo_tramite=".$id_tipo_tramite;
-         }
-         if($id_tipo_atencion > 0){
-             $sql .=" AND id_tipo_atencion=".$id_tipo_atencion;
          }
          if($id_tipo_atencion > 0){
              $sql .=" AND id_tipo_atencion=".$id_tipo_atencion;
@@ -1865,11 +2102,11 @@ public function llenar($request)
              $sql .=" AND strnroexpedienteauxiliar=".$strnroexpedienteauxiliar;
          }
          $sql.=" order by id_proexpediente asc";
+//         exit($sql);
          $conn->sql=$sql;   
          $data = $conn->ejecutarSentencia(2);
          return $data;
-    }    
-    
+    }       
     
  }
 ?>

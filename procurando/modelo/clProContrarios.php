@@ -111,21 +111,25 @@ public function llenar($request)
      if($request['id_sexo'] != ""){
         $this->set_id_sexo($request['id_sexo']);
      }
+     
 
 
      if($request['inthijos'] != ""){
         $this->set_inthijos($request['inthijos']);
      }
+     else $this->set_inthijos(0);
 
 
      if($request['strcodigopostal'] != ""){
         $this->set_strcodigopostal($request['strcodigopostal']);
      }
+     else $this->set_strcodigopostal('N/P');
 
 
      if($request['datefecnac'] != ""){
         $this->set_datefecnac($request['datefecnac']);
      }
+     else $this->set_datefecnac(date('d/m/Y'));
 
 
      if($request['strobservacion'] != ""){
@@ -407,6 +411,20 @@ public function llenar($request)
         return $this->strmovil=$strmovil;
     }
 
+    
+    
+    public static function getBuscarAbogadoCedulaRepetido($cedula){
+        $conn= new Conexion();
+        $conn->abrirConexion();
+        $sql="SELECT strcedula FROM ".clConstantesModelo::correspondencia_table."tbl_contrarios WHERE trim(strcedula)='".$cedula."'";        
+//        exit($sql);
+        $conn->sql= $sql;
+        $data= $conn->ejecutarSentencia(2);
+        $conn->cerrarConexion();
+        if ($data[0][strcedula])
+        return $data[0][strcedula];
+        else return "";
+    }           
 
     public static function getCedulaContrario($cedula){
         $conn= new Conexion();
@@ -455,6 +473,7 @@ public function llenar($request)
          .$this->get_strcodigopostal()."',TO_DATE('"
          .$this->get_datefecnac()."', 'DD/MM/YYYY'),'"
          .$this->get_strobservacion()."')";
+//         exit($sql);
          $conn->sql=$sql;
          if($conn->ejecutarSentencia()){
              $retorno=true;
@@ -522,6 +541,7 @@ public function llenar($request)
          strcodigopostal='".$this->get_strcodigopostal()."',
          datefecnac=TO_DATE('".$this->get_datefecnac()."','DD/MM/YYYY'),
          strobservacion='".$this->get_strobservacion()."' WHERE id_contrarios=".$this->get_id_contrarios();
+//exit($sql);         
          $conn->sql=$sql;
          $data = $conn->ejecutarSentencia();
          return $data;
@@ -596,6 +616,20 @@ public function llenar($request)
          $data = $conn->ejecutarSentencia(2);
          return $data;
     }
+    
+    public function nextValContrario() {
+               $conn = new Conexion ();
+               $conn->abrirConexion ();
+               $sql="SELECT last_value as maximo FROM " . clConstantesModelo::correspondencia_table . "tbl_contrarios_id_contrarios_seq";
+               $conn->sql = $sql;
+               $data = $conn->ejecutarSentencia (2);
+               if ($data)
+               {
+                    $maximo=$data[0]['maximo'];
+               }
+               $conn->cerrarConexion ();
+               return $maximo;
+     }      
 
  }
  ?>

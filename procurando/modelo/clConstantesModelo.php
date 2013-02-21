@@ -2,9 +2,16 @@
 class clConstantesModelo {
 
   const id = 'REDNI-ito';
+  /*
+   * constantes que definen el perfil de coordinador y administrador del sistema
+   * tambier cambiar en bd en caso de cambio de codigo
+   */
   const administrador_sistema=112; 
-
-  
+  const coordinador_sistema=114; 
+  /*
+   * fin constantes 
+   * 
+   */  
 
 // esquemas
   const siembra_table='public.';
@@ -59,7 +66,9 @@ class clConstantesModelo {
   const cierre_comite='12453';
   public static function acciones_comite_controlador() {return array('N' => '12143', 'U' => '12144', 'D' => '12145', 'V' => '12354');}
 
-
+  // demandantes o demandados
+  const demandantes='13014';
+  const demandados='13796';
 
   //form asignar
   const asignar_controlador='12136';
@@ -69,11 +78,14 @@ class clConstantesModelo {
 
   //constantes del sistema
   const maestro_combos=0;
+  const numero_maximo_contrarios=20;
   const interno='12171';
   const maestro='12082';
   const usuarios='12083';
   const perfiles='12084';
   const modeloestados='6';
+  const jefeunidad='165';
+  const secretaria='13696';
   const departamentos='12898';
   const personanatural='12278';
   const firmapersonal='12279';
@@ -129,6 +141,8 @@ class clConstantesModelo {
   const estatusordenrecibidabanco='12303';
   const estatusingresadosaris = '12306';
   const regimen_cerrado=13103;  
+  const otras_fases_litigio=14028;  
+  const otras_motivos_litigio=14066;    
   const documento_entrada=13212;   
   const buscar_expediente='13221';    
   const buscar_persona='13260';    
@@ -140,6 +154,7 @@ class clConstantesModelo {
   const prioridad_alta='13205';
   const prioridad_media='13213';
   const prioridad_baja='13206';  
+  const anexa_actuacion_agenda='14062';      
 
 
 	const IdMaestroProyecto = 104;
@@ -369,7 +384,12 @@ class clConstantesModelo {
             'tipo_tramite_litigio' => '13774',
             'tipo_atencion_litigio' => '13781',
             'sexo' => '12960',
-            'tipo_origen' => '13813'
+            'tipo_origen' => '13813',
+            'tipo_ramo_asociaciones' => '13965',
+            'tipo_fase' => '14064',
+            'tipo_cen_des' => '14057',            
+            'tipo_anexa_agenda' => '14061',
+            'tipo_motivo_reasignacion' => '14061'              
         );
         }
         
