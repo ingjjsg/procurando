@@ -44,7 +44,7 @@ class Plantilla extends TCPDF{
 
     public function  Footer() {
         // Position at 15 mm from bottom
-        $this->SetY(-25);
+        $this->SetY(-20);
         $this->SetFillColor(230, 230, 230);
         $this->SetFont('helvetica', 'I', 8);
         $this->Cell(0, 10, '¡Independencia y Patria Socialista! ¡Viviremos y Venceremos!', 0, false, 'C', 0, '', 0, false, 'T', 'M');
