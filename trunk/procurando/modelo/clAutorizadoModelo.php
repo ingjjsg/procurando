@@ -6,7 +6,7 @@
 /**
  * Description of clAutorizadoModelo
  *
- * @author jsuarez
+ * @author jhuidobro
  */
 class clAutorizadoModelo {
     private $id_autorizados_est;
