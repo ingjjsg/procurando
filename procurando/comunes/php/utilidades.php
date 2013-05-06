@@ -141,6 +141,29 @@
             echo "<script>parent.location.href='../index.html'</script>";
         }
     }
+    
+    
+    function verificarSessionModuloOas() {
+        if ($_SESSION['id_profile']!=clConstantesModelo::administrador_sistema)
+        {
+            if($_SESSION['id_coord_maestro']!=clConstantesModelo::oas){
+                echo "<script>alert('No pertenece a la Coordinaciòn de Unidad de Atención al Soberano')</script>";            
+                echo "<script>parent.location.href='../vista/litigio.php'</script>";
+            }            
+        }
+
+    }    
+    
+    function verificarSessionModuloLitigio() {
+        if ($_SESSION['id_profile']!=clConstantesModelo::administrador_sistema)
+        {
+            if($_SESSION['id_coord_maestro']!=clConstantesModelo::litigio){
+                echo "<script>alert('No pertenece a la Coordinaciòn de Litigio y Representacion')</script>";            
+                echo "<script>parent.location.href='../vista/oas.php'</script>";
+            }         
+        }        
+
+    }      
 
 	function IsAlpha($str)
 
