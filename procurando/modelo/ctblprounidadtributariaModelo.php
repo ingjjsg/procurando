@@ -4,7 +4,7 @@
 /**
  * Description of clRedactarModelo
  *
- * @author jsuarez
+ * @author jhuidobro
  */
 class cltblunidadtributariModelo {
     private $id_unidad;

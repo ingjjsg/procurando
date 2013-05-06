@@ -5,7 +5,7 @@
 /**
  * Description of clNotaModelo
  *
- * @author jsuarez
+ * @author jhuidobro
  */
 class clNotaModelo {
     private $id_notas;
