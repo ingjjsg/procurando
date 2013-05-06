@@ -553,8 +553,8 @@ public function llenar($request)
          $conn= new Conexion();
          $conn->abrirConexion();
          $sql="SELECT id_contrarios,
-         strnombre,
-         strapellido,
+         upper(strnombre) as strnombre,
+         upper(strapellido) as strapellido,
          strcedula,
          strdireccion,
          id_estado,
@@ -581,7 +581,7 @@ public function llenar($request)
          if($strcedula != ""){
              $sql .= " AND tbl_contrarios.strcedula LIKE '%$strcedula%'";
          }
-         
+         $sql .= " limit ".clConstantesModelo::numero_registros_popup;            
          
          $conn->sql=$sql;
          $data = $conn->ejecutarSentencia(2);

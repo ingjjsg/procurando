@@ -128,11 +128,11 @@ class cltblprohonorariosModelo {
         return $data;
     }      
 
-    public function selectHonorarioPrecio($id){
+    public function selectHonorarioPrecio($tipo,$tramite){
         $conn= new Conexion();
         $conn->abrirConexion();
         $sql.= "SELECT * ";
-        $sql.=" from ".clConstantesModelo::correspondencia_table."tblprohonorarios a, tblunidadtributaria b where id_honorarios=".$id." and a.id_unidad=b.id_unidad";
+        $sql.=" from ".clConstantesModelo::correspondencia_table."tblprohonorarios a, tblunidadtributaria b where a.id_tipo=".$tipo." and a.id_tramite=".$tramite." and a.id_unidad=b.id_unidad";
 //        exit($sql);             
         $conn->sql= $sql;
         $data= $conn->ejecutarSentencia(2);
