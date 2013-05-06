@@ -1,20 +1,20 @@
 <?php
     session_start();    
     require_once "../controlador/tblactuacionesControlador.php";
-    require_once '../controlador/reporteOasControlador.php';
+    require_once '../controlador/reporteLitigioControlador.php';
     require_once ('../comunes/xajax/xajax_core/xajax.inc.php');
         
     
     $xajax= new xajax();
 
-     $xajax->registerFunction('llenarSelectTipoTramite');
-    $xajax->registerFunction('llenarSelectTipoAtencion');
+     $xajax->registerFunction('llenarSelectTipoOrigen');
+    $xajax->registerFunction('llenarSelectTipoMotivo');
     $xajax->registerFunction('llenarSelectActuacion');
-    $xajax->registerFunction('llenarSelectTipoFase');  
+    $xajax->registerFunction('llenarSelectTipoFaseLitigio');  
     $xajax->registerFunction('llenarSelectFaseHijo');
-    //$xajax->registerFunction('selectAllDpto');
-    $xajax->registerFunction('llenarSelectOrganismo');
     $xajax->registerFunction('llenarSelectTipoOrganismo');
+    $xajax->registerFunction('llenarSelectOrganismo');
+    $xajax->registerFunction('llenarSelectCenDesReporte');
     //$xajax->registerFunction('selectRefiereAgenda');     
     $xajax->registerFunction('selectLitigioReporte');         
     
@@ -44,7 +44,7 @@
         <script type='text/javascript' src='../comunes/js/funciones.js'></script>
         <script type="text/javascript" src="../comunes/js/prototype.js"></script>
         <script type="text/javascript" src="../comunes/js/effects.js"></script>
-        <script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>
+<!--        <script type="text/javascript" src="../comunes/js/scriptaculous.js"></script>-->
         <script type="text/javascript" src="../comunes/js/tabcontent.js"></script>
       
         <script src="../comunes/js/calendar.js" type="text/javascript"></script>
@@ -65,10 +65,10 @@
             });
             
             function cargar(){
-                    xajax_llenarSelectTipoTramite('frmOas');
+                    xajax_llenarSelectTipoOrigen('frmOas');
                     xajax_llenarSelectActuacion();
-                    xajax_llenarSelectTipoOrganismo('frmOas');
-                    xajax_llenarSelectTipoFase('frmOas');                   
+                    xajax_llenarSelectCenDesReporte('frmOas');
+                    xajax_llenarSelectTipoFaseLitigio('frmOas');                   
                 }
             
 
@@ -102,34 +102,49 @@
                                     </tr>         
                                                                             
                                     <tr>
-                                       <td width="20%">Tipo de Tramite                                </td>
-                                <td width="30%">
-                                    <div id="capaIdTipoTramite">
-                                        <select id="id_tipo_tramite" name="id_tipo_tramite" style='width:50%'>
-                                            <option value="0">Seleccione</option>
-                                        </select>
-                                    </div>
-                                </td>   
-                                <td width="20%">Tipo de Atención</td>
-                                <td width="30%">
-                                        <div id="capaIdTipoAtencion">
-                                        <select id="id_tipo_atencion" name="id_tipo_atencion" style='width:50%'>
-                                            <option value="0">Seleccione</option>
-                                        </select>
-                                    </div>                                 
-                                </td>  
+                                       <td width="20%">Tipo de Origen                               
+                                       </td>
+                                        <td width="30%">
+                                            <div id="capaIdTipoOrigen">
+                                                <select id="id_origen" name="id_origen" style='width:50%'>
+                                                    <option value="0">Seleccione</option>
+                                                </select>
+                                            </div>                                         
+                                        </td>   
+                                        <td width="20%">Motivo de la Causa</td>
+                                        <td width="30%">
+                                            <div id="capaIdTipoMotivo">
+                                                <select id="id_motivo" name="id_motivo" style='width:50%'>
+                                                    <option value="0">Seleccione</option>                                                                                                                             
+                                                </select>
+                                            </div>                            
+                                        </td>  
                                     </tr>
+                                    <tr>
+                                       <td width="20%">Fase del Origen                              
+                                       </td>
+                                        <td width="30%">
+                                            <div id="capaIdFaseLitigio">
+                                                <select id="id_fase" name="id_origen" style='width:50%'>
+                                                    <option value="0">Seleccione</option>
+                                                </select>
+                                            </div>                                         
+                                        </td>   
+                                        <td width="20%"></td>
+                                        <td width="30%">                          
+                                        </td>  
+                                    </tr>                                    
                                     <tr>
                                        <td width="20%">
                                                     Solicitante actua Como:
-                                                </td>
-                                                    <td width="30%">
-                                                        <div id="capaIdActuacion">
-                                                            <select id="id_actuacion_persona" name="id_actuacion_persona" style='width:50%'>
-                                                                <option value="0">Seleccione</option>                                                                                                                             
-                                                            </select>
-                                                        </div>
-                                                    </td> 
+                                        </td>
+                                        <td width="30%">
+                                            <div id="capaIdActuacion">
+                                                <select id="id_actuacion_persona" name="id_actuacion_persona" style='width:50%'>
+                                                    <option value="0">Seleccione</option>                                                                                                                             
+                                                </select>
+                                            </div>
+                                        </td> 
 
                                     </tr>
                                     <tr>
@@ -137,8 +152,8 @@
                                             Tipo Organismo:
                                         </td>
                                         <td width="30%">
-                                            <div id="capaIdTipoOrganismo">
-                                                <select id="id_tipo_organismo" name="id_tipo_organismo" style='width:90%'>
+                                            <div id="capaIdTipoOrganismoCentralizado">
+                                                <select id="id_tipo_organismo_centralizado" name="id_tipo_organismo_centralizado" style='width:90%'>
                                                     <option value="0">Seleccione</option>
                                                 </select>
                                             </div>
@@ -148,35 +163,13 @@
                                             Organismo:
                                         </td>
                                         <td width="30%">
-                                            <div id="capaIdOrganismo">
-                                                <select id="id_organismo" name="id_organismo" style='width:60%'>
+                                            <div id="capaIdTipoOrganismo">
+                                                <select id="id_tipo_organismo" name="id_tipo_organismo" style='width:60%'>
                                                     <option value="0">Seleccione</option>
                                                 </select>
                                             </div>
                                         </td>
                                     </tr>  
-                                   <tr>
-                                                <td width="20%">
-                                                    Fase del Expediente:
-                                                </td>
-                                                <td width="30%">
-                                                    <div id="capaIdFase">
-                                                        <select id="id_tipo_fase" name="id_fase" style='width:50%'>
-                                                            <option value="0">Seleccione</option>
-                                                        </select>
-                                                    </div>                                                
-                                                </td>
-                                                <td width="20%">Situación de la Fase:
-                                                </td>
-                                                <td width="30%">
-                                                    <div id="capaIdFaseSituacion">
-                                                        <select id="id_fase" name="id_fase_situacion" style='width:50%'>
-                                                            <option value="0">Seleccione</option>
-                                                        </select>
-                                                    </div>                                                            
-                                                 </td>
-                                            </tr>                                         
-                                                                           
                                     <tr id="CapaExpediente" >
                                         <td width="20%">
                                             Codigo Expediente:
@@ -199,17 +192,24 @@
                                                 <div align="center"></div>
                                             </div>
                                         </td>
-                                    </tr>                                      
+                                    </tr>      
+                                    <tr>
+                                        <td colspan="6">
+                                            <div  align="center">
+                                                 <img onclick="xajax_selectLitigioReporte(xajax.getFormValues('frmOas'),'pdf');" onmouseout="UnTip()" onmouseover="Tip('Exportar a PDF')" src="../comunes/images/botonpdf.png">
+                                            </div>
+                                        </td>
+                                    </tr>                                     
                                                                       
 
-                                    <tr>
+<!--                                    <tr>
                     <td align="center" width="100%" colspan="5">
                         <table width="100%">
                             <tbody><tr>
                                 <td width="15%">&nbsp;</td>
                                 <td align="center" width="35%">
                                     <img onclick="xajax_selectLitigioReporte(xajax.getFormValues('frmOas'),'pdf');" onmouseout="UnTip()" onmouseover="Tip('Exportar a PDF')" src="../comunes/images/botonpdf.png">
-                                    <!--<img onclick="xajax_selectAgendaReporte(xajax.getFormValues('frmReporteAgenda'),'pdf');" onmouseout="UnTip()" onmouseover="Tip('Exportar a PDF')" src="../comunes/images/botonpdf.png">-->
+                                    <img onclick="xajax_selectAgendaReporte(xajax.getFormValues('frmReporteAgenda'),'pdf');" onmouseout="UnTip()" onmouseover="Tip('Exportar a PDF')" src="../comunes/images/botonpdf.png">
                                 </td>
                                 <td align="center" width="35%">
                                     <img onclick="xajax_selectLitigioReporte(xajax.getFormValues('frmOas'),'ods');" onmouseout="UnTip()" onmouseover="Tip('Exportar a OpenOffice')" src="../comunes/images/botonoo.png">
@@ -218,7 +218,7 @@
                             </tr>
                         </tbody></table>
                     </td>
-                </tr>
+                </tr>-->
  
                                 </table>
                         </div>
