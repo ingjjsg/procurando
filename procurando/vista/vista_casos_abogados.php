@@ -5,7 +5,7 @@
 
 
     $xajax= new xajax();
-   
+    $xajax->registerFunction('selectVista_abogados_casos_cargados_cerrados');   
     $xajax->registerFunction('selectVista_abogados_casos_cargados');
     $xajax->registerFunction('selectVista_abogados_casos_cargados_total');    
     $xajax->processRequest();
@@ -80,7 +80,7 @@
             }
         </script>
     </head>
-    <body onload="xajax_selectVista_abogados_casos_cargados(); xajax_selectVista_abogados_casos_cargados_total();" >
+    <body onload="xajax_selectVista_abogados_casos_cargados(); xajax_selectVista_abogados_casos_cargados_total(); xajax_selectVista_abogados_casos_cargados_cerrados();" >
         <script src="../comunes/js/wz_tooltip/wz_tooltip.js" type="text/javascript"></script>
         <center>
             <form name="frmexpedientes" id="frmexpedientes" method="post">
@@ -115,17 +115,35 @@
                             <div align="center"><img src="../comunes/images/ajax-loader.gif"></div>
                         </div>
                     </td>
-                </tr>    
+                </tr>   
+                <tr>
+                    <td class="menu_izq_titulo">
+                       Numero Total General de Casos Abiertos <input type="text" class='inputbox82' id="total" name="total" size="25" readonly="readonly"/>
+                    </td>
+                </tr>                      
+                <tr>
+                    <td class="menu_izq_titulo">
+                       Total  de Expedientes Cerrados 
+                    </td>
+                </tr>                       
+                <tr>
+                    <td>
+                        <div id="contenedor_casos_total_cerrados" style="width:100%;" align="left">
+                            <div align="center"><img src="../comunes/images/ajax-loader.gif"></div>
+                        </div>
+                    </td>
+                </tr>      
+                <tr>
+                    <td class="menu_izq_titulo">
+                       Numero Total General de Casos Cerrados <input type="text" class='inputbox82' id="total_cerrados" name="total_cerrados" size="25" readonly="readonly"/>
+                    </td>
+                </tr>                     
                 <tr>
                     <td>
                         </br>
                     </td>
                 </tr>                          
-                <tr>
-                    <td class="menu_izq_titulo">
-                       Numero Total General de Casos Abiertos <input type="text" class='inputbox82' id="total" name="total" size="25" readonly="readonly"/>
-                    </td>
-                </tr>                 
+               
             </table>
             </form>
         </center>
