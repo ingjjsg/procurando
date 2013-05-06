@@ -5,9 +5,9 @@
        public $conex;
        private $host= "localhost"; //ambiente de desarrollo
        private $port= "5432";
-       private $dbname= "";
-       private $user= "";
-       private $password= '';
+       private $dbname= "sistema_procuraduria";
+       private $user= "postgres";
+       private $password= 'postgres';
 
         public $sql;
 

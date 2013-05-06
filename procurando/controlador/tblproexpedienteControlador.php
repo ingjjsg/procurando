@@ -20,25 +20,79 @@
     require_once '../modelo/clPermisoModelo.php';
 
     verificarSession();
+    verificarSessionModuloOas();
+    
+    function selectVista_abogados_casos_cargados_cerrados() {
+        $respuesta= new xajaxResponse();
+        $expediente= new clProExpediente();
+        $data= "";
+        $html= ""; 
+        $data= $expediente->selectVista_abogados_casos_cargados_cerrados();
+        if($data){
+            $html= "<div style='border:solid 1px #CCCCCC;background:#f8f8f8'>
+                        <table style='text-align:center' border='0' class='tablaTitulo' width='100%'>
+                            <tr>
+                                <th width='5%'>
+                                    <a href='#' onclick=\"xajax_orden('id_maestro')\">Casos</a>
+                                </th>
+                                <th width='75%'>
+                                    <a href='#' onclick=\"xajax_orden('id_origen')\">Nombre Abogado</a>
+                                </th>
+                            </tr>";
+            for ($i= 0; $i < count($data); $i++){
+                $total=$total+$data[$i]['contador'];
+                $html.= "<tr bgcolor='#f8f8f8'onmouseover=\"this.style.background='#f0f0f0';this.style.color='blue'\" onmouseout=\"this.style.background='#f8f8f8';this.style.color='black'\" >
+                            <td align='center'>".$data[$i]['contador']."</td>
+                            <td align='center' >".$data[$i]['strnombre']."</td>
+                        </tr>";
+            }
+            $html.= "</table></div>";
+        }else{
+            $html="<div class='celda_etiqueta'>No Hay Expedientes Registrados</div>";
+        }
+        $respuesta->assign("contenedor_casos_total_cerrados","innerHTML",$html);
+        $respuesta->assign("total_cerrados", "value", $total);         
+        return $respuesta;
+    
+    }    
+    
+    function ReactualizarExpediente(){
+        $respuesta= new xajaxResponse();
+        $expediente = new clProExpediente();
+        $data = "";
+        $data = $expediente->ActualizarEXpediente();        
+        if($data)
+        {           
+            $respuesta->alert("La Reactualización de Expediente se ejecuto con Exito");  
+        }
+        else 
+        {
+           $respuesta->alert("La Reactualización de Expediente Fallo");  
+        }
+        return $respuesta;
+    }          
     
     function buscarAsistidoOnBlur($cedula){
         $respuesta=new xajaxResponse();
         $asistido=new clProClientes();
-        $data=$asistido->buscarAsistidoCedula($cedula);
-        if(is_array($data)){
-            $respuesta->assign("strnombre_cliente", "value", $data[0]['strnombre']. " " . $data[0]['strapellido']);
-            $respuesta->assign("id_solicitante", "value", $data[0]['id_cliente']);            
-            $respuesta->assign("cedula_cliente", "value", $data[0]['strcedula']);                    
-            $raz_social=clTblasociaciones::getNombreAsociacion_vista_cliente($data[0]['id_cliente']);
-            if ($raz_social!='')   $respuesta->assign('raz_social', 'value', $raz_social);
-            $respuesta->script("$('contenedorAsistidos').hide();");            
+        if ($cedula!='')
+        {
+                $data=$asistido->buscarAsistidoCedula($cedula);
+                if(is_array($data)){
+                    $respuesta->assign("strnombre_cliente", "value", $data[0]['strnombre']. " " . $data[0]['strapellido']);
+                    $respuesta->assign("id_solicitante", "value", $data[0]['id_cliente']);            
+                    $respuesta->assign("cedula_cliente", "value", $data[0]['strcedula']);                    
+                    $raz_social=clTblasociaciones::getNombreAsociacion_vista_cliente($data[0]['id_cliente']);
+                    if ($raz_social!='')   $respuesta->assign('raz_social', 'value', $raz_social);
+                    $respuesta->script("$('contenedorAsistidos').hide();");            
+                }
+                else  {
+                    $respuesta->assign("cedula_cliente", "value", "");  
+                    $respuesta->assign("strnombre_cliente", "value", "");
+                    $respuesta->assign("id_solicitante", "value", "");            
+                    $respuesta->alert("Cédula del Solicitante no Existe");
+                }
         }
-        else  {
-            $respuesta->assign("cedula_cliente", "value", "");  
-            $respuesta->assign("strnombre_cliente", "value", "");
-            $respuesta->assign("id_solicitante", "value", "");            
-            $respuesta->alert("Cédula del Solicitante no Existe");}
-            
         return $respuesta;
     }    
     
@@ -144,7 +198,7 @@
         {           
             $respuesta->assign('cedula_abogado_responsable', 'value', $data[0][strcedula]);        
             $respuesta->assign('id_abogado_resp', 'value', $data[0][id_abogado]);          
-            $respuesta->assign('strnombre_abogado_responsable', 'value', $data[0][strapellido].', '.$data[0][strnombre]);            
+            $respuesta->assign('strnombre_abogado_responsable', 'value', strtoupper($data[0][strapellido].', '.$data[0][strnombre]));            
         }
         else 
         {
@@ -1514,19 +1568,23 @@ function selectAllActuaciones($id_expediente){
     }
             
     
-    function verCosto($id){
+    function verCosto($tipo,$tramite){
         $respuesta=new xajaxResponse(); 
         $unidad= new cltblprohonorariosModelo();
         $functions= new functions();    
-        if ($id)
+        if (($tipo!='') && ($tramite!=''))
         {
-            $data=  explode('-', $id);
-            $datos=  $unidad->selectHonorarioPrecio($data[0]);   
-            $numuni=$datos[0][numunidad];
-            $precio=$functions->toFloat($datos[0][intprecio]);
-            $monto=($numuni*$precio);
-            $respuesta->assign("id_precio_con","value",clFunciones::FormatoMonto($monto)." BSF");     
-            $respuesta->assign("id_honorario","value",$data[0]);                 
+//            $data=  explode('-', $id);
+            $datos=  $unidad->selectHonorarioPrecio($tipo,$tramite); 
+            if ($datos)
+            {
+                $numuni=$datos[0][numunidad];
+                $precio=$functions->toFloat($datos[0][intprecio]);
+                $monto=($numuni*$precio);
+                $respuesta->assign("id_precio_con","value",clFunciones::FormatoMonto($monto)." BSF");     
+                $respuesta->assign("id_honorario","value",$datos[0][id_honorarios]);                 
+            }
+            else $respuesta->alert("Honorario No tiene Costo Contable");            
         }
         else $respuesta->alert("Honorario No tiene Costo Contable");
            return $respuesta;
@@ -1577,24 +1635,39 @@ function selectAllActuaciones($id_expediente){
                 if($data_asistido){
                     $nombre_asistido=$data_asistido[0]['strnombre']." ".$data_asistido[0]['strapellido'];
                 }
-                $data_abogado_responsable= $abogado->buscarAbogadoResponsable($data[$i]['id_abogado_resp']);
-                if($data_abogado_responsable){
-                    $nombre_abogado_responsable=$data_abogado_responsable[0]['strnombre']." ".$data_abogado_responsable[0]['strapellido'];
-                    $cedula_abogado_responsable=$data_abogado_responsable[0]['strcedula'];
+                if ($data[$i]['id_abogado_resp']!='')
+                {
+                    $data_abogado_responsable= $abogado->buscarAbogadoResponsable($data[$i]['id_abogado_resp']);
+                    if($data_abogado_responsable){
+                        $nombre_abogado_responsable=$data_abogado_responsable[0]['strnombre']." ".$data_abogado_responsable[0]['strapellido'];
+                        $cedula_abogado_responsable=$data_abogado_responsable[0]['strcedula'];
+                    }
                 }
-             $data_abogado_ejecutor= $abogado->buscarAbogado($data[$i][id_abogado_ejecutor],"ejecutor");
-             
-             if($data_abogado_ejecutor){
-                    $nombre_abogado_ejecutor=$data_abogado_ejecutor[0]['strnombre']." ".$data_abogado_ejecutor[0]['strapellido'];
+                else
+                {
+                    $nombre_abogado_responsable="No Registrado";
+                    $cedula_abogado_responsable="No Registrado";
+                    
                 }
+                if ($data[$i][id_abogado_ejecutor]!='')
+                {                
+                    $data_abogado_ejecutor= $abogado->buscarAbogado($data[$i][id_abogado_ejecutor],"ejecutor");
+                    if($data_abogado_ejecutor){
+                        $nombre_abogado_ejecutor=$data_abogado_ejecutor[0]['strnombre']." ".$data_abogado_ejecutor[0]['strapellido'];
+                    }                    
+                }
+                else {
+                $nombre_abogado_ejecutor="No Registrado";     
+                }
+
                 $html.= "<tr bgcolor='#f8f8f8'onmouseover=\"this.style.background='#f0f0f0';this.style.color='blue'\" onmouseout=\"this.style.background='#f8f8f8';this.style.color='black'\" >
                             <td align='left'>".$data[$i]['strnroexpediente']."</td>
                             <td align='center' >".$data[$i]['cedula_cliente']."</td>
-                            <td align='center' >".$nombre_asistido."</td>
+                            <td align='center' >".strtoupper($nombre_asistido)."</td>
                             <td align='center' >".$cedula_abogado_responsable."</td>
-                            <td align='center' >".$nombre_abogado_responsable."</td>
+                            <td align='center' >".strtoupper($nombre_abogado_responsable)."</td>
                             <td align='center' >".$data[$i]['cedula_abogado_ejecutor']."</td>
-                            <td align='center' >".$nombre_abogado_ejecutor."</td>
+                            <td align='center' >".strtoupper($nombre_abogado_ejecutor)."</td>
                             <td align='right'>
                                 <a>
                                     <img src='../comunes/images/b_pdfdoc.png' onmouseover=\"Tip('Detalles Expediente')\" onmouseout='UnTip()' onclick=\"location.href='../reportes/reporte_constancia_portada_oas.php?id=".$data[$i]['id_proexpediente']."'\">
@@ -1629,9 +1702,17 @@ function selectAllActuaciones($id_expediente){
     function selectAllExpedientesFiltro($pagina,$cedula_cliente="",$cedula_abogado_responsable="",$cedula_abogado_ejecutor="",$strexpediente="") {
         $respuesta= new xajaxResponse();
         $clientes= new clProExpediente();
+        if ($cedula_cliente!='')
+            $_SESSION['cedula_cliente_reporte']=$cedula_cliente;
+        if ($cedula_abogado_responsable!='')
+            $_SESSION['cedula_abogado_responsable_reporte']=$cedula_abogado_responsable;
+        if ($cedula_abogado_ejecutor!='')
+            $_SESSION['cedula_abogado_ejecutor_reporte']=$cedula_abogado_ejecutor;
+        if ($strexpediente!='')
+            $_SESSION['strexpediente_reporte']=$strexpediente;        
         $data= "";
         $html= ""; 
-        $dataC= $clientes->SelectAllExpedientesFiltro($pagina,$cedula_cliente,$cedula_abogado_responsable,$cedula_abogado_ejecutor,$strexpediente);
+        $dataC= $clientes->SelectAllExpedientesFiltro($pagina);
         $data= $dataC[0];          
         if($data){
              $asistido=new clProClientes();
@@ -1777,7 +1858,7 @@ function selectAllActuaciones($id_expediente){
         $html= "";
         $data= $honorarios->selectAllTramitesCargados($padre);
 //        print_r($data);
-        $html= "<select id='id_tipo_atencion' name='id_tipo_atencion' style='width:".$ancho."' onchange=\"xajax_verCosto(document.".$formInput.".id_tipo_atencion.value)\">";
+        $html= "<select id='id_tipo_atencion' name='id_tipo_atencion' style='width:".$ancho."' onchange=\"xajax_verCosto(document." . $formInput . ".id_tipo_tramite.value,document." . $formInput . ".id_tipo_atencion.value)\">";
         $html.= "<option value='0'>Seleccione</option>";
         if($data){
             for ($i= 0; $i < count($data); $i++){
@@ -2063,8 +2144,15 @@ function selectAllActuaciones($id_expediente){
         $respuesta->assign('id_cliente', 'value', $data[0]['id_cliente']);
         $respuesta->assign('id_contrarios', 'value', $data[0]['id_contrarios']); 
         $abogado_responsable=new clProAbogados();
-        $data_abogado_responsable= $abogado_responsable->buscarAbogadoResponsable($data[0]['id_abogado_resp']);
-        
+        if ($data[0]['id_abogado_resp']!=''){
+            $data_abogado_responsable= $abogado_responsable->buscarAbogadoResponsable($data[0]['id_abogado_resp']);
+            if (is_array($data_abogado_responsable))
+            {
+                $respuesta->assign("strnombre_abogado_responsable", "value", strtoupper($data_abogado_responsable[0][strapellido]. " " . $data_abogado_responsable[0][strnombre]));
+                $respuesta->assign("cedula_abogado_responsable", "value", $data_abogado_responsable[0][strcedula]);
+                $respuesta->assign("id_abogado_resp", "value", $data_abogado_responsable[0][id_abogado]);                       
+            }
+        }
         if ($data[0][strnroexpediente]!='')
         {
             $campos_desactivar= array('id_tipo_tramite','strrefer','fecexpediente','fecapertura','strnroexpediente','feccierre','cedula_cliente','strnombre_cliente');
@@ -2086,7 +2174,8 @@ function selectAllActuaciones($id_expediente){
         $respuesta->script('xajax_llenarSelectTipoDivorcio("frminscribir",' . $data[0][id_refer] . ')');        
         $respuesta->script('xajax_llenarSelectTipoTramite("frminscribir",' . $data[0][id_tipo_tramite] . ')');
         $respuesta->script('xajax_llenarSelectTipoAtencion("frminscribir",' . $data[0][id_tipo_atencion] . ',' . $data[0][id_tipo_tramite] . ')');
-        $datos_honorarios=$honorarios->selectHonorarioPrecio($data[0][id_honorario]);
+        $datos_honorarios=$honorarios->selectHonorarioPrecio($data[0][id_tipo_tramite],$data[0][id_tipo_atencion]);
+//        exit(print_r($datos_honorarios));        
              $numuni=$datos_honorarios[0][numunidad];
              $precio=$functions->toFloat($datos_honorarios[0][intprecio]);
              $monto=($numuni*$precio);
@@ -2103,9 +2192,7 @@ function selectAllActuaciones($id_expediente){
         $respuesta->script('xajax_llenarSelectTipoFase("frminscribir")');        
 //        $respuesta->script('xajax_buscarAbogado(' . $data[0][id_abogado_resp] . ',"responsable")');   
         
-        $respuesta->assign("strnombre_abogado_responsable", "value", $_SESSION['strnombre']. " " . $_SESSION['strapellido']);
-        $respuesta->assign("cedula_abogado_responsable", "value", $data[0][cedula_abogado_responsable]);
-        $respuesta->assign("id_abogado_resp", "value", $_SESSION['id_contacto']);       
+
         $respuesta->script('xajax_verCountExpediente(' . $data[0][cedula_cliente] . ')');     
         $respuesta->script('xajax_buscarAsistido(' . $data[0][id_solicitante] . ')');
         $respuesta->script('xajax_buscarConyugue(' . $data[0][id_contrarios] . ')');    
@@ -2166,6 +2253,7 @@ function selectAllActuaciones($id_expediente){
             $respuesta->script("xajax_desactivarCampos()");
             $respuesta->script("$('msg').show();");
             $respuesta->script("$('save').hide();");
+            $respuesta->script("$('saveReasignar').hide();");            
             $respuesta->script("$('saveSituacion').hide();"); 
             $respuesta->script("$('saveFase').hide();");          
             $respuesta->script("$('saveActuacion').hide();");            
