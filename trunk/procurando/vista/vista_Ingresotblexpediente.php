@@ -289,7 +289,7 @@
                                     Fecha Cierre:
                                 </td>
                                 <td width="30%">
-                                    <input id="feccierre" name="feccierre" type="text"  class='inputbox82' maxlength='20' size='15' value="">
+                                    <input id="feccierre" name="feccierre" type="text"  class='inputbox82' maxlength='20' size='15' value="<?php echo date("d/m/Y"); ?>">
                                     <img name="button"  id="lanzador_feccierre"  src="../comunes/images/calendar.png" align="middle"/>
                                     <script type="text/javascript">
                                         Calendar.setup({
@@ -334,7 +334,7 @@
                                     <?php if ($lngcodigo_expediente!='') { ?>
                                     <input type="text" readonly="readonly" class='inputbox82' id="strnroexpediente" name="strnroexpediente" size="20" />
                                     <?php } else { ?>
-                                    <input type="text" class='inputbox82' id="strnroexpediente" name="strnroexpediente" size="20" />
+                                    <input type="text" readonly="readonly" class='inputbox82' id="strnroexpediente" name="strnroexpediente" size="20" />
                                     <?php } ?>
                                 </td>
                                 <td width="20%">
@@ -349,7 +349,7 @@
                                     Fecha Solicitud:
                                 </td>
                                 <td width="30%">
-                                    <input id="fecapertura" name="fecapertura" type="text"  class='inputbox82' maxlength='20' size='15' value="">
+                                    <input id="fecapertura" name="fecapertura" type="text"  class='inputbox82' maxlength='20' size='15' value="<?php echo date("d/m/Y"); ?>">
                                     <img name="button"  id="lanzador_fecapertura"  src="../comunes/images/calendar.png" align="middle"/>
                                     <script type="text/javascript">
                                         Calendar.setup({
@@ -372,7 +372,7 @@
                                     Fecha del Expediente:
                                 </td>
                                 <td width="30%">
-                                    <input id="fecexpediente" name="fecexpediente" type="text"  class='inputbox82' maxlength='20' size='15' value="">
+                                    <input id="fecexpediente" name="fecexpediente" type="text"  class='inputbox82' maxlength='20' size='15' value="<?php echo date("d/m/Y"); ?>">
                                     <img name="button"  id="lanzador_fecexpediente"  src="../comunes/images/calendar.png" align="middle"/>
                                     <script type="text/javascript">
                                         Calendar.setup({
@@ -505,14 +505,23 @@
                                                     C.I. Abogado Responsable:
                                                 </td>
                                                 <td width="30%">
-                                                    <input type="text" readonly="readonly" class='inputbox82' id="cedula_abogado_responsable" name="cedula_abogado_responsable" size="20" value=""/>                                  
-<!--                                                    <img src="../comunes/images/ico_18_127.gif" onmouseover="Tip('Buscar Abogado Responsable')" onmouseout="UnTip()" border="0" onclick="xajax_buscarAbogado(document.frminscribir.cedula_abogado_responsable.value,'responsable');"/>                                    -->
+                                                    <?php 
+                                                    if ($lngcodigo_expediente!=''){ ?>
+                                                        <input type="text" readonly="readonly" class='inputbox82' id="cedula_abogado_responsable" name="cedula_abogado_responsable" size="20" value=""/>                                  
+                                                    <?php } else { ?>   
+                                                        <input type="text" readonly="readonly" class='inputbox82' id="cedula_abogado_responsable" name="cedula_abogado_responsable" size="20" value="<?php echo $_SESSION['strdocumento']; ?>" />                              
+                                                    <?php }  ?>                                                         
                                                 </td>
                                                 <td width="20%">
                                                     Nombre:
                                                 </td>
                                                 <td width="30%">
-                                                    <input type="text" readonly="readonly" class='inputbox82' id="strnombre_abogado_responsable" name="strnombre_abogado_responsable" size="30" value="<?php echo $_SESSION['strapellido'].", ".$_SESSION['strnombre']; ?>" />
+                                                    <?php 
+                                                    if ($lngcodigo_expediente!=''){ ?>
+                                                        <input type="text" readonly="readonly" class='inputbox82' id="strnombre_abogado_responsable" name="strnombre_abogado_responsable" size="30" value=""/>
+                                                    <?php } else { ?>   
+                                                        <input type="text" readonly="readonly" class='inputbox82' id="strnombre_abogado_responsable" name="strnombre_abogado_responsable" size="30" value="<?php echo strtoupper($_SESSION['strapellido'].", ".$_SESSION['strnombre']); ?>" />
+                                                    <?php }  ?>                                                       
                                                 </td>
                                             </tr>    
                                             <tr>
