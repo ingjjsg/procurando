@@ -142,13 +142,13 @@ $html='
             $html.='<th class="titulo" colspan="4">DATOS OFICINA DE ATENCIÓN AL SOBERANO</th>';
         $html.='</tr>';        
         $html.='<tr>';
-            $html.='<th class="titulo">ABOGADO RESPONSABLE</th>';
+            $html.='<th class="titulo">ABOGADO(A) RESPONSABLE</th>';
             $html.='<td>'.$data['0']['id_abogado_resp'].'</td>';
             $html.='<th class="titulo" >FIRMA</th>';
             $html.='<td ></td>';
         $html.='</tr>';         
         $html.='<tr>';
-            $html.='<th class="titulo">ABOGADO EJECUTOR</th>';
+            $html.='<th class="titulo">ABOGADO(A) EJECUTOR</th>';
             $html.='<td>'.$data['0']['id_abogado_ejecutor'].'</td>';
             $html.='<th class="titulo" >FIRMA</th>';
             $html.='<td >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';        $html.='</tr>';  
