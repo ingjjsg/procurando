@@ -5,7 +5,7 @@
 /**
  * Description of clContactoProfile
  *
- * @author jsuarez
+ * @author jhuidobro
  */
 class clContactoProfileModelo {
    
