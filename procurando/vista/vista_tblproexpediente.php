@@ -7,7 +7,8 @@
 
     $xajax= new xajax();
    
-    $xajax->registerFunction('buscarDatosExpedientes');
+    $xajax->registerFunction('ReactualizarExpediente');
+    $xajax->registerFunction('buscarDatosExpedientes');    
     $xajax->registerFunction('selectAllExpedientesFiltro');
     $xajax->registerFunction('eliminar_expediente');
     
@@ -98,6 +99,8 @@
                         &nbsp;&nbsp;&nbsp;
                         <?php }?>
                         <img src="../comunes/images/filter.png" onmouseover="Tip('Filtros')" onmouseout="UnTip()" border="0" onclick="verForm('formulario');"/>
+                        &nbsp;&nbsp;&nbsp;                        
+                        <img src="../comunes/images/s_notice.png" onmouseover="Tip('Reactualizar Expediente')" onmouseout="UnTip()" border="0" onclick="xajax_ReactualizarExpediente();"/>
                     </td>
                 </tr>
             </table>
