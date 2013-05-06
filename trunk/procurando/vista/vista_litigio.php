@@ -8,6 +8,9 @@
     $xajax= new xajax();
    
     $xajax->registerFunction('buscarDatosExpedientes');
+    $xajax->registerFunction('llenarSelectTipoOrigen');
+    $xajax->registerFunction('llenarSelectTipoMotivo');    
+    $xajax->registerFunction('llenarSelectFormularioAbogadosReporte');    
     $xajax->registerFunction('selectAllExpedientesFiltro');
     $xajax->registerFunction('eliminar_expediente');
     
@@ -68,11 +71,14 @@
             }
             
             function filtrar(){
-                var nro_tribunal= document.frmexpedientes.nro_tribunal.value;
-                var cedula_abogado_ejecutor= document.frmexpedientes.cedula_abogado_ejecutor.value;
-                var strexpediente= document.frmexpedientes.strexpediente.value;
+                var nro_tribunal= document.frminscribir.nro_tribunal.value;
+                var cedula_abogado_ejecutor= document.frminscribir.cedula_abogado_ejecutor.value;
+                var id_responsable= document.frminscribir.id_reasignacion_abogado.value;
+                var strexpediente= document.frminscribir.strexpediente.value;
+                var id_origen = document.frminscribir.id_origen.value;
+                var id_motivo = document.frminscribir.id_motivo.value;
                 
-                xajax_selectAllExpedientesFiltro(1,nro_tribunal, cedula_abogado_ejecutor,strexpediente);
+                xajax_selectAllExpedientesFiltro(1,nro_tribunal, cedula_abogado_ejecutor,strexpediente,id_responsable,id_origen,id_motivo);
                 verForm('formulario');
             }
             
@@ -83,10 +89,10 @@
             }
         </script>
     </head>
-    <body onload="xajax_buscarDatosExpedientes(1)" >
+    <body onload="xajax_buscarDatosExpedientes(1);xajax_llenarSelectFormularioAbogadosReporte();xajax_llenarSelectTipoOrigen('frminscribir');xajax_llenarSelectTipoMotivo();" >
         <script src="../comunes/js/wz_tooltip/wz_tooltip.js" type="text/javascript"></script>
         <center>
-            <form name="frmexpedientes" id="frmexpedientes" method="post">
+            <form name="frminscribir" id="frmexpedientes" method="post">
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                     <td width="65%" class="menu_izq_titulo">Expedientes Litigio</td>
@@ -133,10 +139,34 @@
                                             <input type="text" class='inputbox82' id="cedula_abogado_ejecutor" name="cedula_abogado_ejecutor" size="30" />
                                         </td>
                                         <td width="20%">
+                                            Abogado Responsable:                                            
                                         </td>
+                                        <td width="30%">                                        
+                                            <div id="capaIdAbogadoReasignado">
+                                                <select id="id_reasignacion_abogado" name="id_reasignacion_abogado" style='width:50%'>
+                                                    <option value="0">Seleccione</option>
+                                                </select>
+                                            </div>  
+                                        </td>                                            
+                                    </tr>    
+                                    <tr>
+                                        <td width="20%">Origen de la Causa                                </td>
                                         <td width="30%">
-                                        </td>
-                                    </tr>                                    
+                                            <div id="capaIdTipoOrigen">
+                                                <select id="id_origen" name="id_origen" style='width:50%'>
+                                                    <option value="0">Seleccione</option>
+                                                </select>
+                                            </div>
+                                        </td>   
+                                        <td width="20%">Motivo de la Causa</td>
+                                        <td width="30%">
+                                            <div id="capaIdTipoMotivo">
+                                                <select id="id_motivo" name="id_motivo" style='width:50%'>
+                                                    <option value="0">Seleccione</option>
+                                                </select>
+                                            </div>                                 
+                                        </td>      
+                                    </tr>                                     
                                     <tr>
                                         <td align="right" colspan="8">
                                             <input type="button" value="filtrar" onclick="filtrar();">
