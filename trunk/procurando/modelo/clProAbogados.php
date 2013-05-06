@@ -628,8 +628,8 @@ public function llenar($request)
          strcuentaban,
          strfoto,
          strcurriculum,
-         strnombre,
-         strapellido,
+         upper(strnombre) as strnombre,
+         upper(strapellido) as strapellido,
          strnif_cif,
          strnumcolegiado,
          strrif,
@@ -644,6 +644,7 @@ public function llenar($request)
          if($strcedula != ""){
              $sql .= " AND tbl_abogados.strcedula LIKE '%".strtoupper($strcedula)."%'";
          }
+         $sql .= " limit ".clConstantesModelo::numero_registros_popup;         
          
          $conn->sql=$sql;
          $data = $conn->ejecutarSentencia(2);
