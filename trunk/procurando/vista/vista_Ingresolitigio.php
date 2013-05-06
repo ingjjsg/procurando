@@ -14,6 +14,8 @@ if (isset($_GET['id'])) {
 }
 
 $xajax = new xajax();
+$xajax->registerFunction('SumarMontos'); 
+$xajax->registerFunction('verOtrasFasesMotivos'); 
 $xajax->registerFunction('llenarSelectFormularioAbogadosMotivoReasignar'); 
 $xajax->registerFunction('llenarSelectFormularioAbogadosReasignar');     
 $xajax->registerFunction('validar_reasignacion');     
@@ -143,6 +145,10 @@ $xajax->printJavascript('../comunes/xajax/');
                     body {padding:0px;margin:0px;text-align:left;font:11px verdana, arial, helvetica, serif; background-color:#FFFFFF;}
                 </style>
                 <script language="javascript"> 
+                    
+ 
+
+
                     jQuery(function($){
                         $("#feccierre").mask("99/99/9999");        
                         $("#fecexpediente").mask("99/99/9999");               
@@ -220,7 +226,10 @@ $xajax->printJavascript('../comunes/xajax/');
                     }                
                     function monto(caja,monto)
                     { var name=caja;
-                        document.getElementById(name).value=FloattoFloatVE(monto);
+                        if (monto!='')
+                         document.getElementById(name).value=FloattoFloatVE(monto);
+                        else
+                         document.getElementById(name).value=FloattoFloatVE(0);                            
                     }    
                         
                     function cargar(lngcodigo_expediente){
@@ -415,15 +424,15 @@ $xajax->printJavascript('../comunes/xajax/');
                                                 </td>      
                                             </tr>          
                                             <tr  id="fase_input" style="display:none;">
-                                                <td width="20%">
-                                                    Recurso N°:
+                                                <td id="texto_fase" width="20%">
+                                                    
                                                 </td>
                                                 <td width="30%">
                                                     <input type="text" class='inputbox82' id="otrafase" name="otrafase" size="30" />
                                                 </td> 
                                                 <td width="30%">
                                                 </td>    
-                                            </tr>                                               
+                                            </tr>           
                                             <tr>
                                                 <td width="20%">
                                                     Nro Expediente:
@@ -436,14 +445,20 @@ $xajax->printJavascript('../comunes/xajax/');
                                                 </td>
                                                 <td width="30%">
                                                     <?php if (isset($_GET['id'])) { ?>
-                                                    <input type="text" readonly="true" class='inputbox82' id="strnroexpedienteauxiliar" onblur="xajax_buscarExpedienteAuxiliar(document.frminscribir.strnroexpedienteauxiliar.value);" name="strnroexpedienteauxiliar" size="20" value="UP11-"/>                                                                    
+                                                    <input type="text" class='inputbox82' id="strnroexpedienteauxiliar" onblur="xajax_buscarExpedienteAuxiliar(document.frminscribir.strnroexpedienteauxiliar.value,document.frminscribir.id_proactuacion.value);" name="strnroexpedienteauxiliar" size="20" value="UP11-"/>                                                                    
                                                     <?php }else{?>
-                                                    <input type="text" class='inputbox82' id="strnroexpedienteauxiliar" onblur="xajax_buscarExpedienteAuxiliar(document.frminscribir.strnroexpedienteauxiliar.value);" name="strnroexpedienteauxiliar" size="20" value="UP11-"/>                                                                    
+                                                    <input type="text" class='inputbox82' id="strnroexpedienteauxiliar" onblur="xajax_buscarExpedienteAuxiliar(document.frminscribir.strnroexpedienteauxiliar.value,document.frminscribir.id_proactuacion.value);" name="strnroexpedienteauxiliar" size="20" value="UP11-"/>                                                                    
                                                     <?php }?>                                                    
                                                 </td>
                                             </tr>
                                             <tr>
-
+                                                <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
+                                                    <div align="left" style="background-image: url('../comunes/images/barra.png')">
+                                                        <strong>MONTOS</strong>
+                                                    </div>
+                                                </td>
+                                            </tr>                                             
+                                            <tr>
                                                 <td width="20%">
                                                     Cuantia (Costo Contable):
                                                 </td>
@@ -451,16 +466,30 @@ $xajax->printJavascript('../comunes/xajax/');
                                                     <input type="text" class='inputbox82' id="intcuantias" name="intcuantias" size="30" onblur="monto('intcuantias',document.frminscribir.intcuantias.value);" size="10" />
                                                 </td>
                                             </tr>
-
-                                            <tr>
-
+                                            <tr id="tr_intsentenciado"  style="display:none;">
                                                 <td width="20%">
-
+                                                      Sentenciado:
                                                 </td>
                                                 <td width="30%">
-
+                                                    <input type="text" class='inputbox82' id="intsentenciado" name="intsentenciado" size="30" onblur="xajax_SumarMontos(document.frminscribir.intsentenciado.value,document.frminscribir.inttranzado.value);" size="10" />
                                                 </td>
                                             </tr>    
+                                            <tr  id="tr_inttranzado"  style="display:none;">
+                                                <td width="20%">
+                                                    Transado:
+                                                </td>
+                                                <td width="30%">
+                                                    <input type="text" class='inputbox82' id="inttranzado" name="inttranzado" size="30" onblur="xajax_SumarMontos(document.frminscribir.intsentenciado.value,document.frminscribir.inttranzado.value);" size="10" />
+                                                </td>
+                                            </tr>
+                                            <tr  id="tr_intahorrado"  style="display:none;">
+                                                <td width="20%">
+                                                      Ahorrado:
+                                                </td>
+                                                <td width="30%">
+                                                    <input type="text" readonly="readonly" class='inputbox82' id="intahorrado" name="intahorrado" size="30" size="10" />
+                                                </td>
+                                            </tr>                                              
                                             <tr>
                                                 <td colspan="6" style="border:#CCCCCC solid 1px;" bgcolor="#F8F8F8" >
                                                     <div align="left" style="background-image: url('../comunes/images/barra.png')">
