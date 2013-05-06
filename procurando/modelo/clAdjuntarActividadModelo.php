@@ -6,7 +6,7 @@
 /**
  * Description of clAdjuntarActividadModelo
  *
- * @author jsuarez
+ * @author jhuidobro
  */
 class clAdjuntarActividadModelo {
     public function insertAdjunto($id_actividad, $id_archivo, $stradjunto){
