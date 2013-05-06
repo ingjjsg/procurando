@@ -5,7 +5,7 @@
 /**
  * Description of clDestinatariosModelo
  *
- * @author jsuarez
+ * @author jhuidobro
  */
 class clDestinatariosModelo {
    private $id_destinatarios;

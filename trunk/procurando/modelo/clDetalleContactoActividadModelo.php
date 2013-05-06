@@ -4,7 +4,7 @@
 /**
  * Description of clDetalleContactoActividadModelo
  *
- * @author jsuarez
+ * @author jhuidobro
  */
 class clDetalleContactoActividadModelo {
     private $id_detallecontactoactividad;

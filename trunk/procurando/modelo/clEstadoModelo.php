@@ -5,7 +5,7 @@
 /**
  * Description of clEstadoModelo
  *
- * @author jsuarez
+ * @author jhuidobro
  */
 class clEstadoModelo {
     private $id_estados;
