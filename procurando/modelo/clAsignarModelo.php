@@ -5,7 +5,7 @@
 /**
  * Description of clAsignarModelo
  *
- * @author jsuarez
+ * @author jhuidobro
  */
 class clAsignarModelo {
     private $id_accesoforma;
