@@ -1,0 +1,189 @@
+<?php
+    session_start();
+    require_once "../controlador/tblagendaControlador.php";
+//    require_once "../controlador/tblproexpedienteControlador.php";    
+    require_once ('../comunes/xajax/xajax_core/xajax.inc.php');
+    $xajax= new xajax();
+    $xajax->registerFunction('selectAllAgendaBorrados');
+    $xajax->registerFunction('llenarSelectTipoAgenda');
+    $xajax->registerFunction('selectAllDptoIntegrantes');        
+    $xajax->registerFunction('llenarSelectTipoEvento');
+    $xajax->registerFunction('llenarSelectTipoPrioridad');    
+    $xajax->registerFunction('selectAllDpto');
+    $xajax->registerFunction('ActualizarItemAgendaBorrados');    
+    
+//    $xajax->registerFunction('selectFiltrosHonorarios');
+//    $xajax->registerFunction('llenarDestinatarios');
+    $xajax->processRequest();
+    $xajax->printJavascript('../comunes/xajax/');
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <?php
+			$xajax->printJavascript('../comunes/xajax/')
+		?>
+        
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta http-equiv="pragma" content="no-cache">
+        <link rel="shortcut icon" href="imagenes/favicon.ico" type="image/x-icon" >
+        <link href="../comunes/css/general.css" rel="stylesheet" type="text/css" />
+        <link href="../comunes/css/enlaces.css" rel="stylesheet" type="text/css" />
+        <link href="../comunes/css/pagination.css" rel="stylesheet" type="text/css" />
+        <link href="../comunes/css/calendar-blue2.css" rel="stylesheet" type="text/css" media="all" title="win2k-cold-1" />
+        <script src="../comunes/js/funciones.js" type="text/javascript"></script>
+        <script src="../comunes/js/prototype.js" type="text/javascript"></script>
+        <script src="../comunes/js/effects.js" type="text/javascript"></script>
+        <script src="../comunes/js/scriptaculous.js" type="text/javascript"></script>
+        <script src="../comunes/js/calendar.js" type="text/javascript"></script>
+        <script src="../comunes/js/calendar_es.js" type="text/javascript"></script>
+        <script src="../comunes/js/calendar_setup.js" type="text/javascript"></script>
+        <style>
+            body {padding:0px;margin:0px;text-align:left;font:11px verdana, arial, helvetica, serif; background-color:#FFFFFF;}
+        </style>
+        <script language="javascript">   
+            function edit(id){
+                if (confirm('¿Seguro desea modificar el Honorario?')){
+        	    document.location.href='vista_Ingresotblprohonorarios.php?id='.id;
+                }                
+            }             
+            function ocultar(id, msj) {
+                var log = $(id);
+                log.innerHTML= msj;
+                log.style.backgroundColor= '#fff36f';
+                log.style.padding= '5px';
+                new Effect.Fade(id, {from: 1, to: 0, duration: 2.0});
+                new Effect.SlideUp(id, {queue: 'parallel', duration: 2.0});
+            }
+            function ver(id){
+//                cargar(1);
+                div = $(id);
+                div.toggle();
+                if (div.innerHTML==''){
+                    div.update('<div align="center"><img src="../comunes/images/ajax-loader.gif"></div>');
+                }else{
+                    d = div.descendants();
+                }
+            }
+            function filtrar(){
+                var id_tipo= document.frmAgenda.id_tipo.value;
+                var id_evento= document.frmAgenda.id_evento.value;
+                var id_unidad= document.frmAgenda.id_unidad.value;
+                var id_prioridad= document.frmAgenda.id_prioridad.value;                
+                var id_integrantes_unidad= document.frmAgenda.id_integrantes_unidad.value;                  
+                var id_expediente= document.frmAgenda.id_expediente.value;                          
+                xajax_selectAllAgendaBorrados(id_tipo, id_evento, id_unidad, id_prioridad, id_integrantes_unidad, id_expediente);                        
+                ver('formulario');
+            }
+        </script>
+    </head>
+    <body onload="xajax_selectAllAgendaBorrados();xajax_llenarSelectTipoAgenda('','',1);xajax_llenarSelectTipoEvento();xajax_selectAllDpto();xajax_llenarSelectTipoPrioridad();">
+        <form name="frmAgenda" id="frmAgenda" method="post" style="">
+            <script src="../comunes/js/wz_tooltip/wz_tooltip.js" type="text/javascript"></script>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td width="65%" class="menu_izq_titulo">Borrados de Agenda  Personal<div id='capaMaestro'></div></td>
+                    <td width="10%" align="center" class="menu_izq_titulo">
+                        <img src="../comunes/images/filter.png" onmouseover="Tip('Filtros')" onmouseout="UnTip()" border="0" onclick="ver('formulario');"/>&nbsp;&nbsp;
+                        <img src="../comunes/images/verde.gif" height='17px' onmouseover="Tip('Faltan Más de 2 Días')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_insertTblAgenda.php'"/>                        
+                        <img src="../comunes/images/amarillo.gif" height='17px' onmouseover="Tip('Falta 1 Día')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_insertTblAgenda.php'"/>                        
+                        <img src="../comunes/images/rojo.gif" height='17px' onmouseover="Tip('Día Actual o Vencidas')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_insertTblAgenda.php'"/>                                                
+                        <img src="../comunes/images/page_add.png" onmouseover="Tip('Nuevo Item Agenda')" onmouseout="UnTip()" border="0" onclick="javascript:location.href='vista_insertTblAgenda.php'"/>                        
+                    </td>
+                </tr>
+
+            </table>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding-top:10px; padding-bottom:0px;">
+                <tr>
+                    <td>
+                        <div id="formulario" style="width:100%;display:none;" align="left">
+                            <fieldset style="border:#339933 2px solid">
+                                <table width="100%" border="0" class="tablaVer" >
+                                   <tr>
+                                        <td width="20%">
+                                            Tipo de Agenda:
+                                        </td>
+                                        <td width="30%">
+                                            <div id="capaIdTipo">
+                                                <select id="id_tipo" name="id_tipo" style='width:90%'>
+                                                    <option value="0">Seleccione</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td width="20%">
+                                            Tipo de Evento:
+                                        </td>
+                                        <td width="30%">
+                                            <div id="capaIdTipoEvento">
+                                                <select id="id_evento" name="id_evento" style='width:90%'>
+                                                    <option value="0">Seleccione</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                   <tr>
+                                        <td width="20%">
+                                            Tipo de Unidad:
+                                        </td>
+                                        <td width="30%">
+                                            <div id="capaIdTipoUnidad">
+                                                <select id="id_unidad" name="id_unidad" style='width:60%'>
+                                                    <option value="0">Seleccione</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td width="20%">
+                                           Tipo de Prioridad:
+                                        </td>
+                                        <td width="30%">
+                                            <div id="capaIdTipoPrioridad">
+                                                <select id="id_prioridad" name="id_prioridad" style='width:90%'>
+                                                    <option value="0">Seleccione</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                    </tr>   
+                                  <?php if ($_SESSION['id_profile']==clConstantesModelo::administrador_sistema) { ?>
+                                   <tr>
+                                        <td width="20%">
+                                            Integrantes de la Unidad:
+                                        </td>
+                                        <td width="30%">
+                                            <div id="capaIdTipoIntegrantesUnidad">
+                                                <select id="id_integrantes_unidad" name="id_integrantes_unidad" style='width:60%'>
+                                                    <option value="0">Seleccione</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td width="20%">
+                                           Codigo de Expediente:
+                                        </td>
+                                        <td width="30%">
+                                            <input type="text" class='inputbox82' id="id_expediente" name="id_expediente" size="20" />                             
+                                        </td>
+                                    </tr>     
+                                    <?php } ?>                                    
+                                    <tr>
+                                        <td align="right" colspan="8">
+                                            <input type="button" value="Filtrar" onclick="filtrar();">
+                                        </td>
+                                    </tr>
+                                </table>
+                            </fieldset>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div id="contenedorAgenda" style="width:100%;" align="left">
+                            <div align="center"><img src="../comunes/images/ajax-loader.gif"></div>
+                        </div>
+                        <div id="pagAgenda" style="width:100%;" align="left" class="pagination">
+
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </body>
+</html>
