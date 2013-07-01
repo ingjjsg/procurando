@@ -1,0 +1,23 @@
+@charset "utf-8";
+.boton_misclasificados {
+	background-image: url(../imagenes/boton_misclasificados01.png);
+	float: right;
+	height: 24px;
+	width: 122px;
+	margin-right: 5px;
+}
+.boton_micuenta {
+	background-image: url(../imagenes/boton_micuenta01.png);
+	background-repeat: no-repeat;
+	float: right;
+	height: 24px;
+	width: 81px;
+	margin-right: 5px;
+}
+.boton_salir {
+	background-image: url(../imagenes/boton_salir01.png);
+	background-repeat: no-repeat;
+	float: right;
+	height: 24px;
+	width: 63px;
+}
