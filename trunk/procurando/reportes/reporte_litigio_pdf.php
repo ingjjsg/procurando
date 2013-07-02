@@ -85,9 +85,9 @@ foreach ($data as $key => $value) {
             $monto_intahorrado=$monto_intahorrado+($data[$key]['intsentenciado']-$data[$key]['inttranzado']);
             
         $html.="</tr>";
-        $html.='<tr>';
-                $html.='<th colspan="9"></th>';
-        $html.='</tr>';        
+//        $html.='<tr>';
+//                $html.='<th colspan="9"></th>';
+//        $html.='</tr>';        
     
 }
         $html.='<tr>

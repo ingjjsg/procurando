@@ -9,7 +9,13 @@
                     <img alt="Ubuntu" src="/images/ubuntu.png">&nbsp;&nbsp;
                     <img alt="Adodb" src="/images/adodb.png">&nbsp;&nbsp;
                 </div>
-  <div align="center">Desarrollado por el Ingeniero Jaime José Suárez, Email: ingjjsg@gmail.com para la Procuraduría del Estado Yaracuy
+  <div align="center"><strong>
+      Copyleft Procuraduría del Estado Yaracuy 2012. Distribuido bajo la licencia GNU/GPL V2.0
+    </br>
+Desarrollado por el Ingeniero Jaime José Suárez, Email: ingjjsg@gmail.com 
+    </br>
+Venezuela - Lara - Barquisimeto</strong>
                 </div>
   
   </div></div>
+

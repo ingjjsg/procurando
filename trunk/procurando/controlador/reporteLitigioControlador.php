@@ -59,7 +59,7 @@ function selectLitigioReporteGeneral($request,$tipoReporte){
         
        //serialize($request);
         if($tipoReporte == 'pdf'){
-            $respuesta->script("location.href='../reportes/reporte_constancia_portada_litigio_semanal_general.php?id_origen=".$id_origen."&id_motivo=".$id_motivo."&id_fase=".$id_fase."&id_actuacion_persona=".$id_actuacion_persona."&id_tipo_organismo_centralizado=".$id_tipo_organismo_centralizado."&id_tipo_organismo=".$id_tipo_organismo."&strnroexpediente=".$strnroexpediente."&strnroexpedienteauxiliar=".$strnroexpedienteauxiliar."'");
+            $respuesta->script("location.href='../reportes/reporte_litigio_pdf.php?id_origen=".$id_origen."&id_motivo=".$id_motivo."&id_fase=".$id_fase."&id_actuacion_persona=".$id_actuacion_persona."&id_tipo_organismo_centralizado=".$id_tipo_organismo_centralizado."&id_tipo_organismo=".$id_tipo_organismo."&strnroexpediente=".$strnroexpediente."&strnroexpedienteauxiliar=".$strnroexpedienteauxiliar."'");
         }else if($tipoReporte == 'ods'){
             $respuesta->script("location.href='../reportes/reporte_litigio_ods.php?data=".serialize($request)."'");
         }else{
