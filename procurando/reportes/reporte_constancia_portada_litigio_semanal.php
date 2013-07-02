@@ -67,12 +67,12 @@ $pdf->AddPage();
                 $html.='<tr>';
                     $html.='<th align="center" colspan="4">'.strtoupper($data[$i]['strdescripcion']).'</th>';
                 $html.='</tr>';             
-//                $html.='<tr>';
-//                    $html.='<th class="titulo">FECHA APERTURA</th>';
-//                    $html.='<td>'.$data[$i]['fecapertura'].'</td>';
-//                    $html.='<th  class="titulo"></th>';
-//                    $html.='<td ></td>';
-//                $html.='</tr>';
+                $html.='<tr>';
+                    $html.='<th class="titulo">FECHA APERTURA</th>';
+                    $html.='<td>'.$data[$i]['fecapertura'].'</td>';
+                    $html.='<th  class="titulo"></th>';
+                    $html.='<td ></td>';
+                $html.='</tr>';
                 $html.='<tr>';
                     $html.='<th align="left" colspan="1" class="titulo">ORIGEN DE LA CAUSA</th>';
                     $html.='<td colspan="3" >'.$data[$i]['origen'].'</td>';
@@ -80,7 +80,7 @@ $pdf->AddPage();
                 $html.='<tr>';
                     $html.='<th align="left" colspan="1" class="titulo">MOTIVO DE LA CAUSA</th>';
                     $html.='<td colspan="3" >'.$data[$i]['motivo'].'</td>';
-                $html.='</tr>';                  
+                $html.='</tr>';     
                 $html.='<tr>';
                     $html.='<th class="titulo">FASE DEL ORIGEN</th>';
                     $html.='<td>'.$data[$i]['fase'].'</td>';
@@ -97,14 +97,13 @@ $pdf->AddPage();
                 $html.='<tr>';
                     $html.='<th  class="titulo" colspan="4">'.$text.'</th>';
                 $html.='</tr>'; 
-                $html.='</table><table>';
                 $data_demanda= $prodocumento->SelectExpedienteDemandaReporte($data[$i]['id_proactuacion']);
                 if($data_demanda){
-                    $html.='<tr>
-                           <th width="10%" align="center" bgcolor="#D8D8D8" class="nro">N°</th>
+                    $html.='<tr>';
+                    $html.='<th width="10%" align="center" bgcolor="#D8D8D8" class="nro">N°</th>
                            <th width="20%" align="center" bgcolor="#D8D8D8" >CÉDULAS</th>                        
-                           <th width="70%" align="center" bgcolor="#D8D8D8" class="nro">NOMBRES</th>
-                           </tr>';        
+                           <th width="70%" align="center" bgcolor="#D8D8D8" class="nro">NOMBRES</th>';
+                    $html.='</tr>';        
                            $a=1;                    
                            foreach ($data_demanda as $key => $value) {
                               $html.='<tr>';
@@ -115,12 +114,11 @@ $pdf->AddPage();
                               $a++;
                     }   
                 }       
-                $html.='</table><table>';   
                 if ($data[$i]['id_actuacion']==clConstantesModelo::demandantes) $text='DEMANDANDADOS'; else $text='DEMANDANTES';
                 $html.='<tr>';
-                    $html.='<th  class="titulo" colspan="4">ABOGADOS DE LOS '.$text.'</th>';
+                    $html.='<th  class="titulo" colspan="3">ABOGADOS DE LOS '.$text.'</th>';
                 $html.='</tr>'; 
-                $html.='</table><table>';    
+              
                 $data_demanda_abogados= $prodocumento->SelectExpedienteDemandaAbogadosReporte($data[$i]['id_proactuacion']);    
                 if($data_demanda_abogados){
                    $html.='<tr>
@@ -139,27 +137,32 @@ $pdf->AddPage();
                                $b++;                               
                              }   
                 }       
-                $html.='</table><table>';                  
+           
                 if ($data[$i]['id_actuacion']==clConstantesModelo::demandantes) $text_dos='DEMANDANTE'; else $text_dos='DEMANDANDADO';
 
                 $html.='<tr>';
-                    $html.='<th  class="titulo" colspan="4">ORGANISMO '.$text_dos.'</th>';
+                    $html.='<th  class="titulo" colspan="3">ORGANISMO '.$text_dos.'</th>';
                 $html.='</tr>';        
                 $html.='<tr>';
                     $html.='<th align="left" colspan="1" class="titulo">TIPO DE ORGANISMO</th>';
-                    $html.='<td colspan="3" >'.$data[$i]['tipo_organismo_centralizado'].'</td>';
+                    $html.='<td colspan="2" >'.$data[$i]['tipo_organismo_centralizado'].'</td>';
                 $html.='</tr>';
                 $html.='<tr>';
                     $html.='<th align="left" colspan="1" class="titulo">ORGANISMO</th>';
-                    $html.='<td colspan="3" >'.$data[$i]['tipo_organismo'].'</td>';
+                    $html.='<td colspan="2" >'.$data[$i]['tipo_organismo'].'</td>';
                 $html.='</tr>'; 
+                $html.='<tr>
+                       <th width="10%" align="center" bgcolor="#D8D8D8" class="nro">CUANTIA</th>
+                       <th width="20%" align="center" bgcolor="#D8D8D8" class="nro">SENTENCIADO</th>                       
+                       <th width="20%" align="center" bgcolor="#D8D8D8" >TRANSADO</th>
+                       <th width="50%" align="center" bgcolor="#D8D8D8" class="nro">AHORRADO</th>
+                       </tr>'; 
                 $html.='<tr>';
-                    $html.='<th class="titulo">CUANTIA: '.clFunciones::FormatoMonto($data[$i]['intcuantias']).'</th>';
-                    $html.='<td class="titulo">SENTENCIADO: '.clFunciones::FormatoMonto($data[$i]['intsentenciado']).'</td>';
-                    $html.='<th class="titulo">TRANSADO: '.clFunciones::FormatoMonto($data[$i]['inttranzado']).'</th>';
-                    $html.='<td class="titulo">AHORRADO: '.clFunciones::FormatoMonto($data[$i]['intahorrado']).'</td>';
-                $html.='</tr>';                   
-            
+                $html.='<td width="10%" align="center" >'.clFunciones::FormatoMonto($data[$i]['intcuantias']).'</td>';
+                $html.='<td width="20%" align="left">'.clFunciones::FormatoMonto($data[$i]['intsentenciado']).'</td>';
+                $html.='<td width="20%" align="left" >'.clFunciones::FormatoMonto($data[$i]['inttranzado']).'</td>';
+                $html.='<td width="50%" align="left" >'.clFunciones::FormatoMonto($data[$i]['intahorrado']).'</td>';
+                $html.="</tr>";
         $html.='</table>';
         $pdf->writeHTML($html);        
         $html='';        
