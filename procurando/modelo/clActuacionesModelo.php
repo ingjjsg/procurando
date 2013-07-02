@@ -2158,7 +2158,9 @@ a;
            id_tipo_organismo_centralizado, 
            otrafase, 
            otromotivo, 
-           id_abogado_resp          
+           id_abogado_resp,
+           strdescripcionestrategia,
+           (SELECT (upper(tbl_abogados.strapellido) || ', '::text) || upper(tbl_abogados.strnombre) FROM  tbl_abogados WHERE tbl_abogados.id_abogado = id_abogado_resp) AS strnombre           
            FROM public.tblactuaciones  WHERE bolborrado=0";
 
 //         if (($_SESSION['id_profile']!=  clConstantesModelo::administrador_sistema) || ($_SESSION['id_profile']!=clConstantesModelo::coordinador_sistema))
