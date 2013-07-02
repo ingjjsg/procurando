@@ -19,7 +19,7 @@ $html='
             border: 1px solid #000; 
             line-height: normal;
             text-align:center;
-            font-size: 20px;            
+            font-size: 18px;            
         }
         
         tr>th {
@@ -31,16 +31,20 @@ $html='
         .nro{
             width:15px;
         }
-        
+        .expediente {
+            width:67px;
+        }        
         .departamento {
             width:140px;
         }
-        
+        .fase {
+            width:50px;
+        }        
         .prioridad {
-            width:120px;
+            width:75px;
         }
         .monto {
-            width:65px;
+            width:50px;
         }        
         
         .align{
@@ -52,10 +56,13 @@ $html='
     <table>
         <tr>
             <th class="nro">N°</th>
-            <th>Expediente</th>
-            <th>Expediente Auxiliar</th>
+            <th class="expediente">Expediente</th>
+            <th class="expediente">Expediente Auxiliar</th>
             <th class="prioridad">Tipo Organismo</th>
             <th class="departamento">Organismo</th>
+            <th class="fase">Objeto</th>                        
+            <th class="fase">Estatus</th>            
+            <th class="fase">Responsable</th>                
             <th class="monto">Monto (Cuantia)</th>
             <th class="monto">Sentenciado</th>
             <th class="monto">Tranzado</th>
@@ -74,7 +81,10 @@ foreach ($data as $key => $value) {
             $html.='<td>'.$data[$key]['strnroexpediente'].'</td>';
             $html.='<td>'.$data[$key]['strnroexpedienteauxiliar'].'</td>';
             $html.='<td>'.clFunciones::mostrarStritema($data[$key]['id_tipo_organismo_centralizado']).'</td>';
-            $html.='<td>'.clFunciones::mostrarStritema($data[$key]['id_tipo_organismo']).'</td>';
+            $html.='<td>'.mb_convert_case(clFunciones::mostrarStritema($data[$key]['id_tipo_organismo']), MB_CASE_TITLE, "utf8").'</td>';
+            $html.='<td>'.clFunciones::mostrarStritema($data[$key]['id_motivo']).'</td>';                
+            $html.='<td>'.clFunciones::mostrarStritema($data[$key]['id_fase']).'</td>';      
+            $html.='<td>'.mb_convert_case($data[$key]['strnombre'], MB_CASE_TITLE, "utf8").'</td>';                  
             $html.='<td>'.clFunciones::FormatoMonto($data[$key]['intcuantias']).'</td>';
             $html.='<td>'.clFunciones::FormatoMonto($data[$key]['intsentenciado']).'</td>';
             $html.='<td>'.clFunciones::FormatoMonto($data[$key]['inttranzado']).'</td>';
@@ -91,23 +101,23 @@ foreach ($data as $key => $value) {
     
 }
         $html.='<tr>
-            <th colspan="5"></th>
+            <th colspan="8"></th>
             <th class="monto">Total Monto</th>
             <th class="monto">Total Sentenciado</th>
             <th class="monto">Total Tranzado</th>
             <th class="monto">Total Ahorrado</th>
     </tr>';
         $html.='<tr>
-            <th colspan="5"></th>
+            <th colspan="8"></th>
             <th class="monto">'.clFunciones::FormatoMonto($monto_intcuantias).'</th>
             <th class="monto">'.clFunciones::FormatoMonto($monto_intsentenciado).'</th>
             <th class="monto">'.clFunciones::FormatoMonto($monto_inttranzado).'</th>
             <th class="monto">'.clFunciones::FormatoMonto($monto_intahorrado).'</th>
     </tr>';        
 }
-        $html.='<tr>';
-                $html.='<th class="align" colspan="9">TOTAL: '.clFunciones::FormatoMonto($monto).'</th>';
-        $html.='</tr>';  
+//        $html.='<tr>';
+//                $html.='<th class="align" colspan="10">TOTAL: '.clFunciones::FormatoMonto($monto).'</th>';
+//        $html.='</tr>';  
 $html.='</table>';
 //$pdf->SetY(50);
 $pdf->writeHTML($html);
