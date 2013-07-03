@@ -2289,7 +2289,7 @@ public function llenar($request)
              $sql .=" AND fecapertura<='".$fecfin."'";
          }         
          
-         $sql.=" order by id_proexpediente asc";
+         $sql.=" order by id_proexpediente asc ";
 //         exit($sql);
          $conn->sql=$sql;   
          $data = $conn->ejecutarSentencia(2);
@@ -2302,13 +2302,10 @@ public function llenar($request)
          $conn= new Conexion();
          $conn->abrirConexion();
          $sql="SELECT 
-                 count(id_tipo_tramite), 
+                 count(id_tipo_tramite) as numero, 
                  (select stritema from tblmaestros where id_maestro=id_tipo_tramite) as tramite
              FROM 
-                tblproexpediente 
-                group by 
-                id_tipo_tramite,
-                (select stritema from tblmaestros where id_maestro=id_tipo_tramite) where bolborrado=0";
+                tblproexpediente where bolborrado=0 ";
          
        
          if($id_tipo_tramite > 0){
@@ -2344,8 +2341,10 @@ public function llenar($request)
          if($fecfin !=""){
              $sql .=" AND fecapertura<='".$fecfin."'";
          }         
-         
-         $sql.=" order by id_proexpediente asc";
+         $sql.=" group by 
+                id_tipo_tramite,
+                (select stritema from tblmaestros where id_maestro=id_tipo_tramite) ";
+         $sql.=" order by count(id_tipo_tramite) asc ";
 //         exit($sql);
          $conn->sql=$sql;   
          $data = $conn->ejecutarSentencia(2);
