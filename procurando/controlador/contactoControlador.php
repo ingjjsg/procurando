@@ -11,7 +11,22 @@
     include('../comunes/php/utilidades.php');
 //    verificarSessionModuloSeguridad();
     
-
+    function tiempo() {
+        $respuesta = new xajaxResponse();
+        $respuesta->call('setTimeout','xajax_buzon();','500');
+        return $respuesta;
+    } 
+    
+    
+    function buzon() {
+        $html='';
+        $respuesta = new xajaxResponse();
+        $html.='buzon de entrada dissss';
+        $respuesta->assign("mensaje","innerHTML",$html);
+        return $respuesta;
+    }     
+    
+    
     function selectAllContacto(){
         $respuesta= new xajaxResponse();
         $contacto= new clContactoModelo();
