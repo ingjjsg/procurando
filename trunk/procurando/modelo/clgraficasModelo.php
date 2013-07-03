@@ -4,14 +4,15 @@
 //clase para reportes 
 //autor Carlos Belisario
 //
-require_once '../comunes/fpdf/fpdf.php';    
-require_once('../comunes/jpgraph/inc/jpgraph.php');
-require_once('../comunes/jpgraph/inc/jpgraph_pie.php');
-require_once ('../comunes/jpgraph/inc/jpgraph_pie3d.php');
+require_once ('../comunes/fpdf/fpdf.php');    
+require_once('../comunes/jpgraph/src/jpgraph.php');
+require_once('../comunes/jpgraph/src/jpgraph_pie.php');
+require_once ('../comunes/jpgraph/src/jpgraph_pie3d.php');
 
 
 class Reporte extends FPDF
 {
+    
   public function __construct($orientation='P', $unit='mm', $format='A4')
   {
      parent::__construct($orientation, $unit, $format);
@@ -39,7 +40,7 @@ public function gaficoPDF($datos = array(),$nombreGrafico = NULL,$ubicacionTamam
    $ancho = $ubicacionTamamo[2];  
    $altura = $ubicacionTamamo[3];  
    #Creamos un grafico vacio
-   $graph = new PieGraph(600,400);
+   $graph = new PieGraph(1000,700);
    #indicamos titulo del grafico si lo indicamos como parametro
    if(!empty($titulo)){
     $graph->title->Set($titulo);
