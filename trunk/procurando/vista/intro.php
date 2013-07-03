@@ -2,13 +2,27 @@
     session_start();
     require_once '../controlador/contactoControlador.php';
     require_once '../controlador/menuControlador.php';
+    require_once ('../comunes/xajax/xajax_core/xajax.inc.php');    
     $_SESSION["AD"]="ASC";
     $_SESSION['id_oficina']="O";
+    
+$xajax = new xajax();
+$xajax->registerFunction('tiempo'); 
+$xajax->registerFunction('buzon'); 
+
+
+
+
+$xajax->processRequest();
+$xajax->printJavascript('../comunes/xajax/');    
 
 
 ?>
 <?php include('header.php');?>
 <script language="javascript">
+            function cargar(){
+                    xajax_tiempo();
+                }    
             function mostrar(id){
                 var cap= document.getElementById(id);
                 if(cap.style.visibility == "hidden"){
@@ -40,7 +54,7 @@
 </head>
 
 
-<body>
+<body onload="cargar();">
 <div align="center">
 <div class="contenedor_general">
   <?php

@@ -2296,5 +2296,65 @@ public function llenar($request)
          return $data;
     }       
     
+    
+    
+    public function SelectAllExpedienteReporteEstadisticas($id_tipo_tramite,$id_tipo_atencion,$id_actuacion_persona,$id_tipo_organismo,$id_organismo,$id_tipo_fase,$id_fase,$strnroexpediente,$strnroexpedienteauxiliar,$fecini,$fecfin){
+         $conn= new Conexion();
+         $conn->abrirConexion();
+         $sql="SELECT 
+                 count(id_tipo_tramite), 
+                 (select stritema from tblmaestros where id_maestro=id_tipo_tramite) as tramite
+             FROM 
+                tblproexpediente 
+                group by 
+                id_tipo_tramite,
+                (select stritema from tblmaestros where id_maestro=id_tipo_tramite) where bolborrado=0";
+         
+       
+         if($id_tipo_tramite > 0){
+             $sql .=" AND id_tipo_tramite=".$id_tipo_tramite;
+         }
+         if($id_tipo_atencion > 0){
+             $sql .=" AND id_tipo_atencion=".$id_tipo_atencion;
+         }
+         if($id_actuacion > 0){
+             $sql .=" AND id_actuacion=".$id_actuacion;
+         }
+         if($id_tipo_organismo > 0){
+             $sql .=" AND id_tipo_organismo=".$id_tipo_organismo;
+         }
+         if($id_organismo > 0){
+             $sql .=" AND id_organismo=".$id_organismo;
+         }
+         if($id_tipo_fase > 0){
+             $sql .=" AND id_tipo_fase=".$id_tipo_fase;
+         }
+         if($id_fase > 0){
+             $sql .=" AND id_fase=".$id_fase;
+         }
+         if($strnroexpediente !=""){
+             $sql .=" AND strnroexpediente='".$strnroexpediente."'";
+         }
+         if($strnroexpedienteauxiliar !=""){
+             $sql .=" AND strnroexpedienteauxiliar='".$strnroexpedienteauxiliar."'";
+         }
+         if($fecini !=""){
+             $sql .=" AND fecapertura>='".$fecini."'";
+         }
+         if($fecfin !=""){
+             $sql .=" AND fecapertura<='".$fecfin."'";
+         }         
+         
+         $sql.=" order by id_proexpediente asc";
+//         exit($sql);
+         $conn->sql=$sql;   
+         $data = $conn->ejecutarSentencia(2);
+         return $data;
+    }        
+    
+    
+
+    
+    
  }
 ?>

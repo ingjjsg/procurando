@@ -19,3 +19,6 @@
         <!--<div class="boton_misclasificados"><a href="../../inder-intranet/mis_clasificados.php"><img src="imagenes/boton_misclasificados01.png" border="0" /></a></div>-->
   </div><div class="submenu_usuario"><strong>Hola,</strong> <?php echo $_SESSION['strapellido'].", ".$_SESSION['strnombre'];?></div>
   </div>
+<div class="contenedor950" id="mensaje">
+    buzon de entrada
+</div>    
